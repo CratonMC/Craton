@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.teamtea.scientificgeology.mixin",
+  "refmap": "scientific_geology.refmap.json",
+  "mixins": [
+    "game.MixinSurface"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "com.teamtea.scientificgeology.mixin.EclipticSeasonsMixinPlugin",
+  "minVersion": "0.8"
+}
