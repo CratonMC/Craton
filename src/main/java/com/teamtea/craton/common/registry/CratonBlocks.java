@@ -44,6 +44,7 @@ public class CratonBlocks {
                 block.get(),
                 new Item.Properties()
                         .setId(ResourceKey.create(Registries.ITEM, id))
+                        .useBlockDescriptionPrefix()
         ));
 
         return block;
