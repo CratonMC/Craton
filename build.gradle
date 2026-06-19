@@ -105,7 +105,7 @@ neoForge {
 //                '-XX:TieredStopAtLevel=3',
 //                "-XX:+AllowEnhancedClassRedefinition",
 '-Dmixin.debug.export=true',
-"-Xmx2548M"]
+"-Xmx2048M"]
 
         }
 
@@ -199,6 +199,9 @@ dependencies {
     implementation "maven.modrinth:iris:1.10.9+26.1-neoforge"
     implementation "curse.maven:dynamictrees-252818:8228621"
     implementation "curse.maven:jade-324717:7817285"
+    implementation "curse.maven:falling-leaves-plus-1577351:8256788"
+    implementation "curse.maven:puzzles-lib-495476:8251528"
+    implementation "curse.maven:ecliptic-seasons-1118306:8267143"
 
     println("----Scan onlyMainRuntimeOnly libs begin----")
     fileTree(dir: 'libs', include: ['*.jar']).each { File file ->
