@@ -1,4 +1,4 @@
-package com.teamtea.scientificgeology.mixin;
+package com.teamtea.craton.mixin;
 
 import net.neoforged.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class EclipticSeasonsMixinPlugin implements IMixinConfigPlugin {
+public class CratonMixinPlugin implements IMixinConfigPlugin {
 
     public static final String MIXIN_COMPAT_PACKAGE = "mixin.compat.";
 

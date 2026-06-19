@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.teamtea.scientificgeology.mixin",
+  "package": "com.teamtea.craton.mixin",
   "refmap": "scientific_geology.refmap.json",
   "mixins": [
     "game.MixinSurface"
@@ -10,6 +10,6 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "com.teamtea.scientificgeology.mixin.EclipticSeasonsMixinPlugin",
+  "plugin": "com.teamtea.craton.mixin.CratonMixinPlugin",
   "minVersion": "0.8"
 }

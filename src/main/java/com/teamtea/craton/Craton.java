@@ -1,6 +1,9 @@
-package com.teamtea.scientificgeology;
+package com.teamtea.craton;
 
 
+import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.registry.CratonTab;
+import com.teamtea.craton.data.DataInit;
 import net.minecraft.resources.Identifier;
 
 import net.neoforged.api.distmarker.Dist;
@@ -18,19 +21,23 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(ScientificGeology.MODID)
-public class ScientificGeology {
-    public static final String MODID = "scientific_geology";
+@Mod(Craton.MODID)
+public class Craton {
+    public static final String MODID = "craton";
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static final String NETWORK_VERSION = "1.0";
 
-    public ScientificGeology(IEventBus modEventBus, ModContainer modContainer) {
+    public Craton(IEventBus modEventBus, ModContainer modContainer) {
 
         modEventBus.addListener(this::FMLCommonSetup);
         modEventBus.addListener(this::FMLCommonSetup);
         modEventBus.addListener(this::gatherData);
+        modEventBus.addListener(this::gatherData2);
 
+        CratonBlocks.BLOCKS.register(modEventBus);
+        CratonBlocks.ITEMS.register(modEventBus);
+        CratonTab.TABS.register(modEventBus);
 
 
         if (FMLLoader.getCurrentOrNull().getDist() == Dist.CLIENT)
@@ -55,6 +62,12 @@ public class ScientificGeology {
 
 
     public void gatherData(final GatherDataEvent.Client event) {
+        DataInit.dataGen(event);
+    }
+
+
+    public void gatherData2(final GatherDataEvent.Server event) {
+        DataInit.dataGenServer(event);
     }
 
 

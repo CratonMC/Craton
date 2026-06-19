@@ -1,9 +1,6 @@
-package com.teamtea.scientificgeology.common.misc;
+package com.teamtea.craton.common.misc;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.worldgen.NoiseData;
-import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -11,7 +8,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.NoiseSettings;
 
 public class WorldTester {
 
