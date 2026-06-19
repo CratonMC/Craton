@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "craton:block/polished_marble",
+    "side": "craton:block/polished_marble",
+    "top": "craton:block/polished_marble"
+  }
+}

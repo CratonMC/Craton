@@ -8,6 +8,7 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -24,20 +25,26 @@ public class CBlockModelGenerators {
     }
 
     public void run() {
-        stone(CratonBlocks.PEGMATITE.get());
-        stone(CratonBlocks.GNEISS.get());
-        stone(CratonBlocks.RHYOLITE.get());
-        stone(CratonBlocks.MARBLE.get());
-        stone(CratonBlocks.LIMESTONE.get());
-        stone(CratonBlocks.GABBRO.get());
+        for (CratonBlocks.StoneCollection collection : CratonBlocks.STONE_COLLECTIONS) {
+            addStoneFamily(collection.origin().get());
+            addStoneFamily(collection.polished().get());
+        }
     }
 
-    private void stone(Block block) {
-        simpleBlockItem(
-                block,
-                resource(BuiltInRegistries.BLOCK.getKey(block).getPath()),
-                true
-        );
+    private void addStoneFamily(BlockFamily family) {
+        Block block = family.getBaseBlock();
+        models.family(block)
+                .generateFor(family);
+        models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
+        // simpleBlockItem(
+        //         block,
+        //         resource(BuiltInRegistries.BLOCK.getKey(block).getPath()),
+        //         true
+        // );
+    }
+
+    private String name(Block block) {
+        return BuiltInRegistries.BLOCK.getKey(block).getPath();
     }
 
     private void simpleBlockItem(Block block, Identifier textureid, boolean item) {

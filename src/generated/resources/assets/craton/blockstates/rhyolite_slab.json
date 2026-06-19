@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/rhyolite_slab"
+    },
+    "type=double": {
+      "model": "craton:block/rhyolite"
+    },
+    "type=top": {
+      "model": "craton:block/rhyolite_slab_top"
+    }
+  }
+}

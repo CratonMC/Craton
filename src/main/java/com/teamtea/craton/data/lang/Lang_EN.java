@@ -2,6 +2,7 @@ package com.teamtea.craton.data.lang;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.registry.CratonBlocks;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
 
 
@@ -15,12 +16,24 @@ public class Lang_EN extends LangHelper {
     protected void addTranslations() {
         add("itemGroup." + modid + ".core", "Craton");
 
-        addBlock(CratonBlocks.PEGMATITE, "Pegmatite");
-        addBlock(CratonBlocks.GNEISS, "Gneiss");
-        addBlock(CratonBlocks.RHYOLITE, "Rhyolite");
-        addBlock(CratonBlocks.MARBLE, "Marble");
-        addBlock(CratonBlocks.LIMESTONE, "Limestone");
-        addBlock(CratonBlocks.GABBRO, "Gabbro");
+        addStoneCollection(CratonBlocks.GNEISS, "Gneiss");
+        addStoneCollection(CratonBlocks.RHYOLITE, "Rhyolite");
+        addStoneCollection(CratonBlocks.MARBLE, "Marble");
+        addStoneCollection(CratonBlocks.LIMESTONE, "Limestone");
+        addStoneCollection(CratonBlocks.GABBRO, "Gabbro");
+        addStoneCollection(CratonBlocks.PEGMATITE, "Pegmatite");
+    }
+
+    private void addStoneCollection(CratonBlocks.StoneCollection collection, String name) {
+        addStoneFamily(collection.origin().get(), name);
+        addStoneFamily(collection.polished().get(), "Polished " + name);
+    }
+
+    private void addStoneFamily(BlockFamily family, String name) {
+        add(family.getBaseBlock().getDescriptionId(), name);
+        add(family.get(BlockFamily.Variant.STAIRS).getDescriptionId(), name + " Stairs");
+        add(family.get(BlockFamily.Variant.SLAB).getDescriptionId(), name + " Slab");
+        add(family.get(BlockFamily.Variant.WALL).getDescriptionId(), name + " Wall");
     }
 
 

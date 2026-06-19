@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "craton:block/polished_rhyolite",
+    "side": "craton:block/polished_rhyolite",
+    "top": "craton:block/polished_rhyolite"
+  }
+}

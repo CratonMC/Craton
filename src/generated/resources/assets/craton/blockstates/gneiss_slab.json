@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/gneiss_slab"
+    },
+    "type=double": {
+      "model": "craton:block/gneiss"
+    },
+    "type=top": {
+      "model": "craton:block/gneiss_slab_top"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "values": [
+    "craton:gneiss_wall",
+    "craton:polished_gneiss_wall",
+    "craton:rhyolite_wall",
+    "craton:polished_rhyolite_wall",
+    "craton:marble_wall",
+    "craton:polished_marble_wall",
+    "craton:limestone_wall",
+    "craton:polished_limestone_wall",
+    "craton:gabbro_wall",
+    "craton:polished_gabbro_wall",
+    "craton:pegmatite_wall",
+    "craton:polished_pegmatite_wall"
+  ]
+}

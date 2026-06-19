@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/gabbro_slab"
+    },
+    "type=double": {
+      "model": "craton:block/gabbro"
+    },
+    "type=top": {
+      "model": "craton:block/gabbro_slab_top"
+    }
+  }
+}
