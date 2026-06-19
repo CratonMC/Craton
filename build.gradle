@@ -197,6 +197,8 @@ dependencies {
 
     implementation "maven.modrinth:sodium:mc26.1.2-0.8.12-neoforge"
     implementation "maven.modrinth:iris:1.10.9+26.1-neoforge"
+    implementation "curse.maven:dynamictrees-252818:8228621"
+    implementation "maven.modrinth:jade:26.2.2+neoforge"
 
     println("----Scan onlyMainRuntimeOnly libs begin----")
     fileTree(dir: 'libs', include: ['*.jar']).each { File file ->
