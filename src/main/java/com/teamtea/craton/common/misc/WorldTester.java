@@ -13,7 +13,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 public class WorldTester {
 
     public static void extracted(BlockState blockState, ChunkAccess val$chunk, BlockPos.MutableBlockPos val$blockpos$mutableblockpos) {
-        if (!FMLEnvironment.isProduction()) return;
+        if (FMLEnvironment.isProduction()) return;
 
         LevelHeightAccessor levelheightaccessor = val$chunk.getHeightAccessorForGeneration();
         int minBuildHeight = levelheightaccessor.getMinY();
