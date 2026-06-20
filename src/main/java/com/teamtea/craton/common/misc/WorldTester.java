@@ -8,10 +8,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 public class WorldTester {
 
     public static void extracted(BlockState blockState, ChunkAccess val$chunk, BlockPos.MutableBlockPos val$blockpos$mutableblockpos) {
+        if (!FMLEnvironment.isProduction()) return;
+
         LevelHeightAccessor levelheightaccessor = val$chunk.getHeightAccessorForGeneration();
         int minBuildHeight = levelheightaccessor.getMinY();
         int height = val$chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, val$blockpos$mutableblockpos.getX(), val$blockpos$mutableblockpos.getZ());
