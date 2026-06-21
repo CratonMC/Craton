@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "craton:block/mossy_pegmatite_brick"
+  }
+}

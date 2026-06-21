@@ -195,12 +195,12 @@ dependencies {
     // And its provides the option to then use net.minecraft as the group, and one of; client, server or joined as the module name, plus the game version as version.
     // For all intends and purposes: You can treat this dependency as if it is a normal library you would use.
 
-    implementation "maven.modrinth:sodium:mc26.1.2-0.8.12-neoforge"
-    implementation "maven.modrinth:iris:1.10.9+26.1-neoforge"
-    implementation "curse.maven:dynamictrees-252818:8228621"
-    implementation "curse.maven:jade-324717:7817285"
-    implementation "curse.maven:falling-leaves-plus-1577351:8256788"
-    implementation "curse.maven:puzzles-lib-495476:8251528"
+    onlyMainRuntimeOnly "maven.modrinth:sodium:mc26.1.2-0.8.12-neoforge"
+    onlyMainRuntimeOnly "maven.modrinth:iris:1.10.9+26.1-neoforge"
+    onlyMainRuntimeOnly "curse.maven:dynamictrees-252818:8228621"
+    onlyMainRuntimeOnly "curse.maven:jade-324717:7817285"
+    onlyMainRuntimeOnly "curse.maven:falling-leaves-plus-1577351:8256788"
+    onlyMainRuntimeOnly "curse.maven:puzzles-lib-495476:8251528"
     implementation "curse.maven:ecliptic-seasons-1118306:8267143"
 
     println("----Scan onlyMainRuntimeOnly libs begin----")

@@ -2,9 +2,8 @@ package com.teamtea.craton.data.model;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.MultiVariant;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,9 +24,11 @@ public class CBlockModelGenerators {
     }
 
     public void run() {
-        for (CratonBlocks.StoneCollection collection : CratonBlocks.STONE_COLLECTIONS) {
+        for (StoneCollection collection : CratonBlocks.STONE_COLLECTIONS) {
             addStoneFamily(collection.origin().get());
             addStoneFamily(collection.polished().get());
+            addStoneFamily(collection.brick().get());
+            addStoneFamily(collection.mossyBrick().get());
         }
     }
 

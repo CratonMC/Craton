@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "craton:block/mossy_rhyolite_brick",
+    "side": "craton:block/mossy_rhyolite_brick",
+    "top": "craton:block/mossy_rhyolite_brick"
+  }
+}

@@ -12,16 +12,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class CLootTableProvider extends LootTableProvider {
 
-    private final PackOutput generator;
 
     public CLootTableProvider(PackOutput generator, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(generator, Set.of(), List.of(new SubProviderEntry(
                 CBlockLootTables::new,
-                // Loot table generator for the 'empty' param set
                 LootContextParamSets.BLOCK
         )),lookupProvider);
-        this.generator = generator;
-
     }
 
 }

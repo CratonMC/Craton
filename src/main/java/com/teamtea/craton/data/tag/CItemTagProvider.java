@@ -3,6 +3,7 @@ package com.teamtea.craton.data.tag;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
@@ -21,9 +22,12 @@ public final class CItemTagProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NonNull Provider pProvider) {
-        for (CratonBlocks.StoneCollection collection : CratonBlocks.STONE_COLLECTIONS) {
-            addStoneFamilyTags(collection.origin().get());
-            addStoneFamilyTags(collection.polished().get());
+        for (StoneCollection collection : CratonBlocks.STONE_COLLECTIONS) {
+            // addStoneFamilyTags(collection.origin().get());
+            // addStoneFamilyTags(collection.polished().get());
+            for (BlockFamily blockFamily : collection.getAll()) {
+                addStoneFamilyTags(blockFamily);
+            }
         }
     }
 

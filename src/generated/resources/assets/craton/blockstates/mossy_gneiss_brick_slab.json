@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/mossy_gneiss_brick_slab"
+    },
+    "type=double": {
+      "model": "craton:block/mossy_gneiss_brick"
+    },
+    "type=top": {
+      "model": "craton:block/mossy_gneiss_brick_slab_top"
+    }
+  }
+}

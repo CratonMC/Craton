@@ -2,6 +2,7 @@ package com.teamtea.craton.common.registry;
 
 import com.google.common.base.Suppliers;
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.Identifier;
@@ -41,23 +42,12 @@ public class CratonBlocks {
             PEGMATITE
     );
 
-    public record StoneCollection(
-            Supplier<BlockFamily> origin,
-            Supplier<BlockFamily> polished
-    ) {
-        public BlockFamily getOrigin() {
-            return origin.get();
-        }
-
-        public BlockFamily getPolished() {
-            return polished.get();
-        }
-    }
-
     private static StoneCollection registerStoneCollection(String name, MapColor mapColor) {
         return new StoneCollection(
                 registerStoneFamily(name, mapColor),
-                registerStoneFamily("polished_" + name, mapColor)
+                registerStoneFamily("polished_" + name, mapColor),
+                registerStoneFamily(name + "_brick", mapColor),
+                registerStoneFamily("mossy_" + name + "_brick", mapColor)
         );
     }
 

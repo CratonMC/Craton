@@ -2,6 +2,7 @@ package com.teamtea.craton.data.lang;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
 
@@ -24,9 +25,11 @@ public class Lang_EN extends LangHelper {
         addStoneCollection(CratonBlocks.PEGMATITE, "Pegmatite");
     }
 
-    private void addStoneCollection(CratonBlocks.StoneCollection collection, String name) {
+    private void addStoneCollection(StoneCollection collection, String name) {
         addStoneFamily(collection.origin().get(), name);
         addStoneFamily(collection.polished().get(), "Polished " + name);
+        addStoneFamily(collection.brick().get(), name + " Brick");
+        addStoneFamily(collection.mossyBrick().get(), "Mossy " + name + " Brick");
     }
 
     private void addStoneFamily(BlockFamily family, String name) {
