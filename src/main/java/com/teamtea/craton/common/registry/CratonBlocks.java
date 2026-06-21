@@ -1,5 +1,6 @@
 package com.teamtea.craton.common.registry;
 
+import com.google.common.base.Suppliers;
 import com.teamtea.craton.Craton;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;
@@ -44,6 +45,13 @@ public class CratonBlocks {
             Supplier<BlockFamily> origin,
             Supplier<BlockFamily> polished
     ) {
+        public BlockFamily getOrigin() {
+            return origin.get();
+        }
+
+        public BlockFamily getPolished() {
+            return polished.get();
+        }
     }
 
     private static StoneCollection registerStoneCollection(String name, MapColor mapColor) {
@@ -59,11 +67,11 @@ public class CratonBlocks {
         DeferredBlock<SlabBlock> slab = registerSlab(name + "_slab", mapColor);
         DeferredBlock<WallBlock> wall = registerWall(name + "_wall", mapColor);
 
-        return () -> new BlockFamily.Builder(block.get())
+        return Suppliers.memoize(() -> new BlockFamily.Builder(block.get())
                 .stairs(stairs.get())
                 .slab(slab.get())
                 .wall(wall.get())
-                .getFamily();
+                .getFamily());
     }
 
     private static DeferredBlock<Block> registerStone(String name, MapColor mapColor) {

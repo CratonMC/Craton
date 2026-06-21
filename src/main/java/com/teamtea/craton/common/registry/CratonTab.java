@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -31,8 +32,12 @@ public class CratonTab {
 
     private static void acceptFamily(CreativeModeTab.Output output, BlockFamily family) {
         output.accept(family.getBaseBlock());
-        output.accept(family.get(BlockFamily.Variant.STAIRS));
-        output.accept(family.get(BlockFamily.Variant.SLAB));
-        output.accept(family.get(BlockFamily.Variant.WALL));
+        for (Block value : family.getVariants().values()) {
+            output.accept(value);
+        }
+        // output.accept(family.getBaseBlock());
+        // output.accept(family.get(BlockFamily.Variant.STAIRS));
+        // output.accept(family.get(BlockFamily.Variant.SLAB));
+        // output.accept(family.get(BlockFamily.Variant.WALL));
     }
 }
