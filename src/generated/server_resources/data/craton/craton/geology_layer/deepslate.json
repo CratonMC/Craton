@@ -1,0 +1,8 @@
+{
+  "amplitude": 8.0,
+  "block": "minecraft:deepslate",
+  "freq_x": 0.006,
+  "freq_z": 0.009,
+  "seed": 77,
+  "thickness": 48.0
+}

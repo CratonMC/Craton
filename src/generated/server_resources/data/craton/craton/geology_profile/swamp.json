@@ -1,0 +1,11 @@
+{
+  "biomes": "#c:is_swamp",
+  "layers": [
+    "craton:limestone",
+    "craton:stone",
+    "craton:tuff",
+    "craton:andesite",
+    "craton:gneiss",
+    "craton:deepslate"
+  ]
+}

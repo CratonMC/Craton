@@ -1,0 +1,11 @@
+{
+  "biomes": "#c:is_ocean",
+  "layers": [
+    "craton:basalt",
+    "craton:tuff",
+    "craton:gabbro",
+    "craton:stone",
+    "craton:andesite",
+    "craton:deepslate"
+  ]
+}

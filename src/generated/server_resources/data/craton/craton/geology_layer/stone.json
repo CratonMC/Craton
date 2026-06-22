@@ -1,0 +1,8 @@
+{
+  "amplitude": 8.0,
+  "block": "minecraft:stone",
+  "freq_x": 0.006,
+  "freq_z": 0.009,
+  "seed": 11,
+  "thickness": 28.0
+}

@@ -1,0 +1,11 @@
+{
+  "biomes": "#c:is_taiga",
+  "layers": [
+    "craton:stone",
+    "craton:limestone",
+    "craton:andesite",
+    "craton:gneiss",
+    "craton:granite",
+    "craton:deepslate"
+  ]
+}

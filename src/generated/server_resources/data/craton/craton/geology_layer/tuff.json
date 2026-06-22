@@ -1,0 +1,8 @@
+{
+  "amplitude": 16.0,
+  "block": "minecraft:tuff",
+  "freq_x": 0.011,
+  "freq_z": 0.008,
+  "seed": 55,
+  "thickness": 20.0
+}

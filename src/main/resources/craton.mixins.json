@@ -3,7 +3,8 @@
   "package": "com.teamtea.craton.mixin",
   "refmap": "scientific_geology.refmap.json",
   "mixins": [
-    "game.MixinSurface"
+    "game.MixinSurface",
+    "game.MixinSurfaceSystem"
   ],
   "client": [
   ],

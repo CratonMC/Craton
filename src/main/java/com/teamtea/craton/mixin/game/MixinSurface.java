@@ -3,6 +3,7 @@ package com.teamtea.craton.mixin.game;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.teamtea.craton.common.core.WorldSetter;
 import com.teamtea.craton.common.misc.WorldTester;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -31,23 +32,25 @@ public abstract class MixinSurface {
     @Final
     ChunkPos val$chunkPos;
 
-    @Inject(at = {@At("HEAD")}, method = {"setBlock"})
-    public void ccccs$canUse2(int p_190008_,
-                              BlockState p_190009_,
-                              CallbackInfo ci,
-                              @Local(argsOnly = true) LocalRef<BlockState> blockStateLocalRef) {
-        // if (blockStateLocalRef.get().is(Blocks.SNOW)) {
-        //     blockStateLocalRef.set(Blocks.AIR.defaultBlockState());
-        // }
-    }
-
-    @Inject(at = {@At("RETURN")}, method = {"setBlock"})
-    public void ssdsd$canUse(int p_190008_,
-                             BlockState blockState,
-                             CallbackInfo ci,
-                             @Local(argsOnly = true) LocalRef<BlockState> blockStateLocalRef) {
-        WorldTester.extracted(blockState, val$protoChunk, val$columnPos);
-    }
+    // @Inject(at = {@At("HEAD")}, method = {"setBlock"})
+    // public void ccccs$canUse2(int p_190008_,
+    //                           BlockState p_190009_,
+    //                           CallbackInfo ci,
+    //                           @Local(argsOnly = true) LocalRef<BlockState> blockStateLocalRef) {
+    //     // if (blockStateLocalRef.get().is(Blocks.SNOW)) {
+    //     //     blockStateLocalRef.set(Blocks.AIR.defaultBlockState());
+    //     // }
+    // }
+    //
+    // @Inject(at = {@At("RETURN")}, method = {"setBlock"})
+    // public void ssdsd$canUse(int p_190008_,
+    //                          BlockState blockState,
+    //                          CallbackInfo ci,
+    //                          @Local(argsOnly = true) LocalRef<BlockState> blockStateLocalRef) {
+    //     // WorldTester.extracted(blockState, val$protoChunk, val$columnPos);
+    //     WorldSetter.extracted(blockState, val$protoChunk, val$columnPos);
+    //
+    // }
 
 
 }

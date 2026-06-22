@@ -1,0 +1,11 @@
+{
+  "biomes": "#c:is_desert",
+  "layers": [
+    "craton:limestone",
+    "craton:granite",
+    "craton:stone",
+    "craton:gabbro",
+    "craton:gneiss",
+    "craton:deepslate"
+  ]
+}

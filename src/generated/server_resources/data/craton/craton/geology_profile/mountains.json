@@ -1,0 +1,11 @@
+{
+  "biomes": "#c:is_mountain",
+  "layers": [
+    "craton:gneiss",
+    "craton:granite",
+    "craton:pegmatite",
+    "craton:gabbro",
+    "craton:rhyolite",
+    "craton:deepslate"
+  ]
+}

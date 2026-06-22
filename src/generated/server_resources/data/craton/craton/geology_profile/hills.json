@@ -1,0 +1,11 @@
+{
+  "biomes": "#c:is_hill",
+  "layers": [
+    "craton:andesite",
+    "craton:stone",
+    "craton:granite",
+    "craton:gneiss",
+    "craton:gabbro",
+    "craton:deepslate"
+  ]
+}

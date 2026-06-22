@@ -1,0 +1,8 @@
+{
+  "amplitude": 10.0,
+  "block": "minecraft:andesite",
+  "freq_x": 0.007,
+  "freq_z": 0.012,
+  "seed": 44,
+  "thickness": 26.0
+}

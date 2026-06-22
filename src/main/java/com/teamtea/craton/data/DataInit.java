@@ -1,6 +1,7 @@
 package com.teamtea.craton.data;
 
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.data.datapack.DatapackRegistryGenerator;
 import com.teamtea.craton.data.lang.Lang_EN;
 import com.teamtea.craton.data.lang.Lang_ZH;
 import com.teamtea.craton.data.loot.CLootTableProvider;
@@ -33,5 +34,7 @@ public class DataInit {
         generator.addProvider(true, esb);
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
         generator.addProvider(true, new CLootTableProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new DatapackRegistryGenerator(packOutput, lookupProvider));
+
     }
 }
