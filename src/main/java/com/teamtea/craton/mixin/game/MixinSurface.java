@@ -36,9 +36,9 @@ public abstract class MixinSurface {
                               BlockState p_190009_,
                               CallbackInfo ci,
                               @Local(argsOnly = true) LocalRef<BlockState> blockStateLocalRef) {
-        if (blockStateLocalRef.get().is(Blocks.SNOW)) {
-            blockStateLocalRef.set(Blocks.AIR.defaultBlockState());
-        }
+        // if (blockStateLocalRef.get().is(Blocks.SNOW)) {
+        //     blockStateLocalRef.set(Blocks.AIR.defaultBlockState());
+        // }
     }
 
     @Inject(at = {@At("RETURN")}, method = {"setBlock"})
