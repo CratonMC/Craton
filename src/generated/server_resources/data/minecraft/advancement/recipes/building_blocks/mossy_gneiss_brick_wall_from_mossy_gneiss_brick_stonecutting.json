@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_mossy_gneiss_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:mossy_gneiss_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:mossy_gneiss_brick_wall_from_mossy_gneiss_brick_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mossy_gneiss_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:mossy_gneiss_brick_wall_from_mossy_gneiss_brick_stonecutting"
+    ]
+  }
+}

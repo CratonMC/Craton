@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_marble_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:marble_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:marble_brick_wall_from_marble_brick_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_marble_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:marble_brick_wall_from_marble_brick_stonecutting"
+    ]
+  }
+}

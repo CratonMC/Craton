@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pegmatite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:pegmatite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:pegmatite_slab_from_pegmatite_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_pegmatite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:pegmatite_slab_from_pegmatite_stonecutting"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:pegmatite",
+  "result": {
+    "id": "craton:mossy_pegmatite_brick"
+  }
+}

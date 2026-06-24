@@ -6,6 +6,7 @@ import com.teamtea.craton.data.lang.Lang_EN;
 import com.teamtea.craton.data.lang.Lang_ZH;
 import com.teamtea.craton.data.loot.CLootTableProvider;
 import com.teamtea.craton.data.model.CModelProvider;
+import com.teamtea.craton.data.recipe.CratonRecipeProvider;
 import com.teamtea.craton.data.tag.CBlockTagProvider;
 import com.teamtea.craton.data.tag.CItemTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -35,6 +36,7 @@ public class DataInit {
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
         generator.addProvider(true, new CLootTableProvider(packOutput, lookupProvider));
         generator.addProvider(true, new DatapackRegistryGenerator(packOutput, lookupProvider));
+        generator.addProvider(true, new CratonRecipeProvider.Runner(packOutput, lookupProvider));
 
     }
 }

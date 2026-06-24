@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:mossy_gabbro_brick",
+  "result": {
+    "id": "craton:mossy_gabbro_brick_slab"
+  }
+}
