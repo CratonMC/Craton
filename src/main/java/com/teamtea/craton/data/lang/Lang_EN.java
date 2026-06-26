@@ -6,6 +6,9 @@ import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.block.Block;
+
+import java.util.Map;
 
 
 public class Lang_EN extends LangHelper {
@@ -35,13 +38,25 @@ public class Lang_EN extends LangHelper {
 
     private void addStoneFamily(BlockFamily family, String name) {
         add(family.getBaseBlock().getDescriptionId(), name);
-        add(family.get(BlockFamily.Variant.STAIRS).getDescriptionId(), name + " Stairs");
-        add(family.get(BlockFamily.Variant.SLAB).getDescriptionId(), name + " Slab");
-        add(family.get(BlockFamily.Variant.WALL).getDescriptionId(), name + " Wall");
-        add(family.get(BlockFamily.Variant.PRESSURE_PLATE).getDescriptionId(), name + " Pressure Plate");
-        add(family.get(BlockFamily.Variant.BUTTON).getDescriptionId(), name + " Button");
-        add(ExtendedBlockFamily.getVerticalSlab(family), name + " Vertical Slab");
+
+        VARIANT_NAMES.forEach((variant, suffix) -> {
+            Block block = family.get(variant);
+            if (block != null) {
+                add(block.getDescriptionId(), name + " " + suffix);
+            }
+        });
+
+        Block verticalSlab = ExtendedBlockFamily.getVerticalSlab(family);
+        if (verticalSlab != null) {
+            add(verticalSlab.getDescriptionId(), name + " Vertical Slab");
+        }
     }
 
-
+    private static final Map<BlockFamily.Variant, String> VARIANT_NAMES = Map.of(
+            BlockFamily.Variant.STAIRS, "Stairs",
+            BlockFamily.Variant.SLAB, "Slab",
+            BlockFamily.Variant.WALL, "Wall",
+            BlockFamily.Variant.PRESSURE_PLATE, "Pressure Plate",
+            BlockFamily.Variant.BUTTON, "Button"
+    );
 }

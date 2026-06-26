@@ -12,12 +12,9 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.block.dispatch.Variant;
-import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Optional;
@@ -52,7 +49,9 @@ public class CBlockModelGenerators {
         models.family(block)
                 .generateFor(family);
         models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
-        models.registerSimpleItemModel(family.get(BlockFamily.Variant.PRESSURE_PLATE), ModelLocationUtils.getModelLocation(family.get(BlockFamily.Variant.PRESSURE_PLATE)));
+        Block blockPressure = family.get(BlockFamily.Variant.PRESSURE_PLATE);
+        if(blockPressure !=null)
+        models.registerSimpleItemModel(blockPressure, ModelLocationUtils.getModelLocation(blockPressure));
         // simpleBlockItem(
         //         block,
         //         resource(BuiltInRegistries.BLOCK.getKey(block).getPath()),

@@ -7,6 +7,9 @@ import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.block.Block;
+
+import java.util.Map;
 
 
 public class Lang_ZH extends LangHelper {
@@ -37,13 +40,25 @@ public class Lang_ZH extends LangHelper {
 
     private void addStoneFamily(BlockFamily family, String name) {
         add(family.getBaseBlock().getDescriptionId(), name);
-        add(family.get(BlockFamily.Variant.STAIRS).getDescriptionId(), name + "楼梯");
-        add(family.get(BlockFamily.Variant.SLAB).getDescriptionId(), name + "台阶");
-        add(family.get(BlockFamily.Variant.WALL).getDescriptionId(), name + "墙");
-        add(family.get(BlockFamily.Variant.PRESSURE_PLATE).getDescriptionId(), name + "压力板");
-        add(family.get(BlockFamily.Variant.BUTTON).getDescriptionId(), name + "按钮");
-        add(ExtendedBlockFamily.getVerticalSlab(family), name + "竖半砖");
+
+        VARIANT_NAMES_ZH.forEach((variant, suffix) -> {
+            Block block = family.get(variant);
+            if (block != null) {
+                add(block.getDescriptionId(), name + suffix);
+            }
+        });
+
+        Block verticalSlab = ExtendedBlockFamily.getVerticalSlab(family);
+        if (verticalSlab != null) {
+            add(verticalSlab.getDescriptionId(), name + "竖半砖");
+        }
     }
 
-
+    private static final Map<BlockFamily.Variant, String> VARIANT_NAMES_ZH = Map.of(
+            BlockFamily.Variant.STAIRS, "楼梯",
+            BlockFamily.Variant.SLAB, "台阶",
+            BlockFamily.Variant.WALL, "墙",
+            BlockFamily.Variant.PRESSURE_PLATE, "压力板",
+            BlockFamily.Variant.BUTTON, "按钮"
+    );
 }

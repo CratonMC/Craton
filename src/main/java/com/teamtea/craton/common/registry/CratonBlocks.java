@@ -47,33 +47,63 @@ public class CratonBlocks {
 
     private static StoneCollection registerStoneCollection(String name, MapColor mapColor) {
         return new StoneCollection(
-                registerStoneFamily(name, mapColor),
-                registerStoneFamily("polished_" + name, mapColor),
-                registerStoneFamily(name + "_brick", mapColor),
-                registerStoneFamily("mossy_" + name + "_brick", mapColor)
+                registerFullStoneFamily(name, mapColor),
+                registerBasicStoneFamily("polished_" + name, mapColor),
+                registerBrickStoneFamily(name + "_brick", mapColor),
+                registerBasicStoneFamily("mossy_" + name + "_brick", mapColor)
         );
     }
 
-    private static Supplier<BlockFamily> registerStoneFamily(String name, MapColor mapColor) {
+    private static Supplier<BlockFamily> registerFullStoneFamily(String name, MapColor mapColor) {
+        return registerStoneFamily(name, mapColor, true, true);
+    }
+
+    private static Supplier<BlockFamily> registerBasicStoneFamily(String name, MapColor mapColor) {
+        return registerStoneFamily(name, mapColor, false, false);
+    }
+
+    private static Supplier<BlockFamily> registerBrickStoneFamily(String name, MapColor mapColor) {
+        return registerStoneFamily(name, mapColor, true, false);
+    }
+
+    private static Supplier<BlockFamily> registerStoneFamily(
+            String name,
+            MapColor mapColor,
+            boolean hasPressurePlate,
+            boolean hasButton
+    ) {
         DeferredBlock<Block> block = registerStone(name, mapColor);
         DeferredBlock<StairBlock> stairs = registerStairs(name + "_stairs", block);
         DeferredBlock<SlabBlock> slab = registerSlab(name + "_slab", mapColor);
         DeferredBlock<WallBlock> wall = registerWall(name + "_wall", mapColor);
-        DeferredBlock<PressurePlateBlock> pressurePlate = registerPressurePlate(name + "_pressure_plate", block);
-        DeferredBlock<ButtonBlock> button = registerButton(name + "_button", block);
-
         DeferredBlock<VerticalSlabBlock> verticalSlab = registerVerticalSlab(name + "_vertical_slab", mapColor);
 
+        DeferredBlock<PressurePlateBlock> pressurePlate =
+                hasPressurePlate ? registerPressurePlate(name + "_pressure_plate", block) : null;
+
+        DeferredBlock<ButtonBlock> button =
+                hasButton ? registerButton(name + "_button", block) : null;
+
         return Suppliers.memoize(() -> {
-            BlockFamily family = new BlockFamily.Builder(block.get())
+            BlockFamily.Builder builder = new BlockFamily.Builder(block.get())
                     .stairs(stairs.get())
                     .slab(slab.get())
-                    .wall(wall.get())
-                    .pressurePlate(pressurePlate.get())
-                    .button(button.get())
-                    .generateStonecutterRecipe()
-                    .getFamily();
-            if (family instanceof ExtendedBlockFamily e) e.setVerticalSlab(verticalSlab.get());
+                    .wall(wall.get());
+
+            if (pressurePlate != null) {
+                builder.pressurePlate(pressurePlate.get());
+            }
+
+            if (button != null) {
+                builder.button(button.get());
+            }
+
+            BlockFamily family = builder.generateStonecutterRecipe().getFamily();
+
+            if (family instanceof ExtendedBlockFamily e) {
+                e.setVerticalSlab(verticalSlab.get());
+            }
+
             return family;
         });
     }
