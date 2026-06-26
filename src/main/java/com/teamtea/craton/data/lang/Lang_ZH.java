@@ -2,6 +2,7 @@ package com.teamtea.craton.data.lang;
 
 
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;
@@ -39,6 +40,9 @@ public class Lang_ZH extends LangHelper {
         add(family.get(BlockFamily.Variant.STAIRS).getDescriptionId(), name + "楼梯");
         add(family.get(BlockFamily.Variant.SLAB).getDescriptionId(), name + "台阶");
         add(family.get(BlockFamily.Variant.WALL).getDescriptionId(), name + "墙");
+        add(family.get(BlockFamily.Variant.PRESSURE_PLATE).getDescriptionId(), name + "压力板");
+        add(family.get(BlockFamily.Variant.BUTTON).getDescriptionId(), name + "按钮");
+        add(ExtendedBlockFamily.getVerticalSlab(family), name + "竖半砖");
     }
 
 

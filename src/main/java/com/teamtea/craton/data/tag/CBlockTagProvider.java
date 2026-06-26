@@ -1,6 +1,7 @@
 package com.teamtea.craton.data.tag;
 
 
+import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.core.HolderLookup;
@@ -33,13 +34,15 @@ public final class CBlockTagProvider extends BlockTagsProvider {
                 .add(family.getBaseBlock())
                 .add(family.get(BlockFamily.Variant.STAIRS))
                 .add(family.get(BlockFamily.Variant.SLAB))
-                .add(family.get(BlockFamily.Variant.WALL));
+                .add(family.get(BlockFamily.Variant.WALL))
+                .add(ExtendedBlockFamily.getVerticalSlab(family));
 
         tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(family.getBaseBlock())
                 .add(family.get(BlockFamily.Variant.STAIRS))
                 .add(family.get(BlockFamily.Variant.SLAB))
-                .add(family.get(BlockFamily.Variant.WALL));
+                .add(family.get(BlockFamily.Variant.WALL))
+                .add(ExtendedBlockFamily.getVerticalSlab(family));
 
         tag(BlockTags.WALLS)
                 .add(family.get(BlockFamily.Variant.WALL));

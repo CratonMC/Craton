@@ -32,7 +32,7 @@ public final class CItemTagProvider extends ItemTagsProvider {
     }
 
     private void addStoneFamilyTags(BlockFamily family) {
-        tag( ItemTags.WALLS)
+        tag(ItemTags.WALLS)
                 .add(family.get(BlockFamily.Variant.WALL).asItem());
     }
 

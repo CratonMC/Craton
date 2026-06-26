@@ -1,6 +1,7 @@
 package com.teamtea.craton.data.lang;
 
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;
@@ -37,6 +38,9 @@ public class Lang_EN extends LangHelper {
         add(family.get(BlockFamily.Variant.STAIRS).getDescriptionId(), name + " Stairs");
         add(family.get(BlockFamily.Variant.SLAB).getDescriptionId(), name + " Slab");
         add(family.get(BlockFamily.Variant.WALL).getDescriptionId(), name + " Wall");
+        add(family.get(BlockFamily.Variant.PRESSURE_PLATE).getDescriptionId(), name + " Pressure Plate");
+        add(family.get(BlockFamily.Variant.BUTTON).getDescriptionId(), name + " Button");
+        add(ExtendedBlockFamily.getVerticalSlab(family), name + " Vertical Slab");
     }
 
 

@@ -2,6 +2,8 @@ package com.teamtea.craton.common.registry;
 
 import com.google.common.base.Suppliers;
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
+import com.teamtea.craton.common.block.VerticalSlabBlock;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;
@@ -60,14 +62,20 @@ public class CratonBlocks {
         DeferredBlock<PressurePlateBlock> pressurePlate = registerPressurePlate(name + "_pressure_plate", block);
         DeferredBlock<ButtonBlock> button = registerButton(name + "_button", block);
 
-        return Suppliers.memoize(() -> new BlockFamily.Builder(block.get())
-                .stairs(stairs.get())
-                .slab(slab.get())
-                .wall(wall.get())
-                .pressurePlate(pressurePlate.get())
-                .button(button.get())
-                .generateStonecutterRecipe()
-                .getFamily());
+        DeferredBlock<VerticalSlabBlock> verticalSlab = registerVerticalSlab(name + "_vertical_slab", mapColor);
+
+        return Suppliers.memoize(() -> {
+            BlockFamily family = new BlockFamily.Builder(block.get())
+                    .stairs(stairs.get())
+                    .slab(slab.get())
+                    .wall(wall.get())
+                    .pressurePlate(pressurePlate.get())
+                    .button(button.get())
+                    .generateStonecutterRecipe()
+                    .getFamily();
+            if (family instanceof ExtendedBlockFamily e) e.setVerticalSlab(verticalSlab.get());
+            return family;
+        });
     }
 
     private static DeferredBlock<Block> registerStone(String name, MapColor mapColor) {
@@ -130,6 +138,7 @@ public class CratonBlocks {
         registerBlockItem(name, block);
         return block;
     }
+
     private static DeferredBlock<PressurePlateBlock> registerPressurePlate(String name, DeferredBlock<? extends Block> base) {
         Identifier id = Identifier.fromNamespaceAndPath(Craton.MODID, name);
 
@@ -151,6 +160,22 @@ public class CratonBlocks {
                 20,
                 BlockBehaviour.Properties.ofFullCopy(base.get())
                         .setId(ResourceKey.create(Registries.BLOCK, id))
+        ));
+
+        registerBlockItem(name, block);
+        return block;
+    }
+
+    private static DeferredBlock<VerticalSlabBlock> registerVerticalSlab(String name, MapColor mapColor) {
+        Identifier id = Identifier.fromNamespaceAndPath(Craton.MODID, name);
+
+        DeferredBlock<VerticalSlabBlock> block = BLOCKS.register(name, () -> new VerticalSlabBlock(
+                BlockBehaviour.Properties.of()
+                        .setId(ResourceKey.create(Registries.BLOCK, id))
+                        .mapColor(mapColor)
+                        .strength(1.5F, 6.0F)
+                        .requiresCorrectToolForDrops()
+                        .sound(SoundType.STONE)
         ));
 
         registerBlockItem(name, block);

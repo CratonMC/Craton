@@ -1,6 +1,8 @@
 package com.teamtea.craton.data.loot;
 
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.common.block.VerticalSlabBlock;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -8,7 +10,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
@@ -50,7 +57,11 @@ public class CBlockLootTables extends BlockLootSubProvider {
 
     protected void dropSelfWithContents(Set<Block> blocks) {
         for (Block block : blocks) {
-            add(block, createSingleItemTable(block));
+            if(!(block instanceof VerticalSlabBlock verticalSlabBlock)) {
+                add(block, createSingleItemTable(block));
+            }else {
+                add(block, createSlabItemTable(block));
+            }
         }
     }
 
@@ -64,5 +75,26 @@ public class CBlockLootTables extends BlockLootSubProvider {
 
         dropSelfWithContents(blocks);
 
+    }
+
+    protected LootTable.Builder createSlabItemTable(Block slab) {
+        return LootTable.lootTable()
+                .withPool(
+                        LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                .add(
+                                        this.applyExplosionDecay(
+                                                slab,
+                                                LootItem.lootTableItem(slab)
+                                                        .apply(
+                                                                SetItemCountFunction.setCount(ConstantValue.exactly(2.0F))
+                                                                        .when(
+                                                                                LootItemBlockStatePropertyCondition.hasBlockStateProperties(slab)
+                                                                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(VerticalSlabBlock.TYPE, VerticalSlabBlock.Type.DOUBLE))
+                                                                        )
+                                                        )
+                                        )
+                                )
+                );
     }
 }
