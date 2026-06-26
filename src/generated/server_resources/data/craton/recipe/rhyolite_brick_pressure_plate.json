@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:rhyolite_brick"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:rhyolite_brick_pressure_plate"
+  }
+}

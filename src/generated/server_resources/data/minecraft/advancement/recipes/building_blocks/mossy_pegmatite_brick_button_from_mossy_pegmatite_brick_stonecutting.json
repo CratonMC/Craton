@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_mossy_pegmatite_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:mossy_pegmatite_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:mossy_pegmatite_brick_button_from_mossy_pegmatite_brick_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mossy_pegmatite_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:mossy_pegmatite_brick_button_from_mossy_pegmatite_brick_stonecutting"
+    ]
+  }
+}

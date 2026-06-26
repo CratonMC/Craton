@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_pegmatite",
+  "result": {
+    "id": "craton:polished_pegmatite_button"
+  }
+}

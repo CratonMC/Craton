@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:marble_brick",
+  "result": {
+    "id": "craton:marble_brick_button"
+  }
+}

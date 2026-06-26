@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "craton:mossy_gneiss_brick"
+  ],
+  "result": {
+    "id": "craton:mossy_gneiss_brick_button"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "craton:block/pegmatite_brick_button_inventory"
+  }
+}

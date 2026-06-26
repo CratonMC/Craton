@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "craton:gabbro_brick"
+  ],
+  "result": {
+    "id": "craton:gabbro_brick_button"
+  }
+}

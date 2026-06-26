@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:rhyolite",
+  "result": {
+    "id": "craton:rhyolite_pressure_plate"
+  }
+}

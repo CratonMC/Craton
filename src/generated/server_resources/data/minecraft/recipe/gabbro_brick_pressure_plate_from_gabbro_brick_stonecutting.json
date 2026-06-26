@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:gabbro_brick",
+  "result": {
+    "id": "craton:gabbro_brick_pressure_plate"
+  }
+}

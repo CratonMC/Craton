@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:pegmatite_brick"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:pegmatite_brick_pressure_plate"
+  }
+}

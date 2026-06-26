@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "craton:polished_rhyolite"
+  ],
+  "result": {
+    "id": "craton:polished_rhyolite_button"
+  }
+}

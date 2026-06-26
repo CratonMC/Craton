@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:polished_gabbro"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:polished_gabbro_pressure_plate"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:mossy_gneiss_brick",
+  "result": {
+    "id": "craton:mossy_gneiss_brick_pressure_plate"
+  }
+}

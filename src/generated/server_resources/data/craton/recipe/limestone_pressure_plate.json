@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:limestone"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:limestone_pressure_plate"
+  }
+}

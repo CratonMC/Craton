@@ -11,6 +11,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -56,11 +57,15 @@ public class CratonBlocks {
         DeferredBlock<StairBlock> stairs = registerStairs(name + "_stairs", block);
         DeferredBlock<SlabBlock> slab = registerSlab(name + "_slab", mapColor);
         DeferredBlock<WallBlock> wall = registerWall(name + "_wall", mapColor);
+        DeferredBlock<PressurePlateBlock> pressurePlate = registerPressurePlate(name + "_pressure_plate", block);
+        DeferredBlock<ButtonBlock> button = registerButton(name + "_button", block);
 
         return Suppliers.memoize(() -> new BlockFamily.Builder(block.get())
                 .stairs(stairs.get())
                 .slab(slab.get())
                 .wall(wall.get())
+                .pressurePlate(pressurePlate.get())
+                .button(button.get())
                 .getFamily());
     }
 
@@ -119,6 +124,32 @@ public class CratonBlocks {
                         .strength(1.5F, 6.0F)
                         .requiresCorrectToolForDrops()
                         .sound(SoundType.STONE)
+        ));
+
+        registerBlockItem(name, block);
+        return block;
+    }
+    private static DeferredBlock<PressurePlateBlock> registerPressurePlate(String name, DeferredBlock<? extends Block> base) {
+        Identifier id = Identifier.fromNamespaceAndPath(Craton.MODID, name);
+
+        DeferredBlock<PressurePlateBlock> block = BLOCKS.register(name, () -> new PressurePlateBlock(
+                BlockSetType.STONE,
+                BlockBehaviour.Properties.ofFullCopy(base.get())
+                        .setId(ResourceKey.create(Registries.BLOCK, id))
+        ));
+
+        registerBlockItem(name, block);
+        return block;
+    }
+
+    private static DeferredBlock<ButtonBlock> registerButton(String name, DeferredBlock<? extends Block> base) {
+        Identifier id = Identifier.fromNamespaceAndPath(Craton.MODID, name);
+
+        DeferredBlock<ButtonBlock> block = BLOCKS.register(name, () -> new ButtonBlock(
+                BlockSetType.STONE,
+                20,
+                BlockBehaviour.Properties.ofFullCopy(base.get())
+                        .setId(ResourceKey.create(Registries.BLOCK, id))
         ));
 
         registerBlockItem(name, block);

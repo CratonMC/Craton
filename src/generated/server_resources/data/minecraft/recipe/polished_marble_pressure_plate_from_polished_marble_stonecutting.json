@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_marble",
+  "result": {
+    "id": "craton:polished_marble_pressure_plate"
+  }
+}

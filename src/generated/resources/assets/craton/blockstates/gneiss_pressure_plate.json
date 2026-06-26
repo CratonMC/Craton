@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "craton:block/gneiss_pressure_plate"
+    },
+    "powered=true": {
+      "model": "craton:block/gneiss_pressure_plate_down"
+    }
+  }
+}

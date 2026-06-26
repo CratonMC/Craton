@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_limestone",
+  "result": {
+    "id": "craton:polished_limestone_button"
+  }
+}

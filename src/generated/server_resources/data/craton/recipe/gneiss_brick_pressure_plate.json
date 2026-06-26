@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:gneiss_brick"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:gneiss_brick_pressure_plate"
+  }
+}
