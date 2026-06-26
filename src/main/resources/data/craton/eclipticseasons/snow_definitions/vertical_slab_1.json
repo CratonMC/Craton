@@ -1,0 +1,6 @@
+{
+  "blocks": "#craton:vertical_slabs",
+  "mid": "craton:snowy/vertical_slab",
+  "flag": 1000,
+  "snow_passable": true
+}

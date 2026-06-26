@@ -1,0 +1,28 @@
+{
+  "values": [
+    "craton:gneiss_vertical_slab",
+    "craton:polished_gneiss_vertical_slab",
+    "craton:gneiss_brick_vertical_slab",
+    "craton:mossy_gneiss_brick_vertical_slab",
+    "craton:rhyolite_vertical_slab",
+    "craton:polished_rhyolite_vertical_slab",
+    "craton:rhyolite_brick_vertical_slab",
+    "craton:mossy_rhyolite_brick_vertical_slab",
+    "craton:marble_vertical_slab",
+    "craton:polished_marble_vertical_slab",
+    "craton:marble_brick_vertical_slab",
+    "craton:mossy_marble_brick_vertical_slab",
+    "craton:limestone_vertical_slab",
+    "craton:polished_limestone_vertical_slab",
+    "craton:limestone_brick_vertical_slab",
+    "craton:mossy_limestone_brick_vertical_slab",
+    "craton:gabbro_vertical_slab",
+    "craton:polished_gabbro_vertical_slab",
+    "craton:gabbro_brick_vertical_slab",
+    "craton:mossy_gabbro_brick_vertical_slab",
+    "craton:pegmatite_vertical_slab",
+    "craton:polished_pegmatite_vertical_slab",
+    "craton:pegmatite_brick_vertical_slab",
+    "craton:mossy_pegmatite_brick_vertical_slab"
+  ]
+}

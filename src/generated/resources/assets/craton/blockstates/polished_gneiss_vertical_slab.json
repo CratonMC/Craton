@@ -5,6 +5,7 @@
     },
     "type=east": {
       "model": "craton:block/polished_gneiss_vertical_slab",
+      "uvlock": true,
       "y": 90
     },
     "type=north": {
@@ -12,10 +13,12 @@
     },
     "type=south": {
       "model": "craton:block/polished_gneiss_vertical_slab",
+      "uvlock": true,
       "y": 180
     },
     "type=west": {
       "model": "craton:block/polished_gneiss_vertical_slab",
+      "uvlock": true,
       "y": 270
     }
   }

@@ -1,0 +1,8 @@
+{
+    "parent": "craton:block/template_vertical_slab",
+    "textures": {
+        "bottom": "block/air",
+        "top": "block/snow",
+        "side": "eclipticseasons:block/snow_overlay"
+    }
+}

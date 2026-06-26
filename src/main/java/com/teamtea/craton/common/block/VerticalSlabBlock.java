@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
@@ -21,9 +20,13 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.NonNull;
+
+import java.util.Objects;
 
 public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     public static final MapCodec<VerticalSlabBlock> CODEC = simpleCodec(VerticalSlabBlock::new);
@@ -44,16 +47,16 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    protected MapCodec<? extends Block> codec() {
+    protected @NonNull MapCodec<? extends Block> codec() {
         return CODEC;
     }
 
     @Override
-    protected VoxelShape getShape(
+    protected @NonNull VoxelShape getShape(
             BlockState state,
-            BlockGetter level,
-            BlockPos pos,
-            CollisionContext context
+            @NonNull BlockGetter level,
+            @NonNull BlockPos pos,
+            @NonNull CollisionContext context
     ) {
         return switch (state.getValue(TYPE)) {
             case NORTH -> NORTH_SHAPE;
@@ -82,13 +85,12 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+    public boolean canBeReplaced(BlockState state, @NonNull BlockPlaceContext context) {
         if (state.getValue(TYPE) == Type.DOUBLE) {
             return false;
         }
 
-        ItemStack itemStack = context.getItemInHand();
-        if (!itemStack.is(this.asItem())) {
+        if (!context.getItemInHand().is(this.asItem())) {
             return false;
         }
 
@@ -97,32 +99,37 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     private static Type getTypeForPlacement(BlockPlaceContext context) {
-        Direction face = context.getClickedFace();
+        BlockState existingState = context.getLevel().getBlockState(context.getClickedPos());
 
-        if (face.getAxis().isHorizontal()) {
-            return fromClickedFace(face);
+        if (existingState.getBlock() instanceof VerticalSlabBlock
+                && existingState.hasProperty(TYPE)
+                && existingState.getValue(TYPE) != Type.DOUBLE) {
+            Direction face = context.getClickedFace();
+
+            if (face.getAxis().isHorizontal()) {
+                Type faceType = Type.fromDirection(face);
+
+                if (isOpposite(existingState.getValue(TYPE), faceType)) {
+                    return faceType;
+                }
+            }
         }
 
-        return fromPlayerDirection(context.getHorizontalDirection());
+        return getTypeByClickLocation(context);
     }
 
-    private static Type fromClickedFace(Direction face) {
-        return switch (face) {
-            case NORTH -> Type.SOUTH;
-            case SOUTH -> Type.NORTH;
-            case WEST -> Type.EAST;
-            case EAST -> Type.WEST;
-            default -> Type.NORTH;
-        };
-    }
+    private static Type getTypeByClickLocation(BlockPlaceContext context) {
+        Vec3 click = context.getClickLocation();
+        BlockPos pos = context.getClickedPos();
 
-    private static Type fromPlayerDirection(Direction direction) {
-        return switch (direction) {
-            case NORTH -> Type.SOUTH;
-            case SOUTH -> Type.NORTH;
-            case WEST -> Type.EAST;
-            case EAST -> Type.WEST;
-            default -> Type.NORTH;
+        double localX = click.x - pos.getX();
+        double localZ = click.z - pos.getZ();
+
+        Direction direction = context.getHorizontalDirection();
+
+        return switch (direction.getAxis()) {
+            case X -> localX < 0.5D ? Type.WEST : Type.EAST;
+            default -> localZ < 0.5D ? Type.NORTH : Type.SOUTH;
         };
     }
 
@@ -137,22 +144,22 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    protected FluidState getFluidState(BlockState state) {
+    protected @NonNull FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED)
                 ? Fluids.WATER.getSource(false)
                 : super.getFluidState(state);
     }
 
     @Override
-    protected BlockState updateShape(
+    protected @NonNull BlockState updateShape(
             BlockState state,
-            LevelReader level,
-            ScheduledTickAccess scheduledTickAccess,
-            BlockPos pos,
-            Direction direction,
-            BlockPos neighborPos,
-            BlockState neighborState,
-            RandomSource random
+            @NonNull LevelReader level,
+            @NonNull ScheduledTickAccess scheduledTickAccess,
+            @NonNull BlockPos pos,
+            @NonNull Direction direction,
+            @NonNull BlockPos neighborPos,
+            @NonNull BlockState neighborState,
+            @NonNull RandomSource random
     ) {
         if (state.getValue(WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
@@ -162,7 +169,7 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    protected BlockState rotate(BlockState state, Rotation rotation) {
+    protected @NonNull BlockState rotate(BlockState state, @NonNull Rotation rotation) {
         Type type = state.getValue(TYPE);
 
         if (type == Type.DOUBLE) {
@@ -176,7 +183,7 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    protected BlockState mirror(BlockState state, Mirror mirror) {
+    protected @NonNull BlockState mirror(BlockState state, @NonNull Mirror mirror) {
         Type type = state.getValue(TYPE);
 
         if (type == Type.DOUBLE) {
@@ -210,21 +217,26 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
         }
 
         @Override
-        public String getSerializedName() {
+        public @NonNull String getSerializedName() {
+            return this.name;
+        }
+
+        @Override
+        public String toString() {
             return this.name;
         }
 
         public Direction toDirection() {
-            if (this.direction == null) {
-                return Direction.NORTH;
-            }
-
-            return this.direction;
+            return Objects.requireNonNullElse(this.direction, Direction.NORTH);
         }
 
         public static Type fromDirection(Direction direction) {
+            if (direction == null) {
+                return NORTH;
+            }
+
             return switch (direction) {
-                case NORTH -> NORTH;
+                // case NORTH -> NORTH;
                 case SOUTH -> SOUTH;
                 case WEST -> WEST;
                 case EAST -> EAST;

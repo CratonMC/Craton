@@ -1,0 +1,13 @@
+{
+  "blocks": "#craton:vertical_slabs",
+  "flag": 1,
+  "snow_passable": false,
+  "properties": [
+    {
+      "name": "type",
+      "matcher": {
+        "value": "double"
+      }
+    }
+  ]
+}

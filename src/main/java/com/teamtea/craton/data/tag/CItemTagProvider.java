@@ -2,8 +2,10 @@ package com.teamtea.craton.data.tag;
 
 
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.registry.CratonTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
@@ -34,6 +36,9 @@ public final class CItemTagProvider extends ItemTagsProvider {
     private void addStoneFamilyTags(BlockFamily family) {
         tag(ItemTags.WALLS)
                 .add(family.get(BlockFamily.Variant.WALL).asItem());
+
+        tag(CratonTags.Items.VERTICAL_SLABS).add(ExtendedBlockFamily.getVerticalSlab(family).asItem()
+        );
     }
 
 }

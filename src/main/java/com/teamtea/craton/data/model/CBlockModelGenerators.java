@@ -79,15 +79,25 @@ public class CBlockModelGenerators {
                                     case NORTH -> new MultiVariant(WeightedList.of(
                                             new Variant(model)
                                     ));
-                                    case SOUTH -> new MultiVariant(WeightedList.of(
-                                            new Variant(model).withYRot(Quadrant.R180)
-                                    ));
-                                    case WEST -> new MultiVariant(WeightedList.of(
-                                            new Variant(model).withYRot(Quadrant.R270)
-                                    ));
+
                                     case EAST -> new MultiVariant(WeightedList.of(
-                                            new Variant(model).withYRot(Quadrant.R90)
+                                            new Variant(model)
+                                                    .withYRot(Quadrant.R90)
+                                                    .withUvLock(true)
                                     ));
+
+                                    case SOUTH -> new MultiVariant(WeightedList.of(
+                                            new Variant(model)
+                                                    .withYRot(Quadrant.R180)
+                                                    .withUvLock(true)
+                                    ));
+
+                                    case WEST -> new MultiVariant(WeightedList.of(
+                                            new Variant(model)
+                                                    .withYRot(Quadrant.R270)
+                                                    .withUvLock(true)
+                                    ));
+
                                     case DOUBLE -> new MultiVariant(WeightedList.of(
                                             new Variant(fullModel)
                                     ));
