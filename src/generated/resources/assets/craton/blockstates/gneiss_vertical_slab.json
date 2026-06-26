@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "type=double": {
+      "model": "craton:block/gneiss"
+    },
+    "type=east": {
+      "model": "craton:block/gneiss_vertical_slab",
+      "y": 90
+    },
+    "type=north": {
+      "model": "craton:block/gneiss_vertical_slab"
+    },
+    "type=south": {
+      "model": "craton:block/gneiss_vertical_slab",
+      "y": 180
+    },
+    "type=west": {
+      "model": "craton:block/gneiss_vertical_slab",
+      "y": 270
+    }
+  }
+}

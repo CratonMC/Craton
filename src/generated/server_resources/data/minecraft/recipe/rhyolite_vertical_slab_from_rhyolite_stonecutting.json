@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:rhyolite",
+  "result": {
+    "count": 2,
+    "id": "craton:rhyolite_vertical_slab"
+  }
+}

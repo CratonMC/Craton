@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gabbro_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:gabbro_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "craton:gabbro_brick_vertical_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_gabbro_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:gabbro_brick_vertical_slab"
+    ]
+  }
+}

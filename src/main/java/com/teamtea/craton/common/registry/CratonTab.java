@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class CratonTab {
@@ -25,6 +26,7 @@ public class CratonTab {
                         for (StoneCollection collection : CratonBlocks.STONE_COLLECTIONS) {
                             for (BlockFamily blockFamily : collection.getAll()) {
                                 acceptFamily(output, blockFamily);
+                                output.accept(Objects.requireNonNull(collection.getVerticalSlab(blockFamily)));
                             }
                         }
                     })

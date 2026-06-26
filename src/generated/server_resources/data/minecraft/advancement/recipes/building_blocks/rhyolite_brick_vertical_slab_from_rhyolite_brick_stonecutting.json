@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_rhyolite_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:rhyolite_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:rhyolite_brick_vertical_slab_from_rhyolite_brick_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_rhyolite_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:rhyolite_brick_vertical_slab_from_rhyolite_brick_stonecutting"
+    ]
+  }
+}

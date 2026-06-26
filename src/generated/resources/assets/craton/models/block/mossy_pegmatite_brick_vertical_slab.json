@@ -1,0 +1,6 @@
+{
+  "parent": "craton:block/template_vertical_slab_all",
+  "textures": {
+    "all": "craton:block/mossy_pegmatite_brick"
+  }
+}

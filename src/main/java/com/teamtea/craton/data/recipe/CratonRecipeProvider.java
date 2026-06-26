@@ -66,10 +66,30 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
                 //             blockFamily.getBaseBlock(),
                 //             1);
                 // }
+                verticalSlabRecipes(
+                        stoneCollection.getVerticalSlab(blockFamily),
+                        blockFamily.getBaseBlock()
+                );
             }
         }
     }
 
+    private void verticalSlabRecipes(ItemLike verticalSlab, ItemLike baseBlock) {
+        ShapedRecipeBuilder.shaped(registries.lookupOrThrow(Registries.ITEM), RecipeCategory.BUILDING_BLOCKS, verticalSlab, 6)
+                .define('#', baseBlock)
+                .pattern("#")
+                .pattern("#")
+                .pattern("#")
+                .unlockedBy("has_" + getItemName(baseBlock), has(baseBlock))
+                .save(output);
+
+        stonecutterResultFromBase(
+                RecipeCategory.BUILDING_BLOCKS,
+                verticalSlab,
+                baseBlock,
+                2
+        );
+    }
     @FunctionalInterface
     private interface FamilyStonecutterRecipeProvider {
         void create(CratonRecipeProvider context, ItemLike result, ItemLike base);

@@ -1,0 +1,9 @@
+{
+  "parent": "craton:block/template_vertical_slab",
+  "textures": {
+    "particle": "#all",
+    "bottom": "#all",
+    "top": "#all",
+    "side": "#all"
+  }
+}

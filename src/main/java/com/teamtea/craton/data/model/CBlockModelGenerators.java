@@ -52,6 +52,7 @@ public class CBlockModelGenerators {
         models.family(block)
                 .generateFor(family);
         models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
+        models.registerSimpleItemModel(family.get(BlockFamily.Variant.PRESSURE_PLATE), ModelLocationUtils.getModelLocation(family.get(BlockFamily.Variant.PRESSURE_PLATE)));
         // simpleBlockItem(
         //         block,
         //         resource(BuiltInRegistries.BLOCK.getKey(block).getPath()),
@@ -94,40 +95,5 @@ public class CBlockModelGenerators {
         );
 
         models.registerSimpleItemModel(verticalSlab, model);
-    }
-
-    private String name(Block block) {
-        return BuiltInRegistries.BLOCK.getKey(block).getPath();
-    }
-
-    private void simpleBlockItem(Block block, Identifier textureid, boolean item) {
-        simpleBlockItem(block, textureid, ModelTemplates.CUBE_ALL, item);
-    }
-
-    private void simpleBlockItem(Block block, Identifier textureid, ModelTemplate modelTemplate, boolean item) {
-        models.createTrivialBlock(block,
-                (b) -> TexturedModel.createDefault((_) ->
-                        TextureMapping.cube(new Material(textureid))
-                                .put(TextureSlot.PARTICLE, new Material(textureid)), modelTemplate).get(b));
-        if (item && block.asItem() != Items.AIR)
-            models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
-    }
-
-
-    public void addSimple(Block block) {
-        models.createNonTemplateModelBlock(block);
-    }
-
-    public void addSimple(Block block, Block parent) {
-        models.createNonTemplateModelBlock(block, parent);
-    }
-
-
-    public Identifier id(String id) {
-        return Craton.parse(id);
-    }
-
-    public Identifier resource(String path) {
-        return Craton.rl("block/" + path);
     }
 }

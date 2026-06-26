@@ -1,8 +1,12 @@
 package com.teamtea.craton.common.core;
 
+import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
+import com.teamtea.craton.common.block.VerticalSlabBlock;
 import net.minecraft.data.BlockFamily;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public record StoneCollection(
@@ -30,5 +34,9 @@ public record StoneCollection(
     public List<BlockFamily> getAll() {
         return List.of(getOrigin(), getPolished(),
                 getBrick(), getMossyBrick());
+    }
+
+    public @Nullable VerticalSlabBlock getVerticalSlab(BlockFamily blockFamily) {
+        return (VerticalSlabBlock) ExtendedBlockFamily.getVerticalSlab(blockFamily);
     }
 }

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:mossy_limestone_brick",
+  "result": {
+    "count": 2,
+    "id": "craton:mossy_limestone_brick_vertical_slab"
+  }
+}
