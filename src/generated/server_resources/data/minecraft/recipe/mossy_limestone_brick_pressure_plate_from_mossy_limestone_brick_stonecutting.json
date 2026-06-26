@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": "craton:mossy_limestone_brick",
-  "result": {
-    "id": "craton:mossy_limestone_brick_pressure_plate"
-  }
-}

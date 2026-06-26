@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": "craton:gabbro",
-  "result": {
-    "id": "craton:gabbro_button"
-  }
-}

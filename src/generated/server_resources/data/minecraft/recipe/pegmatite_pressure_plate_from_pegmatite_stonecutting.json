@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": "craton:pegmatite",
-  "result": {
-    "id": "craton:pegmatite_pressure_plate"
-  }
-}

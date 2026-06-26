@@ -56,16 +56,16 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
                             stoneCollection.getOrigin().getBaseBlock(),
                            1);
                 }
-                for (Block value : blockFamily.getVariants().values()) {
-                    // stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS,
-                    //         value,
-                    //         stoneCollection.getOrigin().getBaseBlock(),
-                    //         1);
-                    stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS,
-                            value,
-                            blockFamily.getBaseBlock(),
-                            1);
-                }
+                // for (Block value : blockFamily.getVariants().values()) {
+                //     // stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS,
+                //     //         value,
+                //     //         stoneCollection.getOrigin().getBaseBlock(),
+                //     //         1);
+                //     stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS,
+                //             value,
+                //             blockFamily.getBaseBlock(),
+                //             1);
+                // }
             }
         }
     }

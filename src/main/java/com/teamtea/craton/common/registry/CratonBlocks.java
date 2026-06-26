@@ -66,6 +66,7 @@ public class CratonBlocks {
                 .wall(wall.get())
                 .pressurePlate(pressurePlate.get())
                 .button(button.get())
+                .generateStonecutterRecipe()
                 .getFamily());
     }
 

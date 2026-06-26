@@ -2,6 +2,7 @@
   "type": "minecraft:stonecutting",
   "ingredient": "craton:limestone_brick",
   "result": {
+    "count": 2,
     "id": "craton:limestone_brick_slab"
   }
 }

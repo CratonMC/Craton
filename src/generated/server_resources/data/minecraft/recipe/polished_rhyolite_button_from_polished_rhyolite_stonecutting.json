@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": "craton:polished_rhyolite",
-  "result": {
-    "id": "craton:polished_rhyolite_button"
-  }
-}

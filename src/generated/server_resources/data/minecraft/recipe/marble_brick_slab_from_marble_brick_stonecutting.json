@@ -2,6 +2,7 @@
   "type": "minecraft:stonecutting",
   "ingredient": "craton:marble_brick",
   "result": {
+    "count": 2,
     "id": "craton:marble_brick_slab"
   }
 }
