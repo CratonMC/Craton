@@ -31,6 +31,8 @@ import java.util.Objects;
 public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
     public static final MapCodec<VerticalSlabBlock> CODEC = simpleCodec(VerticalSlabBlock::new);
 
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
+
     public static final EnumProperty<Type> TYPE = EnumProperty.create("type", Type.class);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -43,6 +45,7 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(TYPE, Type.NORTH)
+                .setValue(FACING, Direction.NORTH)
                 .setValue(WATERLOGGED, false));
     }
 
