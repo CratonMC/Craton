@@ -5,9 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamtea.craton.common.registry.CratonRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.core.registries.codec.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public record GeologyProfile(
         List<Holder<GeologyLayer>> layers
 ) {
     public static final Codec<GeologyProfile> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.BIOME)
+            RegistryCodecs.holderSet(Registries.BIOME)
                     .fieldOf("biomes")
                     .forGetter(GeologyProfile::biomes),
 

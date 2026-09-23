@@ -1,7 +1,10 @@
 package com.teamtea.craton.data;
 
 import com.teamtea.craton.Craton;
-import com.teamtea.craton.data.datapack.DatapackRegistryGenerator;
+import com.teamtea.craton.common.registry.CratonRegistries;
+import com.teamtea.craton.common.registry.GeologyLayerRegistry;
+import com.teamtea.craton.common.registry.GeologyProfileRegistry;
+import com.teamtea.craton.common.registry.ModBiomeModifiers;
 import com.teamtea.craton.data.lang.Lang_EN;
 import com.teamtea.craton.data.lang.Lang_ZH;
 import com.teamtea.craton.data.loot.CLootTableProvider;
@@ -10,9 +13,13 @@ import com.teamtea.craton.data.recipe.CratonRecipeProvider;
 import com.teamtea.craton.data.tag.CBlockTagProvider;
 import com.teamtea.craton.data.tag.CItemTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -30,13 +37,17 @@ public class DataInit {
     public static void dataGenServer(GatherDataEvent.Server event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getReloadableLookupProvider();
         var esb = new CBlockTagProvider(packOutput, lookupProvider, MODID);
         generator.addProvider(true, esb);
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
-        generator.addProvider(true, new CLootTableProvider(packOutput, lookupProvider));
-        generator.addProvider(true, new DatapackRegistryGenerator(packOutput, lookupProvider));
-        generator.addProvider(true, new CratonRecipeProvider.Runner(packOutput, lookupProvider));
-
+        event.createReloadableRegistryObjects(
+                new RegistrySetBuilder()
+                        .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
+                        .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
+                        .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
+                        .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
+                        .add(Registries.LOOT_TABLE, new CLootTableProvider())
+        );
     }
 }

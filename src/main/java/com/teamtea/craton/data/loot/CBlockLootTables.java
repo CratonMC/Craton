@@ -2,10 +2,10 @@ package com.teamtea.craton.data.loot;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
@@ -14,8 +14,8 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 
 public class CBlockLootTables extends BlockLootSubProvider {
 
-    public CBlockLootTables(HolderLookup.Provider provider) {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
+    public CBlockLootTables(LootTableSubProvider.Context output) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), output);
     }
 
     private final Map<ResourceKey<LootTable>, LootTable.Builder> map = new HashMap<>();
@@ -57,9 +57,9 @@ public class CBlockLootTables extends BlockLootSubProvider {
 
     protected void dropSelfWithContents(Set<Block> blocks) {
         for (Block block : blocks) {
-            if(!(block instanceof VerticalSlabBlock verticalSlabBlock)) {
+            if (!(block instanceof VerticalSlabBlock verticalSlabBlock)) {
                 add(block, createSingleItemTable(block));
-            }else {
+            } else {
                 add(block, createSlabItemTable(block));
             }
         }
@@ -81,16 +81,15 @@ public class CBlockLootTables extends BlockLootSubProvider {
         return LootTable.lootTable()
                 .withPool(
                         LootPool.lootPool()
-                                .setRolls(ConstantValue.exactly(1.0F))
+                                .setRolls(ContextIntProviders.exactly(1))
                                 .add(
                                         this.applyExplosionDecay(
                                                 slab,
                                                 LootItem.lootTableItem(slab)
                                                         .apply(
-                                                                SetItemCountFunction.setCount(ConstantValue.exactly(2.0F))
-                                                                        .when(
-                                                                                LootItemBlockStatePropertyCondition.hasBlockStateProperties(slab)
-                                                                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(VerticalSlabBlock.TYPE, VerticalSlabBlock.Type.DOUBLE))
+                                                                SetItemCountFunction.setCount(ContextIntProviders.exactly(2))
+                                                                        .when(MatchBlock.blockMatches(BuiltInRegistries.BLOCK, slab
+                                                                                , StatePropertiesPredicate.Builder.properties().hasProperty(VerticalSlabBlock.TYPE, VerticalSlabBlock.Type.DOUBLE))
                                                                         )
                                                         )
                                         )

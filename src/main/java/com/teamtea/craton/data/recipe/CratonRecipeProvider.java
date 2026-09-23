@@ -4,6 +4,8 @@ package com.teamtea.craton.data.recipe;
 import com.google.common.collect.ImmutableMap;
 import com.teamtea.craton.common.core.StoneCollection;
 import com.teamtea.craton.common.registry.CratonBlocks;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamilies;
@@ -11,9 +13,11 @@ import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.NonNull;
@@ -23,29 +27,15 @@ import java.util.concurrent.CompletableFuture;
 
 public class CratonRecipeProvider extends VanillaRecipeProvider {
 
-    public static class Runner extends RecipeProvider.Runner {
-        public Runner(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-            super(packOutput, registries);
-        }
+    HolderGetter<Item> items;
 
-        @Override
-        protected @NonNull RecipeProvider createRecipeProvider(HolderLookup.@NonNull Provider registries, RecipeOutput output) {
-            return new CratonRecipeProvider(registries, output);
-        }
-
-        @Override
-        public @NonNull String getName() {
-            return "Craton Recipes";
-        }
-    }
-
-    public CratonRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
-        super(registries, output);
+    public CratonRecipeProvider(BootstrapContext<Recipe<?>> recipeOutput, BootstrapContext<Advancement> advancementOutput) {
+        super(recipeOutput, advancementOutput);
+        items = recipeOutput.lookup(Registries.ITEM);
     }
 
     @Override
     protected void buildRecipes() {
-        HolderLookup.RegistryLookup<Item> items = registries.lookupOrThrow(Registries.ITEM);
 
         for (StoneCollection stoneCollection : CratonBlocks.STONE_COLLECTIONS) {
             for (BlockFamily blockFamily : stoneCollection.getAll()) {
@@ -75,7 +65,7 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
     }
 
     private void verticalSlabRecipes(ItemLike verticalSlab, ItemLike baseBlock) {
-        ShapedRecipeBuilder.shaped(registries.lookupOrThrow(Registries.ITEM), RecipeCategory.BUILDING_BLOCKS, verticalSlab, 6)
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, verticalSlab, 6)
                 .define('#', baseBlock)
                 .pattern("#")
                 .pattern("#")

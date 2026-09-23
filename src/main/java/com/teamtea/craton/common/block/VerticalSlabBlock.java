@@ -29,7 +29,8 @@ import org.jspecify.annotations.NonNull;
 import java.util.Objects;
 
 public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
-    public static final MapCodec<VerticalSlabBlock> CODEC = simpleCodec(VerticalSlabBlock::new);
+//    public static final MapCodec<VerticalSlabBlock> CODEC = simpleCodec(VerticalSlabBlock::new);
+
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
@@ -49,10 +50,10 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
                 .setValue(WATERLOGGED, false));
     }
 
-    @Override
-    protected @NonNull MapCodec<? extends Block> codec() {
-        return CODEC;
-    }
+//    @Override
+//    protected @NonNull MapCodec<? extends Block> codec() {
+//        return CODEC;
+//    }
 
     @Override
     protected @NonNull VoxelShape getShape(
