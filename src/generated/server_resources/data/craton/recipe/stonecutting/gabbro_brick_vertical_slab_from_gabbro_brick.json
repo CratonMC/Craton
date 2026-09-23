@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:gabbro_brick",
+  "result": {
+    "count": 2,
+    "id": "craton:gabbro_brick_vertical_slab"
+  }
+}

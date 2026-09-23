@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_gabbro",
+  "result": {
+    "id": "craton:polished_gabbro_stairs"
+  }
+}

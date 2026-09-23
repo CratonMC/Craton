@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:gneiss_brick",
+  "result": {
+    "id": "craton:gneiss_brick_stairs"
+  }
+}

@@ -99,7 +99,7 @@ public class CratonBlocks {
                 builder.button(button.get());
             }
 
-            BlockFamily family = builder.generateStonecutterRecipe().getFamily();
+            BlockFamily family = builder.getFamily();
 
             if (family instanceof ExtendedBlockFamily e) {
                 e.setVerticalSlab(verticalSlab.get());
