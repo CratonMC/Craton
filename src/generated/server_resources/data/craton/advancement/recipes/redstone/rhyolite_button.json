@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:rhyolite_button"
+        "recipes": "craton:rhyolite_button"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:mossy_marble_brick_wall"
+        "recipes": "craton:mossy_marble_brick_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

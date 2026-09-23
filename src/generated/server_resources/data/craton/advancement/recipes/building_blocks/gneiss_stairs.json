@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:gneiss_stairs"
+        "recipes": "craton:gneiss_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

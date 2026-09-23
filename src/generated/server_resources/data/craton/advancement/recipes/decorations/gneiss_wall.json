@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:gneiss_wall"
+        "recipes": "craton:gneiss_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:pegmatite_button"
+        "recipes": "craton:pegmatite_button"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

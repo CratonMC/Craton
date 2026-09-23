@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:marble_button"
+        "recipes": "craton:marble_button"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

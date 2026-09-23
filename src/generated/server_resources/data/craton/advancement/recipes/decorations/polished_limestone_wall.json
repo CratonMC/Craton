@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:polished_limestone_wall"
+        "recipes": "craton:polished_limestone_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

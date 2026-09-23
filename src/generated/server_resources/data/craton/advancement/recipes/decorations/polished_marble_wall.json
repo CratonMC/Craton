@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:polished_marble_wall"
+        "recipes": "craton:polished_marble_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

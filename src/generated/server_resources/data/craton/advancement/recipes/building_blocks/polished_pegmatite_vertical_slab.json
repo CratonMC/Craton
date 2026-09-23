@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:polished_pegmatite_vertical_slab"
+        "recipes": "craton:polished_pegmatite_vertical_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

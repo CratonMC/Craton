@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:polished_gneiss_slab"
+        "recipes": "craton:polished_gneiss_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:limestone_button"
+        "recipes": "craton:limestone_button"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

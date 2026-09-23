@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:marble_stairs"
+        "recipes": "craton:marble_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

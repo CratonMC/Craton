@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:gabbro_brick_stairs"
+        "recipes": "craton:gabbro_brick_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

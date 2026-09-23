@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:polished_gabbro_stairs"
+        "recipes": "craton:polished_gabbro_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

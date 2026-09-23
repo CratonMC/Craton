@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:gneiss_vertical_slab"
+        "recipes": "craton:gneiss_vertical_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

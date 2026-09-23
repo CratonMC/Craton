@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:rhyolite_wall"
+        "recipes": "craton:rhyolite_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

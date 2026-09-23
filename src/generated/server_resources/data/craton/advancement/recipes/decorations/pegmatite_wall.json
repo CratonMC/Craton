@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:pegmatite_wall"
+        "recipes": "craton:pegmatite_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

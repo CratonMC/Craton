@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:pegmatite_brick_slab"
+        "recipes": "craton:pegmatite_brick_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

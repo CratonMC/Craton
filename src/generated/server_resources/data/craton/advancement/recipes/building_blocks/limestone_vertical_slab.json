@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:limestone_vertical_slab"
+        "recipes": "craton:limestone_vertical_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

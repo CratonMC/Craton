@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "craton:limestone_stairs"
+        "recipes": "craton:limestone_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

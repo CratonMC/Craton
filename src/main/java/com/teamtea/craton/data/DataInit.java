@@ -43,11 +43,14 @@ public class DataInit {
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
         event.createReloadableRegistryObjects(
                 new RegistrySetBuilder()
+                        .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
+                        .add(Registries.LOOT_TABLE, new CLootTableProvider())
+        );
+        event.createWorldRegistryObjects(
+                new RegistrySetBuilder()
                         .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
                         .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
                         .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
-                        .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
-                        .add(Registries.LOOT_TABLE, new CLootTableProvider())
         );
     }
 }
