@@ -202,7 +202,7 @@ public class VerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(TYPE, WATERLOGGED);
+        builder.add(TYPE,FACING, WATERLOGGED);
     }
 
     public enum Type implements StringRepresentable {
