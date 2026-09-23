@@ -1,7 +1,7 @@
 package com.teamtea.craton.data.lang;
 
 import com.teamtea.craton.Craton;
-import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
+import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;

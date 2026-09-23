@@ -1,10 +1,7 @@
 package com.teamtea.craton.data;
 
 import com.teamtea.craton.Craton;
-import com.teamtea.craton.common.registry.CratonRegistries;
-import com.teamtea.craton.common.registry.GeologyLayerRegistry;
-import com.teamtea.craton.common.registry.GeologyProfileRegistry;
-import com.teamtea.craton.common.registry.ModBiomeModifiers;
+import com.teamtea.craton.common.registry.*;
 import com.teamtea.craton.data.lang.Lang_EN;
 import com.teamtea.craton.data.lang.Lang_ZH;
 import com.teamtea.craton.data.loot.CLootTableProvider;
@@ -50,6 +47,8 @@ public class DataInit {
                 new RegistrySetBuilder()
                         .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
                         .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
+                        .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)
+                        .add(CratonRegistries.DEPOSIT, DepositRegistry::bootstrap)
                         .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
         );
     }

@@ -1,7 +1,7 @@
 package com.teamtea.craton.data.tag;
 
 
-import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
+import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
 import com.teamtea.craton.common.registry.CratonTags;
@@ -54,8 +54,9 @@ public final class CBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.WALLS)
                 .add(family.get(BlockFamily.Variant.WALL));
 
-        tag(CratonTags.Blocks.VERTICAL_SLABS).add(ExtendedBlockFamily.getVerticalSlab(family)
-                );
+        tag(CratonTags.Blocks.VERTICAL_SLABS).add(ExtendedBlockFamily.getVerticalSlab(family));
+
+        tag(BlockTags.STONE_ORE_REPLACEABLES).add(family.getBaseBlock());
     }
     protected record Appender(TagAppender<Block> app) implements TagAppender<Block> {
         @Override

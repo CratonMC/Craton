@@ -1,4 +1,4 @@
-// package com.teamtea.craton.api.geology.block;
+// package com.teamtea.craton.api.block;
 //
 // import net.minecraft.data.BlockFamily;
 // import net.minecraft.world.level.block.Block;

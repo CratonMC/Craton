@@ -2,7 +2,7 @@ package com.teamtea.craton.common.registry;
 
 import com.google.common.base.Suppliers;
 import com.teamtea.craton.Craton;
-import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
+import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.core.registries.Registries;

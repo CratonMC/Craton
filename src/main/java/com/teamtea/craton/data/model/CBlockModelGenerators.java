@@ -2,7 +2,7 @@ package com.teamtea.craton.data.model;
 
 import com.mojang.math.Quadrant;
 import com.teamtea.craton.Craton;
-import com.teamtea.craton.api.geology.block.ExtendedBlockFamily;
+import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.core.StoneCollection;
