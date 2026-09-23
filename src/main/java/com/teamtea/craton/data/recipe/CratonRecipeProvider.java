@@ -36,7 +36,6 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
 
     @Override
     protected void buildRecipes() {
-
         for (StoneCollection stoneCollection : CratonBlocks.STONE_COLLECTIONS) {
             for (BlockFamily blockFamily : stoneCollection.getAll()) {
                 generateRecipes(blockFamily, FeatureFlagSet.of(FeatureFlags.VANILLA));

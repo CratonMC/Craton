@@ -88,7 +88,8 @@ public class CratonBlocks {
             BlockFamily.Builder builder = new BlockFamily.Builder(block.get())
                     .stairs(stairs.get())
                     .slab(slab.get())
-                    .wall(wall.get());
+                    .wall(wall.get())
+                    .generateStonecutterRecipe();
 
             if (pressurePlate != null) {
                 builder.pressurePlate(pressurePlate.get());
