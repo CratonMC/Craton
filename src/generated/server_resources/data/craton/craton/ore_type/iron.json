@@ -1,0 +1,12 @@
+{
+  "variants": [
+    {
+      "hosts": "#minecraft:stone_ore_replaceables",
+      "result": "minecraft:iron_ore"
+    },
+    {
+      "hosts": "#minecraft:deepslate_ore_replaceables",
+      "result": "minecraft:deepslate_iron_ore"
+    }
+  ]
+}

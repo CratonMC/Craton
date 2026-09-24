@@ -33,6 +33,7 @@ public final class CBlockTagProvider extends BlockTagsProvider {
             for (BlockFamily blockFamily : collection.getAll()) {
                 addStoneFamilyTags(blockFamily);
             }
+            tag(BlockTags.STONE_ORE_REPLACEABLES).add(collection.getOrigin().getBaseBlock());
         }
     }
 
@@ -56,7 +57,6 @@ public final class CBlockTagProvider extends BlockTagsProvider {
 
         tag(CratonTags.Blocks.VERTICAL_SLABS).add(ExtendedBlockFamily.getVerticalSlab(family));
 
-        tag(BlockTags.STONE_ORE_REPLACEABLES).add(family.getBaseBlock());
     }
     protected record Appender(TagAppender<Block> app) implements TagAppender<Block> {
         @Override

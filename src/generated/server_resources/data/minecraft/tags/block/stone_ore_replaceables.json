@@ -1,0 +1,10 @@
+{
+  "values": [
+    "craton:gneiss",
+    "craton:rhyolite",
+    "craton:marble",
+    "craton:limestone",
+    "craton:gabbro",
+    "craton:pegmatite"
+  ]
+}

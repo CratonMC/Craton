@@ -13,6 +13,7 @@ import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.util.valueproviders.FloatProviders;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.IntProviders;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 public record BandedIronFormation(
         Holder<OreType> ore,
@@ -27,7 +28,7 @@ public record BandedIronFormation(
 
     public static final MapCodec<BandedIronFormation> CODEC =
             RecordCodecBuilder.mapCodec(instance -> instance.group(
-                    RegistryFixedCodec.create(CratonRegistries.ORE_TYPE).fieldOf("length")
+                    RegistryFixedCodec.create(CratonRegistries.ORE_TYPE).fieldOf("ore")
                             .forGetter(BandedIronFormation::ore),
                     Codec.DOUBLE.fieldOf("length")
                             .forGetter(BandedIronFormation::length),

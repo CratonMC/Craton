@@ -1,0 +1,11 @@
+{
+  "type": "bif",
+  "band_scale": 4.0,
+  "dip_max": 30.0,
+  "dip_min": 0.0,
+  "enrichment_scale": 120.0,
+  "length": 800.0,
+  "ore": "craton:iron",
+  "thickness": 3.0,
+  "width": 300.0
+}
