@@ -29,6 +29,48 @@ public class Lang_ZH extends LangHelper {
         addStoneCollection(CratonBlocks.LIMESTONE, "石灰岩");
         addStoneCollection(CratonBlocks.GABBRO, "辉长岩");
         addStoneCollection(CratonBlocks.PEGMATITE, "伟晶岩");
+
+        add(CratonBlocks.banded_iron_gneiss_ore.value().getDescriptionId(), "条带铁矿石");
+//        add(CratonBlocks.banded_iron_marble_ore.value().getDescriptionId(), "大理岩条带铁矿石");
+//        add(CratonBlocks.banded_iron_stone_ore.value().getDescriptionId(), "石头条带铁矿石");
+        add(CratonBlocks.limestone_coal_ore.value().getDescriptionId(), "石灰岩煤矿石");
+        add(CratonBlocks.sedimentary_copper_ore.value().getDescriptionId(), "沉积铜矿石");
+        add(CratonBlocks.metasomatic_lapis_ore.value().getDescriptionId(), "青金石矿石");
+        add(CratonBlocks.magmatic_pge_ore.value().getDescriptionId(), "岩浆型铂族矿石");
+        add(CratonBlocks.magmatic_ni_cu_ore.value().getDescriptionId(), "岩浆型镍铜矿石");
+        add(CratonBlocks.pegmatite_quartz_ore.value().getDescriptionId(), "伟晶岩石英矿石");
+        add(CratonBlocks.pegmatite_emerald_ore.value().getDescriptionId(), "伟晶岩绿宝石矿石");
+        add(CratonBlocks.quartz_vein_gold_ore.value().getDescriptionId(), "石英脉金矿石");
+        add(CratonBlocks.quartz_vein_pyrite_ore.value().getDescriptionId(), "黄铁矿石英脉矿石");
+        add(CratonBlocks.fluorite_vein_ore.value().getDescriptionId(), "萤石脉矿石");
+        add(CratonBlocks.sedimentary_uranium_ore.value().getDescriptionId(), "沉积铀矿石");
+        add(CratonBlocks.sedimentary_pb_zn_ore.value().getDescriptionId(), "沉积铅锌矿石");
+        add(CratonBlocks.shale_coal_ore.value().getDescriptionId(), "页岩煤矿石");
+        add(CratonBlocks.deep_hydrothermal_redstone_ore.value().getDescriptionId(), "红石矿石");
+        add(CratonBlocks.granite_cassiterite_ore.value().getDescriptionId(), "锡石矿石");
+        add(CratonBlocks.granite_wolframite_ore.value().getDescriptionId(), "黑钨矿石");
+        add(CratonBlocks.porphyry_gold_ore.value().getDescriptionId(), "斑岩金矿石");
+        add(CratonBlocks.porphyry_copper_ore.value().getDescriptionId(), "斑岩铜矿石");
+        add(CratonBlocks.porphyry_sulfide_ore.value().getDescriptionId(), "斑岩硫化矿石");
+        add(CratonBlocks.epithermal_au_ag_ore.value().getDescriptionId(), "浅成金银矿石");
+        add(CratonBlocks.vms_copper_ore.value().getDescriptionId(), "VMS 铜矿石");
+        add(CratonBlocks.vms_zinc_ore.value().getDescriptionId(), "VMS 锌矿石");
+        add(CratonBlocks.vms_pb_ag_ore.value().getDescriptionId(), "VMS 铅银矿石");
+        add(CratonBlocks.bauxite_ore.value().getDescriptionId(), "铝土矿石");
+        add(CratonBlocks.peat.value().getDescriptionId(), "泥炭");
+        add(CratonBlocks.auriferous_gravel.value().getDescriptionId(), "含金砂砾");
+        add(CratonBlocks.iron_bearing_gravel.value().getDescriptionId(), "含铁砂砾");
+        add(CratonBlocks.gold_bearing_sand.value().getDescriptionId(), "金砂");
+        add(CratonBlocks.iron_sand.value().getDescriptionId(), "铁砂");
+        add(CratonBlocks.diamond_bearing_kimberlite.value().getDescriptionId(), "含钻金伯利岩");
+        add(CratonBlocks.diamond_rich_kimberlite.value().getDescriptionId(), "金伯利钻石体");
+        add(CratonBlocks.skarn_iron_ore.value().getDescriptionId(), "矽卡岩铁矿石");
+        add(CratonBlocks.skarn_copper_ore.value().getDescriptionId(), "矽卡岩铜矿石");
+        add(CratonBlocks.skarn_w_sn_ore.value().getDescriptionId(), "矽卡岩钨锡矿石");
+        add(CratonBlocks.skarn_pb_zn_ore.value().getDescriptionId(), "矽卡岩铅锌矿石");
+        add(CratonBlocks.skarn_gold_ore.value().getDescriptionId(), "矽卡岩金矿石");
+        add(CratonBlocks.meteoric_iron_ore.value().getDescriptionId(), "陨铁矿石");
+        add(CratonBlocks.suspicious_jadeitite.value().getDescriptionId(), "可疑的玉岩");
     }
 
     private void addStoneCollection(StoneCollection collection, String name) {
