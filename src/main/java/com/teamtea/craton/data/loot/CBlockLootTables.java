@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class CBlockLootTables extends BlockLootSubProvider {
 
-    public CBlockLootTables(LootTableSubProvider.Context output) {
+    public CBlockLootTables(Context output) {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), output);
     }
 

@@ -15,7 +15,7 @@ public class CLootTableProvider extends LootTableProvider {
 
 
     public CLootTableProvider() {
-        super(BuiltInLootTables.all(), List.of(new LootTableProvider.SubProviderEntry(
+        super(BuiltInLootTables.all(), List.of(new SubProviderEntry(
                 CBlockLootTables::new,
                 // Loot table generator for the 'empty' param set
                 LootContextParamSets.BLOCK
