@@ -1,11 +1,5 @@
 {
-  "biomes": {
-    "type": "neoforge:or",
-    "values": [
-      "#c:is_desert",
-      "minecraft:desert"
-    ]
-  },
+  "biomes": "#c:is_badlands",
   "layers": [
     "craton:limestone",
     "craton:granite",

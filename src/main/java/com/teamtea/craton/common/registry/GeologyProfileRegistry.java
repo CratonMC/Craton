@@ -3,6 +3,7 @@ package com.teamtea.craton.common.registry;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.geology.GeologyLayer;
 import com.teamtea.craton.api.geology.GeologyProfile;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -11,7 +12,9 @@ import java.util.List;
 
 
 import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biomes;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 
 import java.util.stream.Stream;
 
@@ -30,6 +33,7 @@ public final class GeologyProfileRegistry {
     public static final ResourceKey<GeologyProfile> MOUNTAINS = createKey("mountains");
 
     public static final ResourceKey<GeologyProfile> DESERT = createKey("desert");
+    public static final ResourceKey<GeologyProfile> BADLANDS = createKey("badlands");
     public static final ResourceKey<GeologyProfile> SAVANNA = createKey("savanna");
 
     public static final ResourceKey<GeologyProfile> OCEAN = createKey("ocean");
@@ -125,16 +129,22 @@ public final class GeologyProfileRegistry {
                 )
         ));
 
+        List<Holder<GeologyLayer>> deserts = layers(layerGetter,
+                GeologyLayerRegistry.LIMESTONE,
+                GeologyLayerRegistry.GRANITE,
+                GeologyLayerRegistry.SANDSTONE,
+                GeologyLayerRegistry.GABBRO,
+                GeologyLayerRegistry.GNEISS,
+                GeologyLayerRegistry.DEEPSLATE
+        );
         context.register(DESERT, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_DESERT),
-                layers(layerGetter,
-                        GeologyLayerRegistry.LIMESTONE,
-                        GeologyLayerRegistry.GRANITE,
-                        GeologyLayerRegistry.SANDSTONE,
-                        GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.GNEISS,
-                        GeologyLayerRegistry.DEEPSLATE
-                )
+                new OrHolderSet<>(biomeGetter.getOrThrow(Tags.Biomes.IS_DESERT),
+                        HolderSet.direct(biomeGetter.getOrThrow(Biomes.DESERT))),
+                deserts
+        ));
+        context.register(BADLANDS, new GeologyProfile(
+                biomeGetter.getOrThrow(Tags.Biomes.IS_BADLANDS),
+                deserts
         ));
 
         context.register(SAVANNA, new GeologyProfile(

@@ -27,6 +27,7 @@ public final class WorldSetter {
     public static void rebuildCloumnExtension(BlockColumn column,BlockPos.MutableBlockPos pos,int x,int z,
                                               int startingHeight,ChunkAccess chunk,Holder<Biome> biome,
                                               PositionalRandomFactory random){
+        boolean debugmode=false;
         Optional<Holder<GeologyProfile>> optional=CratonContents.getGeologyProfile(biome);
         if(optional.isEmpty()) return;
         List<Holder<GeologyLayer>> layers=optional.get().value().layers();
@@ -37,6 +38,10 @@ public final class WorldSetter {
         startingHeight=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
         BlockState surfaceState=column.getBlock(startingHeight);
         int topY=startingHeight-getSurfaceCut(surfaceState,random,pos.setY(startingHeight));
+       if(debugmode)
+        for (int i = topY; i <= startingHeight; i++) {
+            column.setBlock(i,Blocks.AIR.defaultBlockState());
+        }
         if(topY<=minY) return;
 
         GeologyFieldSampler geology=new GeologyFieldSampler(layers,minY,random);
@@ -45,10 +50,19 @@ public final class WorldSetter {
 
         for(int y=minY;y<=topY;y++){
             BlockState current=chunk.getBlockState(pos.setY(y));
-            if(!shouldReplace(current)) continue;
+            if(!shouldReplace(current)) {
+                if(debugmode)
+                column.setBlock(y,Blocks.AIR.defaultBlockState());
+                continue;
+            }
             BlockState host=geology.sample(x,y,z);
             BlockState state=applyBandedIronFormations(bifHits,host,x,y,z);
             state=DepositFieldEngine.apply(depositContext,host,state,y);
+            if(debugmode)
+                if(state==host||state==current){
+                column.setBlock(y,Blocks.AIR.defaultBlockState());
+                continue;
+            }
             column.setBlock(y,state);
         }
     }
