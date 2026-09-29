@@ -2,8 +2,11 @@ package com.teamtea.craton.common.registry;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.geology.ore.OreType;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.references.BlockIds;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
@@ -37,6 +40,18 @@ public final class OreTypeRegistry {
         context.register(
                 IRON,
                 new OreType(List.of(
+                        new OreType.Variant(
+                                HolderSet.direct(blocks.getOrThrow(BlockItemIds.STONE.block())),
+                                CratonBlocks.banded_iron_stone_ore.value().defaultBlockState()
+                        ),
+                        new OreType.Variant(
+                                HolderSet.direct(CratonBlocks.GNEISS.getOrigin().getBaseBlock().builtInRegistryHolder()),
+                                CratonBlocks.banded_iron_gneiss_ore.value().defaultBlockState()
+                        ),
+                        new OreType.Variant(
+                                HolderSet.direct(CratonBlocks.MARBLE.getOrigin().getBaseBlock().builtInRegistryHolder()),
+                                CratonBlocks.banded_iron_marble_ore.value().defaultBlockState()
+                        ),
                         new OreType.Variant(
                                 stoneReplaceables,
                                 Blocks.IRON_ORE.defaultBlockState()

@@ -5,6 +5,7 @@ import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
 import com.teamtea.craton.common.core.StoneCollection;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.Identifier;
@@ -35,6 +36,10 @@ public class CratonBlocks {
     public static final StoneCollection LIMESTONE = registerStoneCollection("limestone", MapColor.SAND);
     public static final StoneCollection GABBRO = registerStoneCollection("gabbro", MapColor.COLOR_BLACK);
     public static final StoneCollection PEGMATITE = registerStoneCollection("pegmatite", MapColor.COLOR_PINK);
+
+    public static final Holder<Block> banded_iron_gneiss_ore =registerOreBlock("banded_iron_gneiss_ore");
+    public static final Holder<Block> banded_iron_marble_ore =registerOreBlock("banded_iron_marble_ore");
+    public static final Holder<Block> banded_iron_stone_ore =registerOreBlock("banded_iron_stone_ore");
 
     public static final List<StoneCollection> STONE_COLLECTIONS = List.of(
             GNEISS,
@@ -222,5 +227,15 @@ public class CratonBlocks {
                         .setId(ResourceKey.create(Registries.ITEM, id))
                         .useBlockDescriptionPrefix()
         ));
+    }
+
+    private static DeferredBlock<Block> registerOreBlock(String name) {
+        Identifier id = Identifier.fromNamespaceAndPath(Craton.MODID, name);
+        DeferredBlock<Block> block = BLOCKS.register(name, () -> new Block(
+                BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
+                        .setId(ResourceKey.create(Registries.BLOCK, id))
+        ));
+        registerBlockItem(name, block);
+        return block;
     }
 }
