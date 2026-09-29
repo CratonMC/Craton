@@ -3,7 +3,6 @@ package com.teamtea.craton.common.registry;
 import com.teamtea.craton.api.geology.GeologyLayer;
 import com.teamtea.craton.api.geology.GeologyProfile;
 import com.teamtea.craton.api.geology.deposit.Deposit;
-import com.teamtea.craton.api.geology.deposit.FieldDeposit;
 import net.minecraft.resources.Identifier;
 import com.teamtea.craton.api.geology.ore.OreType;
 import net.minecraft.core.Holder;
@@ -65,9 +64,9 @@ public class CratonContents {
         return geologyProfileRegistry;
     }
 
-    private static volatile Map<Identifier,List<Holder<Deposit>>> fieldDeposits=Map.of();
+    private static volatile Map<Identifier,List<Holder<Deposit>>> depositsByType=Map.of();
 
-    public static Map<Identifier,List<Holder<Deposit>>> getFieldDeposits() { return fieldDeposits; }
+    public static Map<Identifier,List<Holder<Deposit>>> getDepositsByType() { return depositsByType; }
 
     public static List<Holder<Deposit>> getDeposits() {
         return depositRegistry;
@@ -91,7 +90,7 @@ public class CratonContents {
     public static void onNewRegistry(TagsUpdatedEvent.ServerDataLoad event) {
         geologyProfileRegistry.clear();
         depositRegistry.clear();
-        fieldDeposits=Map.of();
+        depositsByType=Map.of();
         oreTypeRegistry.clear();
         bi.clear();
 
@@ -114,10 +113,9 @@ public class CratonContents {
         Map<Identifier,List<Holder<Deposit>>> grouped=new HashMap<>();
         depositRegistry.sort(Comparator.comparing(entry -> entry.unwrapKey().orElseThrow().identifier().toString()));
         for(Holder<Deposit> entry:depositRegistry)
-            if(entry.value() instanceof FieldDeposit field)
-                grouped.computeIfAbsent(field.type(),key -> new ArrayList<>()).add(entry);
+            grouped.computeIfAbsent(entry.value().getType(),key -> new ArrayList<>()).add(entry);
         grouped.replaceAll((type,entries) -> List.copyOf(entries));
-        fieldDeposits=Map.copyOf(grouped);
+        depositsByType=Map.copyOf(grouped);
 
         event.getRegistries()
                 .lookup(CratonRegistries.ORE_TYPE)
@@ -139,7 +137,7 @@ public class CratonContents {
     public static void onNewRegistry(ServerStoppedEvent event) {
         geologyProfileRegistry.clear();
         depositRegistry.clear();
-        fieldDeposits=Map.of();
+        depositsByType=Map.of();
         oreTypeRegistry.clear();
         bi.clear();
     }

@@ -1,6 +1,7 @@
 package com.teamtea.craton.common.core;
 
 import com.teamtea.craton.api.geology.deposit.Deposit;
+import com.teamtea.craton.api.geology.deposit.BandedIronFormation;
 import com.teamtea.craton.api.geology.deposit.DepositTypes;
 import com.teamtea.craton.api.geology.deposit.FieldDeposit;
 import com.teamtea.craton.common.registry.CratonBlocks;
@@ -26,81 +27,129 @@ import net.minecraft.resources.Identifier;
 public final class DepositFieldEngine {
     private DepositFieldEngine(){}
 
-    public static ColumnContext prepare(PositionalRandomFactory random,GeologyFieldSampler geology,int x,int z,
+    public static ColumnContext prepare(ColumnContext context,GeologyFieldSampler geology,int x,int z,
                                         int minY,int topY,BlockState surfaceState,Holder<Biome> biome){
-        Map<Identifier,List<Holder<Deposit>>> definitions=CratonContents.getFieldDeposits();
-        Map<DepositCandidateSampler.Candidate,FieldDeposit> owners=new java.util.IdentityHashMap<>();
-        Map<Block,List<Integer>> layerIndices=new HashMap<>();
-        for(int i=0;i<geology.layers().size();i++)
-            layerIndices.computeIfAbsent(geology.layers().get(i).value().blockState().getBlock(),block -> new ArrayList<>()).add(i);
-        return new ColumnContext(random,geology,x,z,minY,topY,surfaceState,biome,definitions,owners,layerIndices,
-                query(random,definitions,owners,DepositTypes.GRANITE,DepositRandomSequences.INTRUSIVE,x,z),
-                query(random,definitions,owners,DepositTypes.DIORITE,DepositRandomSequences.INTRUSIVE,x,z),
-                query(random,definitions,owners,DepositTypes.GABBRO,DepositRandomSequences.INTRUSIVE,x,z),
-                query(random,definitions,owners,DepositTypes.EPITHERMAL,DepositRandomSequences.EPITHERMAL,x,z),
-                query(random,definitions,owners,DepositTypes.VMS,DepositRandomSequences.VMS,x,z),
-                query(random,definitions,owners,DepositTypes.VEIN,DepositRandomSequences.VEIN,x,z),
-                query(random,definitions,owners,DepositTypes.WEATHERING,DepositRandomSequences.WEATHERING,x,z),
-                query(random,definitions,owners,DepositTypes.KIMBERLITE,DepositRandomSequences.SPECIAL,x,z),
-                query(random,definitions,owners,DepositTypes.JADEITITE,DepositRandomSequences.SPECIAL,x,z),
-                query(random,definitions,owners,DepositTypes.PLACER,DepositRandomSequences.PLACER,x,z),
-                query(random,definitions,owners,DepositTypes.COAL,DepositRandomSequences.STRATIFORM,x,z),
-                query(random,definitions,owners,DepositTypes.COPPER,DepositRandomSequences.STRATIFORM,x,z),
-                query(random,definitions,owners,DepositTypes.URANIUM,DepositRandomSequences.STRATIFORM,x,z));
+        context.reset(geology,x,z,minY,topY,surfaceState,biome);
+        Map<Identifier,List<Holder<Deposit>>> definitions=context.definitions();
+        Map<DepositCandidateSampler.Candidate,Deposit> owners=context.owners();
+        DepositCandidateSampler.CellCache cells=context.cellCache();
+        context.granite=query(cells,definitions,owners,DepositTypes.GRANITE,DepositRandomSequences.INTRUSIVE,x,z);
+        context.diorite=query(cells,definitions,owners,DepositTypes.DIORITE,DepositRandomSequences.INTRUSIVE,x,z);
+        context.gabbro=query(cells,definitions,owners,DepositTypes.GABBRO,DepositRandomSequences.INTRUSIVE,x,z);
+        context.epithermal=query(cells,definitions,owners,DepositTypes.EPITHERMAL,DepositRandomSequences.EPITHERMAL,x,z);
+        context.vms=query(cells,definitions,owners,DepositTypes.VMS,DepositRandomSequences.VMS,x,z);
+        context.veins=query(cells,definitions,owners,DepositTypes.VEIN,DepositRandomSequences.VEIN,x,z);
+        context.weathering=query(cells,definitions,owners,DepositTypes.WEATHERING,DepositRandomSequences.WEATHERING,x,z);
+        context.kimberlite=query(cells,definitions,owners,DepositTypes.KIMBERLITE,DepositRandomSequences.SPECIAL,x,z);
+        context.jadeitite=query(cells,definitions,owners,DepositTypes.JADEITITE,DepositRandomSequences.SPECIAL,x,z);
+        context.placer=query(cells,definitions,owners,DepositTypes.PLACER,DepositRandomSequences.PLACER,x,z);
+        context.stratiformCoal=query(cells,definitions,owners,DepositTypes.COAL,DepositRandomSequences.STRATIFORM,x,z);
+        context.stratiformCopper=query(cells,definitions,owners,DepositTypes.COPPER,DepositRandomSequences.STRATIFORM,x,z);
+        context.sandstoneUranium=query(cells,definitions,owners,DepositTypes.URANIUM,DepositRandomSequences.STRATIFORM,x,z);
+        context.bif=prepareBif(query(cells,definitions,owners,DepositTypes.BIF,DepositRandomSequences.STRATIFORM,x,z),
+                owners,geology,x,z);
+        return context;
     }
 
-    private static List<DepositCandidateSampler.Candidate> query(PositionalRandomFactory random,
-            Map<Identifier,List<Holder<Deposit>>> definitions,Map<DepositCandidateSampler.Candidate,FieldDeposit> owners,
+    private static List<DepositCandidateSampler.Candidate> query(DepositCandidateSampler.CellCache cells,
+            Map<Identifier,List<Holder<Deposit>>> definitions,Map<DepositCandidateSampler.Candidate,Deposit> owners,
             Identifier type,DepositRandomSequences sequence,int x,int z){
         List<DepositCandidateSampler.Candidate> result=new ArrayList<>();
         for(Holder<Deposit> entry:definitions.getOrDefault(type,List.of())){
-            FieldDeposit field=(FieldDeposit)entry.value();
-            FieldDeposit.Placement p=field.settings().placement();
+            Deposit deposit=entry.value();
+            Deposit.Placement p=deposit.placement();
             if(p.frequency()<=0||p.maxCandidates()==0) continue;
             long id=DepositCandidateSampler.salt(entry.unwrapKey().orElseThrow().identifier().toString());
-            double reach=Math.max(p.reach(),field.settings().shape().horizontalReach());
-            for(DepositCandidateSampler.Candidate c:DepositCandidateSampler.query(random,sequence,id,x,z,
-                    p.cellSize(),reach,p.maxCandidates())){
+            for(DepositCandidateSampler.Candidate c:cells.query(sequence,id,x,z,
+                    p.cellSize(),p.reach(),p.maxCandidates())){
                 if(rand01(c.shapeSeed()^id)>=p.frequency()) continue;
                 result.add(c);
-                owners.put(c,field);
+                owners.put(c,deposit);
             }
         }
         return result;
     }
 
-    private static FieldDeposit.Shape shape(ColumnContext ctx,DepositCandidateSampler.Candidate c){return ctx.owners().get(c).settings().shape();}
-    private static BlockState rock(ColumnContext ctx,DepositCandidateSampler.Candidate c){return ctx.owners().get(c).settings().rock();}
+    private static FieldDeposit field(ColumnContext ctx,DepositCandidateSampler.Candidate c){return (FieldDeposit)ctx.owners().get(c);}
+    private static FieldDeposit.Shape shape(ColumnContext ctx,DepositCandidateSampler.Candidate c){return field(ctx,c).settings().shape();}
+    private static BlockState rock(ColumnContext ctx,DepositCandidateSampler.Candidate c){return field(ctx,c).settings().rock();}
     private static BlockState ore(FieldDeposit d,int index,BlockState host){
         if(index<0||index>=d.settings().ores().size()) return host;
         return d.settings().ores().get(index).value().getOreState(host);
     }
     private static BlockState ore(ColumnContext ctx,DepositCandidateSampler.Candidate c,int index,BlockState host){
-        return ore(ctx.owners().get(c),index,host);
+        return ore(field(ctx,c),index,host);
     }
 
-    public record ColumnContext(
-            PositionalRandomFactory random,GeologyFieldSampler geology,int x,int z,int minY,int topY,
-            BlockState surfaceState,Holder<Biome> biome,Map<Identifier,List<Holder<Deposit>>> definitions,
-            Map<DepositCandidateSampler.Candidate,FieldDeposit> owners,
-            Map<Block,List<Integer>> layerIndices,
-            List<DepositCandidateSampler.Candidate> granite,
-            List<DepositCandidateSampler.Candidate> diorite,
-            List<DepositCandidateSampler.Candidate> gabbro,
-            List<DepositCandidateSampler.Candidate> epithermal,
-            List<DepositCandidateSampler.Candidate> vms,
-            List<DepositCandidateSampler.Candidate> veins,
-            List<DepositCandidateSampler.Candidate> weathering,
-            List<DepositCandidateSampler.Candidate> kimberlite,
-            List<DepositCandidateSampler.Candidate> jadeitite,
-            List<DepositCandidateSampler.Candidate> placer,
-            List<DepositCandidateSampler.Candidate> stratiformCoal,
-            List<DepositCandidateSampler.Candidate> stratiformCopper,
-            List<DepositCandidateSampler.Candidate> sandstoneUranium
-    ){}
+    public static final class ColumnContext {
+        private final PositionalRandomFactory random;
+        private final DepositCandidateSampler.CellCache cellCache;
+        private final Map<Identifier,List<Holder<Deposit>>> definitions;
+        private final Map<DepositCandidateSampler.Candidate,Deposit> owners=new java.util.IdentityHashMap<>();
+        private final Map<Integer,SourceStrength> sourceCache=new HashMap<>();
+        private final Map<GeologyFieldSampler,Map<Block,List<Integer>>> indexedLayers=new java.util.IdentityHashMap<>();
+        private GeologyFieldSampler geology;
+        private int x,z,minY,topY;
+        private BlockState surfaceState;
+        private Holder<Biome> biome;
+        private Map<Block,List<Integer>> layerIndices;
+        private List<DepositCandidateSampler.Candidate> granite,diorite,gabbro,epithermal,vms,veins,
+                weathering,kimberlite,jadeitite,placer,stratiformCoal,stratiformCopper,sandstoneUranium;
+        private BifData bif;
+
+        public ColumnContext(PositionalRandomFactory random){
+            this.random=random;
+            this.cellCache=new DepositCandidateSampler.CellCache(random);
+            this.definitions=CratonContents.getDepositsByType();
+        }
+
+        private void reset(GeologyFieldSampler geology,int x,int z,int minY,int topY,
+                           BlockState surfaceState,Holder<Biome> biome){
+            this.geology=geology;
+            this.x=x;this.z=z;this.minY=minY;this.topY=topY;
+            this.surfaceState=surfaceState;this.biome=biome;
+            owners.clear();
+            sourceCache.clear();
+            layerIndices=indexedLayers.computeIfAbsent(geology,sampler -> {
+                Map<Block,List<Integer>> result=new HashMap<>();
+                for(int i=0;i<sampler.layers().size();i++)
+                    result.computeIfAbsent(sampler.layers().get(i).value().blockState().getBlock(),key -> new ArrayList<>()).add(i);
+                return result;
+            });
+        }
+
+        public PositionalRandomFactory random(){return random;}
+        public DepositCandidateSampler.CellCache cellCache(){return cellCache;}
+        public Map<Identifier,List<Holder<Deposit>>> definitions(){return definitions;}
+        public Map<DepositCandidateSampler.Candidate,Deposit> owners(){return owners;}
+        public Map<Integer,SourceStrength> sourceCache(){return sourceCache;}
+        public GeologyFieldSampler geology(){return geology;}
+        public int x(){return x;}
+        public int z(){return z;}
+        public int minY(){return minY;}
+        public int topY(){return topY;}
+        public BlockState surfaceState(){return surfaceState;}
+        public Holder<Biome> biome(){return biome;}
+        public Map<Block,List<Integer>> layerIndices(){return layerIndices;}
+        public List<DepositCandidateSampler.Candidate> granite(){return granite;}
+        public List<DepositCandidateSampler.Candidate> diorite(){return diorite;}
+        public List<DepositCandidateSampler.Candidate> gabbro(){return gabbro;}
+        public List<DepositCandidateSampler.Candidate> epithermal(){return epithermal;}
+        public List<DepositCandidateSampler.Candidate> vms(){return vms;}
+        public List<DepositCandidateSampler.Candidate> veins(){return veins;}
+        public List<DepositCandidateSampler.Candidate> weathering(){return weathering;}
+        public List<DepositCandidateSampler.Candidate> kimberlite(){return kimberlite;}
+        public List<DepositCandidateSampler.Candidate> jadeitite(){return jadeitite;}
+        public List<DepositCandidateSampler.Candidate> placer(){return placer;}
+        public List<DepositCandidateSampler.Candidate> stratiformCoal(){return stratiformCoal;}
+        public List<DepositCandidateSampler.Candidate> stratiformCopper(){return stratiformCopper;}
+        public List<DepositCandidateSampler.Candidate> sandstoneUranium(){return sandstoneUranium;}
+        public BifData bif(){return bif;}
+    }
 
     public static BlockState apply(ColumnContext ctx,BlockState host,BlockState initialState,int y){
         BlockState state=initialState;
+        if(state.equals(host)) state=applyBandedIronFormations(ctx.bif().hits(),host,ctx.x(),y,ctx.z());
         if(state.equals(host)) state=applyStratiform(ctx,state,y);
 
         IntrusionResult intrusion=sampleIntrusions(ctx,y);
@@ -514,7 +563,7 @@ public final class DepositFieldEngine {
             double edgeP=GeologicalNoise.smoothstep(-.10,.38,footprint);
             if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.15)>edgeP) continue;
 
-            List<BlockState> alteration=ctx.owners().get(c).settings().alterationRocks();
+            List<BlockState> alteration=field(ctx,c).settings().alterationRocks();
             double thickness=config.y(c.shapeSeed());
             if(depth<=thickness*3/13) return alteration.size()>0?alteration.get(0):rock(ctx,c);
             if(depth<=thickness*9/13){
@@ -587,7 +636,7 @@ public final class DepositFieldEngine {
         if(ctx.topY()-y<0||!ctx.biome().is(Tags.Biomes.IS_RIVER)) return state;
         boolean sediment=ctx.surfaceState().is(Blocks.SAND)||ctx.surfaceState().is(Blocks.RED_SAND)||ctx.surfaceState().is(Blocks.GRAVEL);
         if(!sediment) return state;
-        SourceStrength source=primarySourceStrength(ctx);
+        SourceStrength source=ctx.sourceCache().computeIfAbsent(0, ignored -> primarySourceStrength(ctx));
         if(source.gold()<=0&&source.iron()<=0) return state;
 
         for(DepositCandidateSampler.Candidate c:ctx.placer()){
@@ -636,10 +685,139 @@ public final class DepositFieldEngine {
                 if(h.is(Blocks.TUFF)) iron=Math.max(iron,proximity(ctx.x(),ctx.z(),c,105)*.55);
             }
         }
+        // BIF lenses in a gneiss horizon provide a regional iron source to nearby rivers.
+        List<Integer> gneissLayers=matchingLayers(ctx,CratonBlocks.GNEISS.getOrigin().getBaseBlock().defaultBlockState());
+        if(!gneissLayers.isEmpty()){
+            for(DepositCandidateSampler.Candidate c:ctx.bif().candidates()){
+                BandedIronFormation bif=(BandedIronFormation)ctx.owners().get(c);
+                int layer=gneissLayers.get(index(c.verticalSeed(),gneissLayers.size()));
+                double gx=(ctx.geology().boundaryY(layer,c.x()+4,c.z())-ctx.geology().boundaryY(layer,c.x()-4,c.z()))/8.0;
+                double gz=(ctx.geology().boundaryY(layer,c.x(),c.z()+4)-ctx.geology().boundaryY(layer,c.x(),c.z()-4))/8.0;
+                double dip=Math.toDegrees(Math.atan(Math.hypot(gx,gz)));
+                if(dip<bif.dipMin()||dip>bif.dipMax()) continue;
+                double[] strike=ctx.geology().strike(layer,c.x(),c.z());
+                double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
+                double along=dx*strike[0]+dz*strike[1],across=-dx*strike[1]+dz*strike[0];
+                double radial=Math.hypot(along/(bif.length()*.5+60),across/(bif.width()*.5+60));
+                if(radial<1) iron=Math.max(iron,(1-radial)*.8);
+            }
+        }
         // Skarn candidates are intentionally not treated as placer sources unless a real
         // carbonate/intrusion contact can be reconstructed; candidate proximity alone is insufficient.
         return new SourceStrength(gold,iron);
     }
+
+    /* ---------------- BIF: stratiform mineralization ---------------- */
+
+    public record BifColumnHit(BandedIronFormation deposit,double centerY,double horizontalScore,
+                                double satelliteScore,long gradeSeed,long occupancySeed){}
+
+    public record BifData(List<DepositCandidateSampler.Candidate> candidates,List<BifColumnHit> hits){}
+
+    private static BifData prepareBif(List<DepositCandidateSampler.Candidate> candidates,
+            Map<DepositCandidateSampler.Candidate,Deposit> owners,GeologyFieldSampler geology,int x,int z){
+        return new BifData(candidates,prepareBandedIronFormations(candidates,owners,geology,x,z));
+    }
+
+    private static List<BifColumnHit> prepareBandedIronFormations(List<DepositCandidateSampler.Candidate> candidates,
+            Map<DepositCandidateSampler.Candidate,Deposit> owners,GeologyFieldSampler geology,int x,int z){
+        List<Integer> gneissLayers=new ArrayList<>();
+        for(int i=0;i<geology.layers().size();i++)
+            if(geology.layers().get(i).value().blockState().is(CratonBlocks.GNEISS.getOrigin().getBaseBlock())) gneissLayers.add(i);
+        if(gneissLayers.isEmpty()) return List.of();
+
+        List<BifColumnHit> hits=new ArrayList<>();
+        for(DepositCandidateSampler.Candidate candidate:candidates){
+            BandedIronFormation bif=(BandedIronFormation)owners.get(candidate);
+                // A BIF instance binds to exactly one eligible gneiss horizon, not every gneiss band in the profile.
+                int targetLayer=gneissLayers.get((int)Math.floor(rand01(candidate.verticalSeed())*gneissLayers.size())%gneissLayers.size());
+                double gx=(geology.boundaryY(targetLayer,candidate.x()+4,candidate.z())
+                        -geology.boundaryY(targetLayer,candidate.x()-4,candidate.z()))/8.0;
+                double gz=(geology.boundaryY(targetLayer,candidate.x(),candidate.z()+4)
+                        -geology.boundaryY(targetLayer,candidate.x(),candidate.z()-4))/8.0;
+                double hostDip=Math.toDegrees(Math.atan(Math.hypot(gx,gz)));
+                if(hostDip<bif.dipMin()||hostDip>bif.dipMax()) continue;
+                double horizontalScore=horizontalScore(bif,geology,targetLayer,x,z,candidate);
+                double satelliteScore=satelliteScore(bif,geology,targetLayer,x,z,candidate);
+                if(horizontalScore<-.24&&satelliteScore<-.20) continue;
+                double halfThickness=bif.thickness()*.5;
+                double verticalOffset=GeologicalNoise.fbm2(x,z,candidate.shapeSeed(),.035,2)*Math.min(halfThickness*.22,1.5);
+                double topBoundary=geology.boundaryY(targetLayer,x,z);
+                double bottomBoundary=targetLayer+1<geology.layers().size()
+                        ?geology.boundaryY(targetLayer+1,x,z):geology.minY();
+                double available=Math.max(1,topBoundary-bottomBoundary);
+                double inset=Math.min(available*.5,Math.max(2.0,bif.thickness()*.5+1.0));
+                double centerY=topBoundary-inset+verticalOffset;
+                hits.add(new BifColumnHit(bif,centerY,horizontalScore,satelliteScore,
+                        candidate.gradeSeed(),candidate.occupancySeed()));
+        }
+        return hits;
+    }
+
+    private static BlockState applyBandedIronFormations(List<BifColumnHit> hits,BlockState host,int x,int y,int z){
+        if(!host.is(CratonBlocks.GNEISS.getOrigin().getBaseBlock())) return host;
+        for(BifColumnHit hit:hits){
+            BandedIronFormation bif=hit.deposit();
+            double halfThickness=Math.max(.75,bif.thickness()*.5);
+            double verticalScore=1-Math.abs(y+.5-hit.centerY())/halfThickness;
+            double body=Math.min(hit.horizontalScore(),verticalScore);
+            double satellite=Math.min(hit.satelliteScore(),1-Math.abs(y+.5-hit.centerY())/Math.min(2.2,halfThickness));
+            if(body<-.20&&satellite<-.16) continue;
+
+            double envelope=GeologicalNoise.smoothstep(-.18,.48,body);
+            double phase=(y+.5-hit.centerY())/Math.max(2,bif.bandScale());
+            double banding=GeologicalNoise.clamp(.5+.35*Math.sin(phase*Math.PI*2)
+                    +.15*GeologicalNoise.fbm(x,y,z,hit.gradeSeed(),.075,2),0,1);
+            double enrichment=.5+.5*GeologicalNoise.fbm2(x,z,hit.gradeSeed()^0xB1F0L,
+                    1/Math.max(16,bif.enrichmentScale()),3);
+            double probability=(.08+.74*envelope)*(.35+.35*banding+.30*enrichment);
+            double occupancy=GeologicalNoise.occupancy(x,y,z,hit.occupancySeed(),.16);
+            if(body>-.20&&occupancy<probability) return bif.ore().value().getOreState(host);
+            double satelliteChance=GeologicalNoise.smoothstep(-.16,.42,satellite)*(.24+.35*banding);
+            if(satellite>-.16&&occupancy<satelliteChance) return bif.ore().value().getOreState(host);
+        }
+        return host;
+    }
+
+    private static double horizontalScore(BandedIronFormation bif,GeologyFieldSampler geology,int layerIndex,
+                                          int x,int z,DepositCandidateSampler.Candidate candidate){
+        int anchorX=candidate.x(),anchorZ=candidate.z();
+        double[] strike=geology.strike(layerIndex,anchorX,anchorZ);
+        double dx=x+.5-anchorX,dz=z+.5-anchorZ,along=dx*strike[0]+dz*strike[1];
+        double across=-dx*strike[1]+dz*strike[0];
+        double a=Math.max(1,bif.length()*.5),b=Math.max(1,bif.width()*.5);
+        double normalized=sq(along/a)+sq(across/b);
+        double warp=GeologicalNoise.fbm2(x,z,candidate.shapeSeed(),.006,3)*bif.broadNoise()
+                +GeologicalNoise.fbm2(x,z,candidate.shapeSeed()^0x5DEECE66DL,.052,2)*bif.detailNoise();
+        return 1-normalized+warp;
+    }
+
+    private static double satelliteScore(BandedIronFormation bif,GeologyFieldSampler geology,int layerIndex,
+                                         int x,int z,DepositCandidateSampler.Candidate candidate){
+        double[] strike=geology.strike(layerIndex,candidate.x(),candidate.z());
+        double dx=x+.5-candidate.x(),dz=z+.5-candidate.z();
+        double along=dx*strike[0]+dz*strike[1];
+        double across=-dx*strike[1]+dz*strike[0];
+        double a=Math.max(1,bif.length()*.5),b=Math.max(1,bif.width()*.5);
+        if(Math.abs(along)>a*1.25+25||Math.abs(across)>b*1.25+25) return -9;
+        double best=-9;
+        for(int i=0;i<Math.min(24,bif.satelliteCount());i++){
+            long seed=DepositCandidateSampler.mix(candidate.shapeSeed()^(0x9E3779B97F4A7C15L*(i+1)));
+            double theta=rand01(seed)*Math.PI*2;
+            double radial=1.04+rand01(seed^0xA17L)*.20;
+            double ca=Math.cos(theta),sa=Math.sin(theta);
+            double podAlong=a*radial*ca,podAcross=b*radial*sa;
+            double localAlong=along-podAlong,localAcross=across-podAcross;
+            if(Math.abs(localAlong)>25||Math.abs(localAcross)>19) continue;
+            double radiusAlong=8+rand01(seed^0xB31L)*13;
+            double radiusAcross=5+rand01(seed^0xC49L)*9;
+            double broad=GeologicalNoise.fbm2(x,z,seed,.026,3)*.23;
+            double detail=GeologicalNoise.fbm2(x,z,seed^0xD52L,.085,2)*.09;
+            best=Math.max(best,1-sq(localAlong/radiusAlong)-sq(localAcross/radiusAcross)+broad+detail);
+        }
+        return best;
+    }
+
 
     /* ---------------- shared geometry ---------------- */
 

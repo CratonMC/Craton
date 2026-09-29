@@ -27,4 +27,8 @@ public interface Deposit {
     Identifier getType();
 
     MapCodec<? extends Deposit> codec();
+
+    Placement placement();
+
+    record Placement(int cellSize,int maxCandidates,double reach,double frequency) {}
 }

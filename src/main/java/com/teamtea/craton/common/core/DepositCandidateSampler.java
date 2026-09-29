@@ -5,7 +5,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Deterministic spatial index for large deposits.
@@ -37,20 +40,50 @@ public final class DepositCandidateSampler {
 
     public static List<Candidate> query(PositionalRandomFactory rootRandom,DepositRandomSequences sequence,long depositSalt,int x,int z,
                                         int cellSize,double horizontalReach,int maxCandidatesPerCell){
+        return new CellCache(rootRandom).query(sequence,depositSalt,x,z,cellSize,horizontalReach,maxCandidatesPerCell);
+    }
+
+    /** Scoped to one buildSurface call; caches unfiltered cells shared by neighboring columns. */
+    public static final class CellCache {
+        private static final int MAX_CELLS=8192;
+        private final PositionalRandomFactory rootRandom;
+        private final Map<DepositRandomSequences,PositionalRandomFactory> sequences=new EnumMap<>(DepositRandomSequences.class);
+        private final Map<CellKey,List<Candidate>> cells=new LinkedHashMap<>(256,.75f,true){
+            @Override protected boolean removeEldestEntry(Map.Entry<CellKey,List<Candidate>> eldest){
+                return size()>MAX_CELLS;
+            }
+        };
+
+        public CellCache(PositionalRandomFactory rootRandom){this.rootRandom=rootRandom;}
+
+        public List<Candidate> query(DepositRandomSequences sequence,long depositSalt,int x,int z,
+                                     int cellSize,double horizontalReach,int maxCandidatesPerCell){
         if(cellSize<=0||!Double.isFinite(horizontalReach)||horizontalReach<0||maxCandidatesPerCell<0)
             throw new IllegalArgumentException("Invalid deposit candidate query");
         if(maxCandidatesPerCell==0) return List.of();
-        PositionalRandomFactory random=sequence.factory(rootRandom);
+        PositionalRandomFactory random=sequences.computeIfAbsent(sequence,s -> s.factory(rootRandom));
         long root=mix64(depositSalt);
         int cellX=Math.floorDiv(x,cellSize),cellZ=Math.floorDiv(z,cellSize);
         int cellRadius=Math.max(1,(int)Math.floor(horizontalReach/cellSize)+1);
         List<Candidate> result=new ArrayList<>((cellRadius*2+1)*(cellRadius*2+1));
         for(int cx=cellX-cellRadius;cx<=cellX+cellRadius;cx++)
-            for(int cz=cellZ-cellRadius;cz<=cellZ+cellRadius;cz++)
-                collectCell(random,root,cx,cz,cellSize,maxCandidatesPerCell,result);
+            for(int cz=cellZ-cellRadius;cz<=cellZ+cellRadius;cz++){
+                CellKey key=new CellKey(sequence,depositSalt,cx,cz,cellSize,maxCandidatesPerCell);
+                List<Candidate> candidates=cells.get(key);
+                if(candidates==null){
+                    List<Candidate> generated=new ArrayList<>();
+                    collectCell(random,root,cx,cz,cellSize,maxCandidatesPerCell,generated);
+                    candidates=List.copyOf(generated);
+                    cells.put(key,candidates);
+                }
+                result.addAll(candidates);
+            }
         result.removeIf(c -> Math.hypot(x+.5-c.x(),z+.5-c.z())>horizontalReach);
         return result;
+        }
     }
+
+    private record CellKey(DepositRandomSequences sequence,long depositSalt,int x,int z,int cellSize,int maxCandidates){}
 
     private static void collectCell(PositionalRandomFactory random,long root,int cellX,int cellZ,
                                     int cellSize,int maxCandidates,List<Candidate> output){

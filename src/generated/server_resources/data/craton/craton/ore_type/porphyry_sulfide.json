@@ -1,0 +1,8 @@
+{
+  "variants": [
+    {
+      "hosts": "minecraft:diorite",
+      "result": "craton:porphyry_sulfide_ore"
+    }
+  ]
+}

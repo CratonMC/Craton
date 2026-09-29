@@ -8,11 +8,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "craton:banded_iron_stone_ore"
+          "name": "craton:iron_bearing_gravel"
         }
       ],
       "rolls": 1
     }
   ],
-  "random_sequence": "craton:blocks/banded_iron_stone_ore"
+  "random_sequence": "craton:blocks/iron_bearing_gravel"
 }

@@ -8,11 +8,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "craton:banded_iron_marble_ore"
+          "name": "craton:magmatic_ni_cu_ore"
         }
       ],
       "rolls": 1
     }
   ],
-  "random_sequence": "craton:blocks/banded_iron_marble_ore"
+  "random_sequence": "craton:blocks/magmatic_ni_cu_ore"
 }

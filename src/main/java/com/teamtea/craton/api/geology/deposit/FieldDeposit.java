@@ -37,6 +37,12 @@ public record FieldDeposit(Identifier type, Settings settings) implements Deposi
     @Override public Identifier getType() { return type; }
     @Override public MapCodec<? extends Deposit> codec() { return DepositTypes.DEPOSITS.get(type); }
 
+    @Override public Deposit.Placement placement() {
+        Placement p=settings.placement();
+        return new Deposit.Placement(p.cellSize(),p.maxCandidates(),
+                Math.max(p.reach(),settings.shape().horizontalReach()),p.frequency());
+    }
+
     public record Settings(Placement placement, Shape shape, BlockState rock, List<Holder<OreType>> ores, List<BlockState> alterationRocks) {
         public static final Codec<Settings> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Placement.CODEC.fieldOf("placement").forGetter(Settings::placement),

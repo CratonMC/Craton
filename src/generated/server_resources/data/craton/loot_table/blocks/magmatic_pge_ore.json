@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "craton:magmatic_pge_ore"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "craton:blocks/magmatic_pge_ore"
+}

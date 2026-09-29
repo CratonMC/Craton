@@ -5,9 +5,6 @@ import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.registry.CratonFeatures;
 import com.teamtea.craton.common.registry.CratonTab;
 import com.teamtea.craton.data.DataInit;
-import com.teamtea.craton.common.worldgen.MeteoriteFeature;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 
 import net.neoforged.api.distmarker.Dist;
@@ -34,7 +31,6 @@ public class Craton {
 
     public Craton(IEventBus modEventBus, ModContainer modContainer) {
 
-        modEventBus.addListener(this::FMLCommonSetup);
         modEventBus.addListener(this::FMLCommonSetup);
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::gatherData2);

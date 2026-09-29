@@ -1,6 +1,7 @@
 {
   "biomes": "#c:is_savanna",
   "layers": [
+    "craton:basalt",
     "craton:granite",
     "craton:rhyolite",
     "craton:andesite",

@@ -12,9 +12,12 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.Holder;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Optional;
@@ -42,6 +45,12 @@ public class CBlockModelGenerators {
             addStoneFamily(collection.brick().get());
             addStoneFamily(collection.mossyBrick().get());
         }
+        for (Holder<Block> oreBlock : CratonBlocks.ORE_BLOCKS) {
+            if (oreBlock == CratonBlocks.banded_iron_gneiss_ore) continue;
+            Block block = oreBlock.value();
+            simpleBlockItem(block);
+//            models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
+        }
     }
 
     private void addStoneFamily(BlockFamily family) {
@@ -50,8 +59,8 @@ public class CBlockModelGenerators {
                 .generateFor(family);
         models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
         Block blockPressure = family.get(BlockFamily.Variant.PRESSURE_PLATE);
-        if(blockPressure !=null)
-        models.registerSimpleItemModel(blockPressure, ModelLocationUtils.getModelLocation(blockPressure));
+        if (blockPressure != null)
+            models.registerSimpleItemModel(blockPressure, ModelLocationUtils.getModelLocation(blockPressure));
         // simpleBlockItem(
         //         block,
         //         resource(BuiltInRegistries.BLOCK.getKey(block).getPath()),
@@ -60,6 +69,23 @@ public class CBlockModelGenerators {
         if (family instanceof ExtendedBlockFamily et
                 && et.getVerticalSlab() instanceof VerticalSlabBlock verticalSlabBlock)
             addVerticalSlab(verticalSlabBlock, family.getBaseBlock());
+    }
+
+    private void simpleBlockItem(Block block) {
+        simpleBlockItem(block, ModelLocationUtils.getModelLocation(block),  true);
+    }
+
+    private void simpleBlockItem(Block block, Identifier textureid, boolean item) {
+        simpleBlockItem(block, textureid, ModelTemplates.CUBE_ALL, item);
+    }
+
+    private void simpleBlockItem(Block block, Identifier textureid, ModelTemplate modelTemplate, boolean item) {
+        models.createTrivialBlock(block,
+                (b) -> TexturedModel.createDefault((_) ->
+                        TextureMapping.cube(new Material(textureid))
+                                .put(TextureSlot.PARTICLE, new Material(textureid)), modelTemplate).get(b));
+        if (item && block.asItem() != Items.AIR)
+            models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
     }
 
     private void addVerticalSlab(VerticalSlabBlock verticalSlab, Block baseBlock) {

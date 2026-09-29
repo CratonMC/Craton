@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "craton:quartz_vein_gold_ore"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "craton:blocks/quartz_vein_gold_ore"
+}

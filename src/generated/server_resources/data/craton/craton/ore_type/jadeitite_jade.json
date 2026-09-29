@@ -1,76 +1,12 @@
 {
   "variants": [
     {
-      "hosts": "minecraft:stone",
-      "result": "minecraft:green_terracotta"
+      "hosts": "craton:gneiss",
+      "result": "craton:suspicious_jadeitite"
     },
     {
       "hosts": "minecraft:deepslate",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:granite",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:diorite",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:andesite",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:tuff",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:basalt",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:sandstone",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:red_sandstone",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:sand",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:red_sand",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "minecraft:gravel",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "craton:gabbro",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "craton:gneiss",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "craton:limestone",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "craton:marble",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "craton:rhyolite",
-      "result": "minecraft:green_terracotta"
-    },
-    {
-      "hosts": "craton:pegmatite",
-      "result": "minecraft:green_terracotta"
+      "result": "craton:suspicious_jadeitite"
     }
   ]
 }

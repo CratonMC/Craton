@@ -2,7 +2,9 @@
   "type": "diorite_intrusion",
   "settings": {
     "ores": [
-      "craton:diorite_cu_au"
+      "craton:porphyry_copper",
+      "craton:porphyry_gold",
+      "craton:porphyry_sulfide"
     ],
     "placement": {
       "cell_size": 192,

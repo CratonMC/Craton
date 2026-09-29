@@ -2,7 +2,8 @@
   "type": "granite_intrusion",
   "settings": {
     "ores": [
-      "craton:granite_w_sn"
+      "craton:granite_cassiterite",
+      "craton:granite_wolframite"
     ],
     "placement": {
       "cell_size": 224,

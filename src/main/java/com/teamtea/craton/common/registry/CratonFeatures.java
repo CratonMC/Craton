@@ -3,8 +3,6 @@ package com.teamtea.craton.common.registry;
 import com.mojang.serialization.MapCodec;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.worldgen.MeteoriteFeature;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -16,8 +14,4 @@ public class CratonFeatures {
 
     public static final  DeferredHolder<MapCodec<? extends Feature>, MapCodec<MeteoriteFeature>> meteorite = DEFERRED_REGISTER.register("meteorite", () -> MeteoriteFeature.CODEC);
 
-    static {
-//        Registry.register(BuiltInRegistries.FEATURE_TYPE, rl("meteorite"), MeteoriteFeature.CODEC);
-
-    }
 }

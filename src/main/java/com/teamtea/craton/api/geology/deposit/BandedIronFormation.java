@@ -63,6 +63,15 @@ public record BandedIronFormation(
     }
 
     @Override
+    public Placement placement() {
+        int cellSize=Math.max(64,(int)Math.ceil(Math.max(length,width)));
+        double bodyReach=Math.hypot(length*.5,width*.5)
+                *Math.max(1.25,Math.sqrt(1.24+broadNoise+detailNoise))+36;
+        double sourceReach=Math.hypot(length*.5,width*.5)+90;
+        return new Placement(cellSize,2,Math.max(bodyReach,sourceReach),frequency);
+    }
+
+    @Override
     public MapCodec<? extends Deposit> codec() {
         return CODEC;
     }

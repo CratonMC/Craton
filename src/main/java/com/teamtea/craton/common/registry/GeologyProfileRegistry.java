@@ -150,6 +150,7 @@ public final class GeologyProfileRegistry {
         context.register(SAVANNA, new GeologyProfile(
                 biomeGetter.getOrThrow(Tags.Biomes.IS_SAVANNA),
                 layers(layerGetter,
+                        GeologyLayerRegistry.BASALT,
                         GeologyLayerRegistry.GRANITE,
                         GeologyLayerRegistry.RHYOLITE,
                         GeologyLayerRegistry.ANDESITE,

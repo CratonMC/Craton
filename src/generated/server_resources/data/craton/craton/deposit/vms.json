@@ -4,8 +4,7 @@
     "ores": [
       "craton:vms_chalcopyrite",
       "craton:vms_sphalerite",
-      "craton:vms_galena",
-      "craton:vms_pyrite"
+      "craton:vms_galena"
     ],
     "placement": {
       "cell_size": 192,
