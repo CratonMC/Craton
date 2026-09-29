@@ -19,7 +19,7 @@ public final class GeologyFieldSampler {
     public GeologyFieldSampler(List<Holder<GeologyLayer>> layers,int minY,PositionalRandomFactory random){
         this.layers=layers;
         this.minY=minY;
-        this.boundaryRootSeed=random.fromHashOf(Craton.rl("geology_boundary")).at(new BlockPos(0,0,0)).nextLong();
+        this.boundaryRootSeed=random.fromHashOf(Craton.rl("geology_boundary")).nextLong();
         double total=0;
         for(Holder<GeologyLayer> layer:layers) total+=Math.max(1,layer.value().thickness());
         // Keep a full profile within the nominal -64..64 overworld section without

@@ -2,6 +2,7 @@ package com.teamtea.craton;
 
 
 import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.registry.CratonFeatures;
 import com.teamtea.craton.common.registry.CratonTab;
 import com.teamtea.craton.data.DataInit;
 import com.teamtea.craton.common.worldgen.MeteoriteFeature;
@@ -32,7 +33,6 @@ public class Craton {
     public static final String NETWORK_VERSION = "1.0";
 
     public Craton(IEventBus modEventBus, ModContainer modContainer) {
-        Registry.register(BuiltInRegistries.FEATURE_TYPE, rl("meteorite"), MeteoriteFeature.CODEC);
 
         modEventBus.addListener(this::FMLCommonSetup);
         modEventBus.addListener(this::FMLCommonSetup);
@@ -42,7 +42,7 @@ public class Craton {
         CratonBlocks.BLOCKS.register(modEventBus);
         CratonBlocks.ITEMS.register(modEventBus);
         CratonTab.TABS.register(modEventBus);
-
+        CratonFeatures.DEFERRED_REGISTER.register(modEventBus);
 
         if (FMLLoader.getCurrentOrNull().getDist() == Dist.CLIENT)
             modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

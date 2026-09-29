@@ -1,29 +1,27 @@
 {
   "type": "diorite_intrusion",
   "settings": {
-    "placement": {
-      "cell_size": 192,
-      "max_candidates": 2,
-      "reach": 165.0,
-      "frequency": 0.3
-    },
-    "shape": {
-      "radius_x_min": 52.0,
-      "radius_x_max": 104.0,
-      "radius_z_min": 40.0,
-      "radius_z_max": 82.0,
-      "radius_y_min": 42.0,
-      "radius_y_max": 84.0,
-      "height_min": 38.0,
-      "height_max": 120.0,
-      "broad_noise": 0.21,
-      "detail_noise": 0.07,
-      "satellite_count": 6,
-      "satellite_scale": 1.0
-    },
-    "rock": "minecraft:diorite",
     "ores": [
       "craton:diorite_cu_au"
-    ]
+    ],
+    "placement": {
+      "cell_size": 192,
+      "frequency": 0.3,
+      "max_candidates": 2,
+      "reach": 165.0
+    },
+    "rock": "minecraft:diorite",
+    "shape": {
+      "broad_noise": 0.21,
+      "detail_noise": 0.07,
+      "height_max": 120.0,
+      "height_min": 38.0,
+      "radius_x_max": 104.0,
+      "radius_x_min": 52.0,
+      "radius_y_max": 84.0,
+      "radius_y_min": 42.0,
+      "radius_z_max": 82.0,
+      "radius_z_min": 40.0
+    }
   }
 }

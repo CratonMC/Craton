@@ -28,8 +28,8 @@ public final class DepositRegistry {
                               ResourceKey<OreType>... oreKeys) {
         ctx.register(key(name), new FieldDeposit(type, new FieldDeposit.Settings(placement, shape, rock,
                 Arrays.stream(oreKeys).<Holder<OreType>>map(ores::getOrThrow).toList(),
-                type.equals(DepositTypes.WEATHERING)?List.of(Blocks.RED_TERRACOTTA.defaultBlockState(),
-                        Blocks.ORANGE_TERRACOTTA.defaultBlockState(),Blocks.BROWN_TERRACOTTA.defaultBlockState()):List.of())));
+                type.equals(DepositTypes.WEATHERING)?List.of(Blocks.DYED_TERRACOTTA.red().defaultBlockState(),
+                        Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),Blocks.DYED_TERRACOTTA.brown().defaultBlockState()):List.of())));
     }
     private static FieldDeposit.Placement p(int cell, int count, double reach, double frequency) {
         return new FieldDeposit.Placement(cell, count, reach, frequency);
@@ -50,12 +50,12 @@ public final class DepositRegistry {
         field(ctx,ores,"vms",DepositTypes.VMS,p(192,2,130,.55),s(42,88,26,61,6,14,0,0,.29,.09),Blocks.TUFF.defaultBlockState(),OreTypeRegistry.VMS_CHALCOPYRITE,OreTypeRegistry.VMS_SPHALERITE,OreTypeRegistry.VMS_GALENA,OreTypeRegistry.VMS_PYRITE);
         field(ctx,ores,"skarn",DepositTypes.SKARN,p(160,0,0,1),s(0,0,0,0,12,12,0,0,.46,.15),CratonBlocks.MARBLE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.SKARN_W_SN,OreTypeRegistry.SKARN_PB_ZN_AG,OreTypeRegistry.SKARN_COPPER,OreTypeRegistry.SKARN_GOLD,OreTypeRegistry.SKARN_IRON);
         field(ctx,ores,"hydrothermal_vein",DepositTypes.VEIN,p(192,2,245,.40),s(125,125,2.5,2.5,82,82,45,125,.20,.09),Blocks.QUARTZ_BLOCK.defaultBlockState(),OreTypeRegistry.QUARTZ_VEIN_GOLD,OreTypeRegistry.QUARTZ_VEIN_PYRITE,OreTypeRegistry.HYDROTHERMAL_FLUORITE);
-        field(ctx,ores,"weathering",DepositTypes.WEATHERING,p(160,2,160,.36),s(62,110,62,110,13,13,0,0,.28,.08),Blocks.ORANGE_TERRACOTTA.defaultBlockState(),OreTypeRegistry.BASALT_BAUXITE);
+        field(ctx,ores,"weathering",DepositTypes.WEATHERING,p(160,2,160,.36),s(62,110,62,110,13,13,0,0,.28,.08),Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),OreTypeRegistry.BASALT_BAUXITE);
         field(ctx,ores,"kimberlite",DepositTypes.KIMBERLITE,p(256,1,95,.18),s(6,26,6,26,48,62,48,92,.18,.06),Blocks.BLACKSTONE.defaultBlockState(),OreTypeRegistry.KIMBERLITE_DIAMOND);
-        field(ctx,ores,"jadeitite",DepositTypes.JADEITITE,p(224,1,120,.22),s(48,48,19,19,11,11,18,68,.22,.07),Blocks.GREEN_TERRACOTTA.defaultBlockState(),OreTypeRegistry.JADEITITE_JADE);
+        field(ctx,ores,"jadeitite",DepositTypes.JADEITITE,p(224,1,120,.22),s(48,48,19,19,11,11,18,68,.22,.07),Blocks.DYED_TERRACOTTA.green().defaultBlockState(),OreTypeRegistry.JADEITITE_JADE);
         field(ctx,ores,"placer",DepositTypes.PLACER,p(128,2,95,.48),s(28,64,28,64,4,4,0,0,.25,.08),Blocks.GRAVEL.defaultBlockState(),OreTypeRegistry.PLACER_GOLD,OreTypeRegistry.PLACER_IRON);
-        field(ctx,ores,"stratiform_coal",DepositTypes.COAL,p(192,2,190,.40),s(72,130,32,74,2.3,6.5,0,0,.25,.07),Blocks.BLACK_TERRACOTTA.defaultBlockState(),OreTypeRegistry.LIMESTONE_COAL);
-        field(ctx,ores,"stratiform_copper",DepositTypes.COPPER,p(192,2,190,.38),s(72,130,32,74,2.3,6.5,0,0,.25,.07),Blocks.ORANGE_TERRACOTTA.defaultBlockState(),OreTypeRegistry.SEDIMENTARY_COPPER);
-        field(ctx,ores,"sandstone_uranium",DepositTypes.URANIUM,p(192,2,190,.34),s(80,135,36,74,2.8,5,0,0,.22,.07),Blocks.LIME_TERRACOTTA.defaultBlockState(),OreTypeRegistry.SANDSTONE_URANIUM);
+        field(ctx,ores,"stratiform_coal",DepositTypes.COAL,p(192,2,190,.40),s(72,130,32,74,2.3,6.5,0,0,.25,.07),Blocks.DYED_TERRACOTTA.black().defaultBlockState(),OreTypeRegistry.LIMESTONE_COAL);
+        field(ctx,ores,"stratiform_copper",DepositTypes.COPPER,p(192,2,190,.38),s(72,130,32,74,2.3,6.5,0,0,.25,.07),Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),OreTypeRegistry.SEDIMENTARY_COPPER);
+        field(ctx,ores,"sandstone_uranium",DepositTypes.URANIUM,p(192,2,190,.34),s(80,135,36,74,2.8,5,0,0,.22,.07),Blocks.DYED_TERRACOTTA.lime().defaultBlockState(),OreTypeRegistry.SANDSTONE_URANIUM);
     }
 }

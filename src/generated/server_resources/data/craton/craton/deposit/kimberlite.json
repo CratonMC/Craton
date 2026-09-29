@@ -1,29 +1,27 @@
 {
   "type": "kimberlite",
   "settings": {
-    "placement": {
-      "cell_size": 256,
-      "max_candidates": 1,
-      "reach": 95.0,
-      "frequency": 0.18
-    },
-    "shape": {
-      "radius_x_min": 6.0,
-      "radius_x_max": 26.0,
-      "radius_z_min": 6.0,
-      "radius_z_max": 26.0,
-      "radius_y_min": 48.0,
-      "radius_y_max": 62.0,
-      "height_min": 48.0,
-      "height_max": 92.0,
-      "broad_noise": 0.18,
-      "detail_noise": 0.06,
-      "satellite_count": 6,
-      "satellite_scale": 1.0
-    },
-    "rock": "minecraft:blackstone",
     "ores": [
       "craton:kimberlite_diamond"
-    ]
+    ],
+    "placement": {
+      "cell_size": 256,
+      "frequency": 0.18,
+      "max_candidates": 1,
+      "reach": 95.0
+    },
+    "rock": "minecraft:blackstone",
+    "shape": {
+      "broad_noise": 0.18,
+      "detail_noise": 0.06,
+      "height_max": 92.0,
+      "height_min": 48.0,
+      "radius_x_max": 26.0,
+      "radius_x_min": 6.0,
+      "radius_y_max": 62.0,
+      "radius_y_min": 48.0,
+      "radius_z_max": 26.0,
+      "radius_z_min": 6.0
+    }
   }
 }

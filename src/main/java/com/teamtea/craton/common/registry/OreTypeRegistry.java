@@ -75,41 +75,41 @@ public final class OreTypeRegistry {
         bif.add(new OreType.Variant(deepslateReplaceables,Blocks.DEEPSLATE_IRON_ORE.defaultBlockState()));
         context.register(BIF_IRON,new OreType(List.copyOf(bif)));
 
-        registerPlaceholder(context,LIMESTONE_COAL,Blocks.BLACK_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,SEDIMENTARY_COPPER,Blocks.ORANGE_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,SHALE_PB_ZN,Blocks.GRAY_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,SANDSTONE_URANIUM,Blocks.LIME_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,LIMESTONE_COAL,Blocks.DYED_TERRACOTTA.black().defaultBlockState());
+        registerPlaceholder(context,SEDIMENTARY_COPPER,Blocks.DYED_TERRACOTTA.orange().defaultBlockState());
+        registerPlaceholder(context,SHALE_PB_ZN,Blocks.DYED_TERRACOTTA.gray().defaultBlockState());
+        registerPlaceholder(context,SANDSTONE_URANIUM,Blocks.DYED_TERRACOTTA.lime().defaultBlockState());
 
-        registerPlaceholder(context,GRANITE_W_SN,Blocks.LIGHT_GRAY_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,DIORITE_CU_AU,Blocks.YELLOW_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,GABBRO_NI_CU,Blocks.GREEN_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,GABBRO_PGE,Blocks.PURPLE_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,GRANITE_W_SN,Blocks.DYED_TERRACOTTA.lightGray().defaultBlockState());
+        registerPlaceholder(context,DIORITE_CU_AU,Blocks.DYED_TERRACOTTA.yellow().defaultBlockState());
+        registerPlaceholder(context,GABBRO_NI_CU,Blocks.DYED_TERRACOTTA.green().defaultBlockState());
+        registerPlaceholder(context,GABBRO_PGE,Blocks.DYED_TERRACOTTA.purple().defaultBlockState());
 
-        registerPlaceholder(context,EPITHERMAL_AU_AG,Blocks.PINK_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,EPITHERMAL_AU_AG,Blocks.DYED_TERRACOTTA.pink().defaultBlockState());
 
-        registerPlaceholder(context,VMS_CHALCOPYRITE,Blocks.ORANGE_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,VMS_SPHALERITE,Blocks.BROWN_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,VMS_GALENA,Blocks.LIGHT_GRAY_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,VMS_PYRITE,Blocks.YELLOW_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,VMS_CHALCOPYRITE,Blocks.DYED_TERRACOTTA.orange().defaultBlockState());
+        registerPlaceholder(context,VMS_SPHALERITE,Blocks.DYED_TERRACOTTA.brown().defaultBlockState());
+        registerPlaceholder(context,VMS_GALENA,Blocks.DYED_TERRACOTTA.lightGray().defaultBlockState());
+        registerPlaceholder(context,VMS_PYRITE,Blocks.DYED_TERRACOTTA.yellow().defaultBlockState());
 
-        registerPlaceholder(context,SKARN_IRON,Blocks.RED_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,SKARN_COPPER,Blocks.ORANGE_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,SKARN_W_SN,Blocks.WHITE_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,SKARN_PB_ZN_AG,Blocks.LIGHT_GRAY_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,SKARN_GOLD,Blocks.YELLOW_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,SKARN_IRON,Blocks.DYED_TERRACOTTA.red().defaultBlockState());
+        registerPlaceholder(context,SKARN_COPPER,Blocks.DYED_TERRACOTTA.orange().defaultBlockState());
+        registerPlaceholder(context,SKARN_W_SN,Blocks.DYED_TERRACOTTA.white().defaultBlockState());
+        registerPlaceholder(context,SKARN_PB_ZN_AG,Blocks.DYED_TERRACOTTA.lightGray().defaultBlockState());
+        registerPlaceholder(context,SKARN_GOLD,Blocks.DYED_TERRACOTTA.yellow().defaultBlockState());
 
-        registerPlaceholder(context,QUARTZ_VEIN_GOLD,Blocks.YELLOW_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,QUARTZ_VEIN_PYRITE,Blocks.BROWN_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,HYDROTHERMAL_FLUORITE,Blocks.CYAN_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,QUARTZ_VEIN_GOLD,Blocks.DYED_TERRACOTTA.yellow().defaultBlockState());
+        registerPlaceholder(context,QUARTZ_VEIN_PYRITE,Blocks.DYED_TERRACOTTA.brown().defaultBlockState());
+        registerPlaceholder(context,HYDROTHERMAL_FLUORITE,Blocks.DYED_TERRACOTTA.cyan().defaultBlockState());
 
-        registerPlaceholder(context,BASALT_BAUXITE,Blocks.ORANGE_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,BASALT_BAUXITE,Blocks.DYED_TERRACOTTA.orange().defaultBlockState());
 
-        registerPlaceholder(context,KIMBERLITE_DIAMOND,Blocks.LIGHT_BLUE_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,METEORITIC_IRON,Blocks.GRAY_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,JADEITITE_JADE,Blocks.GREEN_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,KIMBERLITE_DIAMOND,Blocks.DYED_TERRACOTTA.lightBlue().defaultBlockState());
+        registerPlaceholder(context,METEORITIC_IRON,Blocks.DYED_TERRACOTTA.gray().defaultBlockState());
+        registerPlaceholder(context,JADEITITE_JADE,Blocks.DYED_TERRACOTTA.green().defaultBlockState());
 
-        registerPlaceholder(context,PLACER_GOLD,Blocks.YELLOW_TERRACOTTA.defaultBlockState());
-        registerPlaceholder(context,PLACER_IRON,Blocks.RED_TERRACOTTA.defaultBlockState());
+        registerPlaceholder(context,PLACER_GOLD,Blocks.DYED_TERRACOTTA.yellow().defaultBlockState());
+        registerPlaceholder(context,PLACER_IRON,Blocks.DYED_TERRACOTTA.red().defaultBlockState());
     }
 
     private static void registerPlaceholder(BootstrapContext<OreType> context,ResourceKey<OreType> key,BlockState result){

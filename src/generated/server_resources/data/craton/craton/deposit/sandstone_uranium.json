@@ -1,29 +1,27 @@
 {
   "type": "sandstone_uranium",
   "settings": {
-    "placement": {
-      "cell_size": 192,
-      "max_candidates": 2,
-      "reach": 190.0,
-      "frequency": 0.34
-    },
-    "shape": {
-      "radius_x_min": 80.0,
-      "radius_x_max": 135.0,
-      "radius_z_min": 36.0,
-      "radius_z_max": 74.0,
-      "radius_y_min": 2.8,
-      "radius_y_max": 5.0,
-      "height_min": 0.0,
-      "height_max": 0.0,
-      "broad_noise": 0.22,
-      "detail_noise": 0.07,
-      "satellite_count": 6,
-      "satellite_scale": 1.0
-    },
-    "rock": "minecraft:lime_terracotta",
     "ores": [
       "craton:sandstone_uranium"
-    ]
+    ],
+    "placement": {
+      "cell_size": 192,
+      "frequency": 0.34,
+      "max_candidates": 2,
+      "reach": 190.0
+    },
+    "rock": "minecraft:lime_terracotta",
+    "shape": {
+      "broad_noise": 0.22,
+      "detail_noise": 0.07,
+      "height_max": 0.0,
+      "height_min": 0.0,
+      "radius_x_max": 135.0,
+      "radius_x_min": 80.0,
+      "radius_y_max": 5.0,
+      "radius_y_min": 2.8,
+      "radius_z_max": 74.0,
+      "radius_z_min": 36.0
+    }
   }
 }

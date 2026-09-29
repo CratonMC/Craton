@@ -1,30 +1,28 @@
 {
   "type": "placer",
   "settings": {
-    "placement": {
-      "cell_size": 128,
-      "max_candidates": 2,
-      "reach": 95.0,
-      "frequency": 0.48
-    },
-    "shape": {
-      "radius_x_min": 28.0,
-      "radius_x_max": 64.0,
-      "radius_z_min": 28.0,
-      "radius_z_max": 64.0,
-      "radius_y_min": 4.0,
-      "radius_y_max": 4.0,
-      "height_min": 0.0,
-      "height_max": 0.0,
-      "broad_noise": 0.25,
-      "detail_noise": 0.08,
-      "satellite_count": 6,
-      "satellite_scale": 1.0
-    },
-    "rock": "minecraft:gravel",
     "ores": [
       "craton:placer_gold",
       "craton:placer_iron"
-    ]
+    ],
+    "placement": {
+      "cell_size": 128,
+      "frequency": 0.48,
+      "max_candidates": 2,
+      "reach": 95.0
+    },
+    "rock": "minecraft:gravel",
+    "shape": {
+      "broad_noise": 0.25,
+      "detail_noise": 0.08,
+      "height_max": 0.0,
+      "height_min": 0.0,
+      "radius_x_max": 64.0,
+      "radius_x_min": 28.0,
+      "radius_y_max": 4.0,
+      "radius_y_min": 4.0,
+      "radius_z_max": 64.0,
+      "radius_z_min": 28.0
+    }
   }
 }
