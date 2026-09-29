@@ -16,6 +16,7 @@ public final class GeologyLayerRegistry {
     public static final ResourceKey<GeologyLayer> TUFF = createKey("tuff");
     public static final ResourceKey<GeologyLayer> BASALT = createKey("basalt");
     public static final ResourceKey<GeologyLayer> GRAVEL = createKey("gravel");
+    public static final ResourceKey<GeologyLayer> SANDSTONE = createKey("sandstone");
 
     public static final ResourceKey<GeologyLayer> GABBRO = createKey("gabbro");
     public static final ResourceKey<GeologyLayer> GNEISS = createKey("gneiss");
@@ -37,6 +38,7 @@ public final class GeologyLayerRegistry {
         context.register(TUFF, layer(Blocks.TUFF, 20.0, 16.0, 0.011, 0.008, 55));
         context.register(BASALT, layer(Blocks.BASALT, 30.0, 9.0, 0.006, 0.007, 66));
         context.register(GRAVEL, layer(Blocks.GRAVEL, 5, 4, 0.006, 0.007, 18));
+        context.register(SANDSTONE, layer(Blocks.SANDSTONE, 24.0, 7.0, 0.008, 0.011, 89));
 
         context.register(GABBRO, layer(CratonBlocks.GABBRO.getOrigin().getBaseBlock(), 30.0, 8.0, 0.006, 0.010, 101));
         context.register(GNEISS, layer(CratonBlocks.GNEISS.getOrigin().getBaseBlock(), 24.0, 18.0, 0.008, 0.012, 202));

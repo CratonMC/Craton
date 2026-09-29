@@ -9,41 +9,75 @@ import java.util.List;
 
 /**
  * Deterministic spatial index for large deposits.
- * Cells are only lookup buckets: deposit geometry is free to cross cell boundaries.
+ * Cells are lookup buckets only; no deposit is aligned to or clipped by a cell boundary.
  */
 public final class DepositCandidateSampler {
     private static final long PLACEMENT_SALT=0x243F6A8885A308D3L;
     private static final long SHAPE_SALT=0x13198A2E03707344L;
+    private static final long GRADE_SALT=0xA4093822299F31D0L;
+    private static final long ORE_SALT=0x082EFA98EC4E6C89L;
+    private static final long VERTICAL_SALT=0x452821E638D01377L;
+    private static final long ROTATION_SALT=0xBE5466CF34E90C6CL;
+    private static final long ALTERATION_SALT=0xC0AC29B7C97C50DDL;
+    private static final long OCCUPANCY_SALT=0x3F84D5B5B5470917L;
 
     private DepositCandidateSampler(){}
 
-    public record Candidate(int x,int z,long shapeSeed){}
+    public record Candidate(
+            int x,
+            int z,
+            long shapeSeed,
+            long gradeSeed,
+            long oreSeed,
+            long verticalSeed,
+            long rotationSeed,
+            long alterationSeed,
+            long occupancySeed
+    ){}
 
-    public static List<Candidate> query(PositionalRandomFactory random,long depositSalt,int x,int z,
+    public static List<Candidate> query(PositionalRandomFactory rootRandom,DepositRandomSequences sequence,long depositSalt,int x,int z,
                                         int cellSize,double horizontalReach,int maxCandidatesPerCell){
+        if(cellSize<=0||!Double.isFinite(horizontalReach)||horizontalReach<0||maxCandidatesPerCell<0)
+            throw new IllegalArgumentException("Invalid deposit candidate query");
+        if(maxCandidatesPerCell==0) return List.of();
+        PositionalRandomFactory random=sequence.factory(rootRandom);
+        long root=mix64(depositSalt);
         int cellX=Math.floorDiv(x,cellSize),cellZ=Math.floorDiv(z,cellSize);
         int cellRadius=Math.max(1,(int)Math.floor(horizontalReach/cellSize)+1);
         List<Candidate> result=new ArrayList<>((cellRadius*2+1)*(cellRadius*2+1));
         for(int cx=cellX-cellRadius;cx<=cellX+cellRadius;cx++)
             for(int cz=cellZ-cellRadius;cz<=cellZ+cellRadius;cz++)
-                collectCell(random,depositSalt,cx,cz,cellSize,maxCandidatesPerCell,result);
+                collectCell(random,root,cx,cz,cellSize,maxCandidatesPerCell,result);
+        result.removeIf(c -> Math.hypot(x+.5-c.x(),z+.5-c.z())>horizontalReach);
         return result;
     }
 
-    private static void collectCell(PositionalRandomFactory random,long depositSalt,int cellX,int cellZ,
+    private static void collectCell(PositionalRandomFactory random,long root,int cellX,int cellZ,
                                     int cellSize,int maxCandidates,List<Candidate> output){
-        RandomSource placement=random.at(saltedPos(cellX,cellZ,depositSalt^PLACEMENT_SALT));
+        RandomSource placement=random.at(saltedPos(cellX,cellZ,root^PLACEMENT_SALT));
         int count=placement.nextInt(maxCandidates+1);
         int baseX=cellX*cellSize,baseZ=cellZ*cellSize;
         for(int i=0;i<count;i++){
             int x=baseX+placement.nextInt(cellSize);
             int z=baseZ+placement.nextInt(cellSize);
-            RandomSource shape=random.at(saltedPos(cellX,cellZ,depositSalt^SHAPE_SALT^mix64(i+1L)));
-            output.add(new Candidate(x,z,shape.nextLong()));
+            long instance=mix64(root^mix64(i+1L)^mix64((((long)cellX)<<32)^(cellZ&0xffffffffL)));
+            output.add(new Candidate(
+                    x,z,
+                    seed(random,cellX,cellZ,instance^SHAPE_SALT),
+                    seed(random,cellX,cellZ,instance^GRADE_SALT),
+                    seed(random,cellX,cellZ,instance^ORE_SALT),
+                    seed(random,cellX,cellZ,instance^VERTICAL_SALT),
+                    seed(random,cellX,cellZ,instance^ROTATION_SALT),
+                    seed(random,cellX,cellZ,instance^ALTERATION_SALT),
+                    seed(random,cellX,cellZ,instance^OCCUPANCY_SALT)
+            ));
         }
     }
 
-    /** Stable salt for registry identifiers or any other stable deposit id. */
+    private static long seed(PositionalRandomFactory random,int cellX,int cellZ,long salt){
+        return random.at(saltedPos(cellX,cellZ,salt)).nextLong();
+    }
+
     public static long salt(String id){
         long h=0xcbf29ce484222325L;
         for(int i=0;i<id.length();i++){
@@ -51,6 +85,10 @@ public final class DepositCandidateSampler {
             h*=0x100000001b3L;
         }
         return mix64(h);
+    }
+
+    public static long mix(long value){
+        return mix64(value);
     }
 
     private static BlockPos saltedPos(int cellX,int cellZ,long salt){

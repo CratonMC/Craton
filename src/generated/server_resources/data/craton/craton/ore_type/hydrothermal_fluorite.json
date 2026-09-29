@@ -1,0 +1,76 @@
+{
+  "variants": [
+    {
+      "hosts": "minecraft:stone",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:deepslate",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:granite",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:diorite",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:andesite",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:tuff",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:basalt",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:sandstone",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:red_sandstone",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:sand",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:red_sand",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "minecraft:gravel",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "craton:gabbro",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "craton:gneiss",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "craton:limestone",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "craton:marble",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "craton:rhyolite",
+      "result": "minecraft:cyan_terracotta"
+    },
+    {
+      "hosts": "craton:pegmatite",
+      "result": "minecraft:cyan_terracotta"
+    }
+  ]
+}

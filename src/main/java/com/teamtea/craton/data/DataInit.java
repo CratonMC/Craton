@@ -49,6 +49,8 @@ public class DataInit {
                         .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
                         .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)
                         .add(CratonRegistries.DEPOSIT, DepositRegistry::bootstrap)
+                        .add(Registries.FEATURE, MeteoriteFeatures::bootstrap)
+                        .add(Registries.PLACED_FEATURE, MeteoriteFeatures::bootstrapPlaced)
                         .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
         );
     }

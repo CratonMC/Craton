@@ -1,0 +1,29 @@
+{
+  "type": "granite_intrusion",
+  "settings": {
+    "placement": {
+      "cell_size": 224,
+      "max_candidates": 2,
+      "reach": 210.0,
+      "frequency": 0.35
+    },
+    "shape": {
+      "radius_x_min": 75.0,
+      "radius_x_max": 140.0,
+      "radius_z_min": 58.0,
+      "radius_z_max": 110.0,
+      "radius_y_min": 38.0,
+      "radius_y_max": 72.0,
+      "height_min": 35.0,
+      "height_max": 112.0,
+      "broad_noise": 0.18,
+      "detail_noise": 0.06,
+      "satellite_count": 6,
+      "satellite_scale": 1.0
+    },
+    "rock": "minecraft:granite",
+    "ores": [
+      "craton:granite_w_sn"
+    ]
+  }
+}

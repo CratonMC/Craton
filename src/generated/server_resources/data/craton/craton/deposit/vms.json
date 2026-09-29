@@ -1,0 +1,32 @@
+{
+  "type": "vms",
+  "settings": {
+    "placement": {
+      "cell_size": 192,
+      "max_candidates": 2,
+      "reach": 130.0,
+      "frequency": 0.55
+    },
+    "shape": {
+      "radius_x_min": 42.0,
+      "radius_x_max": 88.0,
+      "radius_z_min": 26.0,
+      "radius_z_max": 61.0,
+      "radius_y_min": 6.0,
+      "radius_y_max": 14.0,
+      "height_min": 0.0,
+      "height_max": 0.0,
+      "broad_noise": 0.29,
+      "detail_noise": 0.09,
+      "satellite_count": 6,
+      "satellite_scale": 1.0
+    },
+    "rock": "minecraft:tuff",
+    "ores": [
+      "craton:vms_chalcopyrite",
+      "craton:vms_sphalerite",
+      "craton:vms_galena",
+      "craton:vms_pyrite"
+    ]
+  }
+}

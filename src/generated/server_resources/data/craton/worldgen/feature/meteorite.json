@@ -1,0 +1,8 @@
+{
+  "type": "craton:meteorite",
+  "ore": "craton:meteoritic_iron",
+  "rock": "minecraft:basalt",
+  "min_radius": 3,
+  "max_radius": 6,
+  "ore_chance": 0.13
+}

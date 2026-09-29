@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#c:is_overworld",
+  "features": "craton:meteorite",
+  "step": "surface_structures"
+}

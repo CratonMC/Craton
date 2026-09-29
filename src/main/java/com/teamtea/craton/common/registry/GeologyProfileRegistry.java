@@ -130,7 +130,7 @@ public final class GeologyProfileRegistry {
                 layers(layerGetter,
                         GeologyLayerRegistry.LIMESTONE,
                         GeologyLayerRegistry.GRANITE,
-                        GeologyLayerRegistry.STONE,
+                        GeologyLayerRegistry.SANDSTONE,
                         GeologyLayerRegistry.GABBRO,
                         GeologyLayerRegistry.GNEISS,
                         GeologyLayerRegistry.DEEPSLATE
@@ -155,8 +155,6 @@ public final class GeologyProfileRegistry {
                         GeologyLayerRegistry.BASALT,
                         GeologyLayerRegistry.TUFF,
                         GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.STONE,
-                        GeologyLayerRegistry.ANDESITE,
                         GeologyLayerRegistry.DEEPSLATE
                 )
         ));

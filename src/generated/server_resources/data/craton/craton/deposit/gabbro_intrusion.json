@@ -1,0 +1,30 @@
+{
+  "type": "gabbro_intrusion",
+  "settings": {
+    "placement": {
+      "cell_size": 224,
+      "max_candidates": 2,
+      "reach": 220.0,
+      "frequency": 0.22
+    },
+    "shape": {
+      "radius_x_min": 82.0,
+      "radius_x_max": 160.0,
+      "radius_z_min": 55.0,
+      "radius_z_max": 115.0,
+      "radius_y_min": 17.0,
+      "radius_y_max": 34.0,
+      "height_min": 28.0,
+      "height_max": 96.0,
+      "broad_noise": 0.17,
+      "detail_noise": 0.06,
+      "satellite_count": 6,
+      "satellite_scale": 1.0
+    },
+    "rock": "craton:gabbro",
+    "ores": [
+      "craton:gabbro_ni_cu",
+      "craton:gabbro_pge"
+    ]
+  }
+}

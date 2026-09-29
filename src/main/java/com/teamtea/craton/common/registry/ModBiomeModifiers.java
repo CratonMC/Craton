@@ -21,6 +21,7 @@ import java.util.Set;
 public class ModBiomeModifiers {
 
     public static final ResourceKey<BiomeModifier> REMOVE_STONE = createKey("remove_stone");
+    public static final ResourceKey<BiomeModifier> ADD_METEORITE = createKey("add_meteorite");
 
     private static ResourceKey<BiomeModifier> createKey(String name) {
         return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, Craton.rl(name));
@@ -29,6 +30,10 @@ public class ModBiomeModifiers {
     public static void bootstrap(BootstrapContext<BiomeModifier> context) {
         HolderGetter<Biome> holderGetter = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureHolderGetter = context.lookup(Registries.PLACED_FEATURE);
+        context.register(ADD_METEORITE, new BiomeModifiers.AddFeaturesBiomeModifier(
+                holderGetter.getOrThrow(Tags.Biomes.IS_OVERWORLD),
+                HolderSet.direct(placedFeatureHolderGetter.getOrThrow(MeteoriteFeatures.PLACED_METEORITE)),
+                GenerationStep.Decoration.SURFACE_STRUCTURES));
         context.register(REMOVE_STONE, new BiomeModifiers.RemoveFeaturesBiomeModifier(
                 holderGetter.getOrThrow(Tags.Biomes.IS_OVERWORLD),
                 HolderSet.direct(

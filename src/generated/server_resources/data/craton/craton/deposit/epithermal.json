@@ -1,0 +1,29 @@
+{
+  "type": "epithermal",
+  "settings": {
+    "placement": {
+      "cell_size": 160,
+      "max_candidates": 2,
+      "reach": 205.0,
+      "frequency": 0.42
+    },
+    "shape": {
+      "radius_x_min": 88.0,
+      "radius_x_max": 88.0,
+      "radius_z_min": 3.6,
+      "radius_z_max": 3.6,
+      "radius_y_min": 55.0,
+      "radius_y_max": 55.0,
+      "height_min": 45.0,
+      "height_max": 125.0,
+      "broad_noise": 0.2,
+      "detail_noise": 0.09,
+      "satellite_count": 6,
+      "satellite_scale": 1.0
+    },
+    "rock": "minecraft:quartz_block",
+    "ores": [
+      "craton:epithermal_au_ag"
+    ]
+  }
+}

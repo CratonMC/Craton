@@ -12,6 +12,11 @@ public class DepositTypes {
             new HashMap<>();
 
     public static final Identifier BIF = Craton.rl("bif");
+    public static final Identifier GRANITE = Craton.rl("granite_intrusion"), DIORITE = Craton.rl("diorite_intrusion"),
+            GABBRO = Craton.rl("gabbro_intrusion"), EPITHERMAL = Craton.rl("epithermal"), VMS = Craton.rl("vms"),
+            SKARN = Craton.rl("skarn"), VEIN = Craton.rl("hydrothermal_vein"), WEATHERING = Craton.rl("weathering"),
+            KIMBERLITE = Craton.rl("kimberlite"), JADEITITE = Craton.rl("jadeitite"), PLACER = Craton.rl("placer"),
+            COAL = Craton.rl("stratiform_coal"), COPPER = Craton.rl("stratiform_copper"), URANIUM = Craton.rl("sandstone_uranium");
 
     public static void register(
             Identifier id,
@@ -22,5 +27,8 @@ public class DepositTypes {
 
     static {
         register(BIF, BandedIronFormation.CODEC);
+        for (Identifier id : new Identifier[]{GRANITE, DIORITE, GABBRO, EPITHERMAL, VMS, SKARN, VEIN,
+                WEATHERING, KIMBERLITE, JADEITITE, PLACER, COAL, COPPER, URANIUM})
+            register(id, FieldDeposit.codecFor(id));
     }
 }
