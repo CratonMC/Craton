@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"end": "craton:block/banded_iron_stone_ore_top",
+		"side": "craton:block/banded_iron_stone_ore_1_side"
+	}
+}
