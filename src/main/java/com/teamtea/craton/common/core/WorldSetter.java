@@ -22,644 +22,218 @@ import java.util.List;
 import java.util.Optional;
 
 public final class WorldSetter {
+    private static final int DEBUG_NONE=0, DEBUG_DEPOSIT=1, DEBUG_SECTION=2;
+    private static final int DEBUG_MODE=DEBUG_DEPOSIT, DEBUG_CHUNK_RADIUS=8, DEBUG_SECTION_WIDTH=2;
+    private static final int CX=256, CZ=256, DEBUG_CHUNK_X=Math.floorDiv(CX,16), DEBUG_CHUNK_Z=Math.floorDiv(CZ,16);
+    private static final double CY=8, RX=105, RY=105, RZ=90;
 
-    public static void rebuildCloumnExtension(
-            BlockColumn column,
-            BlockPos.MutableBlockPos mutablePos,
-            int x,
-            int z,
-            int startingHeight,
-            ChunkAccess chunk,
-            Holder<Biome> surfaceBiome,
-            PositionalRandomFactory noiseRandom
-    ) {
-        Optional<Holder<GeologyProfile>> profileOptional =
-                CratonContents.getGeologyProfile(surfaceBiome);
+    public static void rebuildCloumnExtension(BlockColumn column, BlockPos.MutableBlockPos pos, int x, int z,
+                                              int startingHeight, ChunkAccess chunk, Holder<Biome> biome,
+                                              PositionalRandomFactory random) {
+        Optional<Holder<GeologyProfile>> optional=CratonContents.getGeologyProfile(biome);
+        if(optional.isEmpty()) return;
+        List<Holder<GeologyLayer>> layers=optional.get().value().layers();
+        if(layers.isEmpty()) return;
 
-        if (profileOptional.isEmpty()) {
+        LevelHeightAccessor height=chunk.getHeightAccessorForGeneration();
+        int minY=height.getMinY(), chunkX=Math.floorDiv(x,16), chunkZ=Math.floorDiv(z,16);
+        boolean debug=false;
+
+        startingHeight=chunk.getHeight(debug?Heightmap.Types.WORLD_SURFACE_WG:Heightmap.Types.OCEAN_FLOOR_WG,x,z);
+        int topY=debug?startingHeight:startingHeight-getSurfaceCut(column.getBlock(startingHeight),random,pos.setY(startingHeight));
+        if(topY<=minY) return;
+
+        if(debug){
+            for(int y=minY;y<=topY;y++){
+                BlockState state=applyHydrothermalDeposit(Blocks.AIR.defaultBlockState(),x,y,z);
+                column.setBlock(y,state);
+            }
             return;
         }
 
-        GeologyProfile profile = profileOptional.get().value();
-        List<Holder<GeologyLayer>> layers = profile.layers();
-
-        if (layers.isEmpty()) {
-            return;
+        List<Holder<Deposit>> deposits=CratonContents.getDeposits();
+        for(int y=minY;y<=topY;y++){
+            BlockState current=chunk.getBlockState(pos.setY(y));
+            if(!shouldReplace(current)) continue;
+            BlockState state=getGeologyState(layers,y,minY,x,z);
+            state=applyHydrothermalDeposit(state,x,y,z);
+            for(Holder<Deposit> holder:deposits)
+                if(holder.value() instanceof BandedIronFormation bif)
+                    state=applyBandedIronFormation(bif,layers,state,y,minY,x,z,random);
+            column.setBlock(y,state);
         }
-
-        LevelHeightAccessor heightAccessor =
-                chunk.getHeightAccessorForGeneration();
-
-        int minY = heightAccessor.getMinY();
-
-        startingHeight = chunk.getHeight(
-                Heightmap.Types.OCEAN_FLOOR_WG,
-                x,
-                z
-        );
-
-        BlockState surfaceState =
-                column.getBlock(startingHeight);
-
-        int cut = getSurfaceCut(
-                surfaceState,
-                noiseRandom,
-                mutablePos.setY(startingHeight)
-        );
-
-        int topY = startingHeight - cut;
-
-        if (topY <= minY) {
-            return;
-        }
-
-        /*
-         * Registry contents are obtained once for the whole column,
-         * not once for every Y.
-         */
-        List<Holder<Deposit>> deposits =
-                CratonContents.getDeposits();
-
-        for (int y = minY; y <= topY; y++) {
-            BlockState current =
-                    chunk.getBlockState(
-                            mutablePos.setY(y)
-                    );
-
-            if (!shouldReplace(current)) {
-                continue;
-            }
-
-            /*
-             * Resolve the host geology first.
-             */
-            BlockState state = getGeologyState(
-                    layers,
-                    y,
-                    minY,
-                    x,
-                    z
-            );
-
-            /*
-             * Deposits overprint the host geology.
-             */
-            for (Holder<Deposit> depositHolder : deposits) {
-                Deposit deposit = depositHolder.value();
-
-                if (deposit instanceof BandedIronFormation bif) {
-                    state = applyBandedIronFormation(
-                            bif,
-                            layers,
-                            state,
-                            y,
-                            minY,
-                            x,
-                            z,
-                            noiseRandom
-                    );
-                }
-            }
-
-            column.setBlock(y, state);
-        }
-    }
-
-    private static int getSurfaceCut(
-            BlockState state,
-            PositionalRandomFactory noiseRandom,
-            BlockPos.MutableBlockPos mutableBlockPos
-    ) {
-        if (state.is(BlockTags.DIRT)) {
-            return noiseRandom
-                    .at(mutableBlockPos)
-                    .nextInt(1, 2);
-        }
-
-        if (state.is(BlockTags.SAND)) {
-            return noiseRandom
-                    .at(mutableBlockPos)
-                    .nextInt(3, 5);
-        }
-
-        if (state.is(Blocks.GRASS_BLOCK)) {
-            return noiseRandom
-                    .at(mutableBlockPos)
-                    .nextInt(2, 3);
-        }
-
-        return noiseRandom
-                .at(mutableBlockPos)
-                .nextInt(0, 1);
-    }
-
-    private static boolean shouldReplace(BlockState state) {
-        if (state.is(BlockTags.BASE_STONE_OVERWORLD)) {
-            return true;
-        }
-
-        return state.is(BlockTags.DIRT)
-                || state.is(Blocks.GRASS_BLOCK)
-                || state.is(BlockTags.SAND);
-    }
-
-    private static BlockState getGeologyState(
-            List<Holder<GeologyLayer>> layers,
-            int worldY,
-            int minY,
-            int x,
-            int z
-    ) {
-        if (layers.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Geology profile has no layers"
-            );
-        }
-
-        double depthFromBottom =
-                worldY
-                        - minY
-                        + getRegionalWarp(x, z);
-
-        double boundary = 0.0;
-
-        for (int i = layers.size() - 1; i >= 0; i--) {
-            GeologyLayer layer =
-                    layers.get(i).value();
-
-            double thickness =
-                    Math.max(
-                            1.0,
-                            layer.thickness()
-                    );
-
-            double offset =
-                    getLayerBoundaryOffset(
-                            layer,
-                            x,
-                            z
-                    );
-
-            boundary += thickness;
-
-            double effectiveBoundary =
-                    Math.max(
-                            1.0,
-                            boundary + offset
-                    );
-
-            if (depthFromBottom < effectiveBoundary) {
-                return layer.blockState();
-            }
-        }
-
-        return layers.getFirst()
-                .value()
-                .blockState();
-    }
-
-    private static BlockState applyBandedIronFormation(
-            BandedIronFormation bif,
-            List<Holder<GeologyLayer>> layers,
-            BlockState hostState,
-            int worldY,
-            int minY,
-            int x,
-            int z,
-            PositionalRandomFactory noiseRandom
-    ) {
-        if (layers.isEmpty()) {
-            return hostState;
-        }
-
-        /*
-         * Temporary stratigraphic selection:
-         *
-         * We currently do not have a field in BIF describing which
-         * stratigraphic boundary it belongs to.
-         *
-         * Therefore we test every internal layer boundary instead of
-         * hard-coding "layers.size() - 3".
-         */
-        for (int layerIndex = 0;
-             layerIndex < layers.size();
-             layerIndex++) {
-
-            BlockState result =
-                    applyBandedIronFormationAtLayer(
-                            bif,
-                            layers,
-                            layerIndex,
-                            hostState,
-                            worldY,
-                            minY,
-                            x,
-                            z,
-                            noiseRandom
-                    );
-
-            if (result != hostState) {
-                return result;
-            }
-        }
-
-        return hostState;
-    }
-
-    private static BlockState applyBandedIronFormationAtLayer(
-            BandedIronFormation bif,
-            List<Holder<GeologyLayer>> layers,
-            int layerIndex,
-            BlockState hostState,
-            int worldY,
-            int minY,
-            int x,
-            int z,
-            PositionalRandomFactory noiseRandom
-    ) {
-        /*
-         * Prototype placement scale.
-         *
-         * No global fixed spacing is used here. The scale is derived from
-         * the actual deposit definition so larger BIF definitions naturally
-         * use larger placement regions.
-         *
-         * This is still placement prototype code and can later be replaced
-         * by proper data-driven placement parameters.
-         */
-        int placementSize =
-                Math.max(
-                        16,
-                        (int) Math.ceil(bif.length())
-                );
-
-        int regionX =
-                Math.floorDiv(
-                        x,
-                        placementSize
-                );
-
-        int regionZ =
-                Math.floorDiv(
-                        z,
-                        placementSize
-                );
-
-        /*
-         * A BIF can extend out of the region containing its anchor.
-         * Check the surrounding candidate regions.
-         */
-        for (int rx = regionX - 1;
-             rx <= regionX + 1;
-             rx++) {
-
-            for (int rz = regionZ - 1;
-                 rz <= regionZ + 1;
-                 rz++) {
-
-                BlockPos anchor =
-                        getDepositAnchor(
-                                bif,
-                                layerIndex,
-                                rx,
-                                rz,
-                                placementSize,
-                                noiseRandom
-                        );
-
-                if (!isInsideHorizontalFootprint(
-                        bif,
-                        layers,
-                        layerIndex,
-                        minY,
-                        x,
-                        z,
-                        anchor.getX(),
-                        anchor.getZ()
-                )) {
-                    continue;
-                }
-
-                double boundaryY =
-                        getLayerBoundaryY(
-                                layers,
-                                layerIndex,
-                                minY,
-                                x,
-                                z
-                        );
-
-                double distance =
-                        worldY + 0.5
-                                - boundaryY;
-
-                if (Math.abs(distance)
-                        > bif.thickness() * 0.5) {
-                    continue;
-                }
-
-                /*
-                 * The BIF does not know or care which concrete block
-                 * represents iron in this host rock.
-                 *
-                 * OreType resolves:
-                 *
-                 * host rock -> corresponding ore block
-                 */
-                return bif.ore()
-                        .value()
-                        .getOreState(hostState);
-            }
-        }
-
-        return hostState;
-    }
-
-    private static BlockPos getDepositAnchor(
-            BandedIronFormation bif,
-            int layerIndex,
-            int regionX,
-            int regionZ,
-            int placementSize,
-            PositionalRandomFactory noiseRandom
-    ) {
-        int baseX =
-                regionX * placementSize;
-
-        int baseZ =
-                regionZ * placementSize;
-
-        /*
-         * Include the layer index in the positional seed so different
-         * stratigraphic boundaries do not receive exactly the same anchors.
-         *
-         * bandScale/enrichmentScale are deliberately NOT used for placement.
-         */
-        BlockPos seedPos =
-                new BlockPos(
-                        baseX,
-                        layerIndex,
-                        baseZ
-                );
-
-        RandomSource random =
-                noiseRandom.at(seedPos);
-
-        int anchorX =
-                baseX
-                        + random.nextInt(
-                        placementSize
-                );
-
-        int anchorZ =
-                baseZ
-                        + random.nextInt(
-                        placementSize
-                );
-
-        return new BlockPos(
-                anchorX,
-                0,
-                anchorZ
-        );
-    }
-
-    private static boolean isInsideHorizontalFootprint(
-            BandedIronFormation bif,
-            List<Holder<GeologyLayer>> layers,
-            int layerIndex,
-            int minY,
-            int x,
-            int z,
-            int anchorX,
-            int anchorZ
-    ) {
-        double[] strike =
-                getLayerStrike(
-                        layers,
-                        layerIndex,
-                        minY,
-                        anchorX,
-                        anchorZ
-                );
-
-        double strikeX = strike[0];
-        double strikeZ = strike[1];
-
-        double dx =
-                x + 0.5
-                        - anchorX;
-
-        double dz =
-                z + 0.5
-                        - anchorZ;
-
-        double along =
-                dx * strikeX
-                        + dz * strikeZ;
-
-        if (Math.abs(along)
-                > bif.length() * 0.5) {
-            return false;
-        }
-
-        double across =
-                -dx * strikeZ
-                        + dz * strikeX;
-
-        return Math.abs(across)
-                <= bif.width() * 0.5;
     }
 
     /*
-     * Returns the world-space Y coordinate of the selected
-     * stratigraphic boundary.
-     *
-     * getGeologyState uses:
-     *
-     * worldY - minY + regionalWarp
-     *
-     * and compares it against:
-     *
-     * cumulativeThickness + layerOffset
-     *
-     * therefore:
-     *
-     * boundaryY =
-     *     minY
-     *     + cumulativeThickness
-     *     + layerOffset
-     *     - regionalWarp
+     * Intrusion system in normalized deposit space.
+     * Deep chamber -> cupola -> vertical stock -> several directional apophyses.
+     * Contact mineralization is derived from the boundary of that same body.
      */
-    private static double getLayerBoundaryY(
-            List<Holder<GeologyLayer>> layers,
-            int layerIndex,
-            int minY,
-            int x,
-            int z
-    ) {
-        double boundary = 0.0;
+    private static BlockState applyHydrothermalDeposit(BlockState host,int x,int y,int z){
+        double X=(x+.5-CX)/RX, Y=(y+.5-CY)/RY, Z=(z+.5-CZ)/RZ;
+        X+=fbm(x,y,z,.010,3,31)*.055;
+        Z+=fbm(x,y,z,.010,3,79)*.055;
+        Y+=fbm(x,y,z,.008,2,137)*.025;
 
-        for (int i = layers.size() - 1;
-             i >= layerIndex;
-             i--) {
+        double chamber=1-sq(X/.72)-sq(Z/.68)-sq((Y+.72)/.32);
+        double cupola=1-sq(X/.42)-sq(Z/.38)-sq((Y+.34)/.25);
 
-            GeologyLayer layer =
-                    layers.get(i).value();
+        double axisX=X+fbm(x,y,z,.006,2,211)*.045, axisZ=Z+fbm(x,y,z,.006,2,337)*.040;
+        double t=smooth(-.58,.82,Y), stockR=lerp(t,.20,.075);
+        double stock=1-Math.hypot(axisX,axisZ)/stockR;
+        stock=Math.min(stock,smooth(-.72,-.50,Y));
+        stock=Math.min(stock,1-smooth(.78,.94,Y));
 
-            boundary += Math.max(
-                    1.0,
-                    layer.thickness()
-            );
-        }
+        // Directional lobes: no radial annulus, so they cannot form a 360-degree disk.
+        double lobes=Math.max(
+                lobe(X,Y,Z,.10,-.20,.82,.13,.18,.075),
+                lobe(X,Y,Z,2.72,-.16,.70,.10,.17,.070));
+        lobes=Math.max(lobes,lobe(X,Y,Z,1.48,-.08,.58,.18,.15,.065));
+        lobes=Math.max(lobes,lobe(X,Y,Z,4.35,-.12,.64,.14,.16,.070));
 
-        GeologyLayer layer =
-                layers.get(layerIndex)
-                        .value();
+        double intrusion=Math.max(Math.max(chamber,cupola),Math.max(stock,lobes));
+        intrusion+=fbm(x-311,y+79,z+173,.034,2,601)*.045;
 
-        double offset =
-                getLayerBoundaryOffset(
-                        layer,
-                        x,
-                        z
-                );
+        // Host-side contact shell. Mineralization follows the intrusion instead of defining its own geometry.
+        double contact=band(intrusion,-.16,.01);
+        double cupolaBias=.55+.45*bell(Y+.05,.52);
+        double fluid=.64+.36*fbm(x+911,y-317,z-613,.050,3,733);
+        double primary=contact*cupolaBias*fluid;
 
-        return minY
-                + boundary
-                + offset
-                - getRegionalWarp(
-                x,
-                z
-        );
+        // Supergene/oxidized part: only the shallow continuation of existing mineralization.
+        double oxidation=primary*smooth(.18,.58,Y)*(1-smooth(.86,1.05,Math.hypot(X,Z)));
+
+        if(intrusion>0) return Blocks.GRANITE.defaultBlockState();
+        if(oxidation>.43) return Blocks.GOLD_BLOCK.defaultBlockState();
+        if(primary>.43) return Blocks.COPPER_BLOCK.weathering().unaffected().defaultBlockState();
+        return host;
     }
 
     /*
-     * Estimates local strike from the boundary gradient.
-     *
-     * gradient = (dY/dX, dY/dZ)
-     *
-     * strike = (-dY/dZ, dY/dX)
+     * Curved directional apophysis in normalized space.
+     * a = azimuth, y0 = root height, len = horizontal reach,
+     * rise = end rise, width/thick = horizontal/vertical radius.
      */
-    private static double[] getLayerStrike(
-            List<Holder<GeologyLayer>> layers,
-            int layerIndex,
-            int minY,
-            int x,
-            int z
-    ) {
-        double gradientX =
-                getLayerBoundaryY(
-                        layers,
-                        layerIndex,
-                        minY,
-                        x + 4,
-                        z
-                )
-                        - getLayerBoundaryY(
-                        layers,
-                        layerIndex,
-                        minY,
-                        x - 4,
-                        z
-                );
+    private static double lobe(double X,double Y,double Z,double a,double y0,double len,double rise,double width,double thick){
+        double ca=Math.cos(a), sa=Math.sin(a), along=X*ca+Z*sa, across=-X*sa+Z*ca;
+        double q=Math.clamp(along/len,0,1), centerY=y0+rise*q+.055*Math.sin(q*Math.PI);
+        double root=Math.max(0,-along)/.12, end=Math.max(0,along-len)/.12;
+        double taper=.72+.28*Math.sin(q*Math.PI);
+        double d=Math.sqrt(sq(across/(width*taper))+sq((Y-centerY)/(thick*taper))+sq(root)+sq(end));
+        return 1-d;
+    }
 
-        double gradientZ =
-                getLayerBoundaryY(
-                        layers,
-                        layerIndex,
-                        minY,
-                        x,
-                        z + 4
-                )
-                        - getLayerBoundaryY(
-                        layers,
-                        layerIndex,
-                        minY,
-                        x,
-                        z - 4
-                );
+    private static double fbm(double x,double y,double z,double f,int octaves,int seed){
+        double v=0,a=.55,sum=0;
+        for(int i=0;i<octaves;i++,f*=2.03,a*=.5){v+=noise(x,y,z,f,seed+i*101)*a;sum+=a;}
+        return v/sum;
+    }
 
-        double strikeX =
-                -gradientZ;
+    private static double noise(double x,double y,double z,double f,int seed){
+        x=x*f+seed*1.371;y=y*f-seed*.917;z=z*f+seed*.613;
+        return (Math.sin(x+Math.sin(z*.73))+Math.sin(z*1.31+Math.cos(y*.79))+Math.cos(y*1.17+Math.sin(x*.67)))/3;
+    }
 
-        double strikeZ =
-                gradientX;
+    private static double band(double v,double outer,double inner){
+        return smooth(outer,inner,v)*(1-smooth(inner,inner+.08,v));
+    }
 
-        double length =
-                Math.sqrt(
-                        strikeX * strikeX
-                                + strikeZ * strikeZ
-                );
+    private static double bell(double x,double w){x/=w;return Math.exp(-x*x*2);}
+    private static double smooth(double a,double b,double x){double t=Math.clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);}
+    private static double lerp(double t,double a,double b){return a+(b-a)*t;}
+    private static double sq(double x){return x*x;}
 
-        if (length < 1.0E-6) {
-            return new double[]{
-                    1.0,
-                    0.0
-            };
+    private static int getSurfaceCut(BlockState state,PositionalRandomFactory random,BlockPos.MutableBlockPos pos){
+        if(state.is(BlockTags.DIRT)) return random.at(pos).nextInt(1,2);
+        if(state.is(BlockTags.SAND)) return random.at(pos).nextInt(3,5);
+        if(state.is(Blocks.GRASS_BLOCK)) return random.at(pos).nextInt(2,3);
+        return random.at(pos).nextInt(0,1);
+    }
+
+    private static boolean shouldReplace(BlockState state){
+        return state.is(BlockTags.BASE_STONE_OVERWORLD)||state.is(BlockTags.DIRT)
+                ||state.is(Blocks.GRASS_BLOCK)||state.is(BlockTags.SAND);
+    }
+
+    private static BlockState getGeologyState(List<Holder<GeologyLayer>> layers,int y,int minY,int x,int z){
+        if(layers.isEmpty()) throw new IllegalArgumentException("Geology profile has no layers");
+        double depth=y-minY+getRegionalWarp(x,z)-getDepositDome(x,z), boundary=0;
+        for(int i=layers.size()-1;i>=0;i--){
+            GeologyLayer layer=layers.get(i).value();
+            boundary+=Math.max(1,layer.thickness());
+            if(depth<Math.max(1,boundary+getLayerBoundaryOffset(layer,x,z))) return layer.blockState();
         }
-
-        return new double[]{
-                strikeX / length,
-                strikeZ / length
-        };
+        return layers.getFirst().value().blockState();
     }
 
-    private static double getRegionalWarp(
-            int x,
-            int z
-    ) {
-        return Math.sin(
-                x * 0.003
-                        + z * 0.001
-        ) * 18.0
-                + Math.cos(
-                x * 0.002
-                        - z * 0.004
-        ) * 14.0;
+    private static double getDepositDome(int x,int z){
+        double X=(x-CX)/RX,Z=(z-CZ)/RZ;
+        return 30*Math.exp(-(X*X+Z*Z)*2.1);
     }
 
-    private static double getLayerBoundaryOffset(
-            GeologyLayer layer,
-            int x,
-            int z
-    ) {
-        int seed =
-                layer.seed();
+    private static BlockState applyBandedIronFormation(BandedIronFormation bif,List<Holder<GeologyLayer>> layers,
+                                                       BlockState host,int y,int minY,int x,int z,
+                                                       PositionalRandomFactory random){
+        if(layers.isEmpty()) return host;
+        for(int i=0;i<layers.size();i++){
+            BlockState result=applyBandedIronFormationAtLayer(bif,layers,i,host,y,minY,x,z,random);
+            if(result!=host) return result;
+        }
+        return host;
+    }
 
-        double amplitude =
-                layer.amplitude();
+    private static BlockState applyBandedIronFormationAtLayer(BandedIronFormation bif,List<Holder<GeologyLayer>> layers,
+                                                              int layerIndex,BlockState host,int y,int minY,int x,int z,
+                                                              PositionalRandomFactory random){
+        int size=Math.max(16,(int)Math.ceil(bif.length()));
+        int regionX=Math.floorDiv(x,size),regionZ=Math.floorDiv(z,size);
+        for(int rx=regionX-1;rx<=regionX+1;rx++) for(int rz=regionZ-1;rz<=regionZ+1;rz++){
+            BlockPos anchor=getDepositAnchor(bif,layerIndex,rx,rz,size,random);
+            if(!isInsideHorizontalFootprint(bif,layers,layerIndex,minY,x,z,anchor.getX(),anchor.getZ())) continue;
+            double boundaryY=getLayerBoundaryY(layers,layerIndex,minY,x,z);
+            if(Math.abs(y+.5-boundaryY)<=bif.thickness()*.5) return bif.ore().value().getOreState(host);
+        }
+        return host;
+    }
 
-        double freqX =
-                layer.freqX();
+    private static BlockPos getDepositAnchor(BandedIronFormation bif,int layerIndex,int regionX,int regionZ,
+                                             int size,PositionalRandomFactory random){
+        int baseX=regionX*size,baseZ=regionZ*size;
+        RandomSource r=random.at(new BlockPos(baseX,layerIndex,baseZ));
+        return new BlockPos(baseX+r.nextInt(size),0,baseZ+r.nextInt(size));
+    }
 
-        double freqZ =
-                layer.freqZ();
+    private static boolean isInsideHorizontalFootprint(BandedIronFormation bif,List<Holder<GeologyLayer>> layers,
+                                                       int layerIndex,int minY,int x,int z,int anchorX,int anchorZ){
+        double[] strike=getLayerStrike(layers,layerIndex,minY,anchorX,anchorZ);
+        double dx=x+.5-anchorX,dz=z+.5-anchorZ,along=dx*strike[0]+dz*strike[1];
+        if(Math.abs(along)>bif.length()*.5) return false;
+        double across=-dx*strike[1]+dz*strike[0];
+        return Math.abs(across)<=bif.width()*.5;
+    }
 
-        double sx =
-                x + seed * 37.17;
+    private static double getLayerBoundaryY(List<Holder<GeologyLayer>> layers,int layerIndex,int minY,int x,int z){
+        double boundary=0;
+        for(int i=layers.size()-1;i>=layerIndex;i--) boundary+=Math.max(1,layers.get(i).value().thickness());
+        GeologyLayer layer=layers.get(layerIndex).value();
+        return minY+boundary+getLayerBoundaryOffset(layer,x,z)-getRegionalWarp(x,z);
+    }
 
-        double sz =
-                z - seed * 19.31;
+    private static double[] getLayerStrike(List<Holder<GeologyLayer>> layers,int layerIndex,int minY,int x,int z){
+        double gx=getLayerBoundaryY(layers,layerIndex,minY,x+4,z)-getLayerBoundaryY(layers,layerIndex,minY,x-4,z);
+        double gz=getLayerBoundaryY(layers,layerIndex,minY,x,z+4)-getLayerBoundaryY(layers,layerIndex,minY,x,z-4);
+        double sx=-gz,sz=gx,length=Math.sqrt(sx*sx+sz*sz);
+        return length<1E-6?new double[]{1,0}:new double[]{sx/length,sz/length};
+    }
 
-        double large =
-                Math.sin(
-                        sx * freqX
-                                + sz * freqZ
-                ) * amplitude;
+    private static double getRegionalWarp(int x,int z){
+        return Math.sin(x*.003+z*.001)*18+Math.cos(x*.002-z*.004)*14;
+    }
 
-        double medium =
-                Math.cos(
-                        sx * freqZ * 1.7
-                                - sz * freqX * 1.3
-                ) * amplitude * 0.45;
-
-        double small =
-                Math.sin(
-                        (sx + sz) * 0.035
-                ) * amplitude * 0.18;
-
-        return large
-                + medium
-                + small;
+    private static double getLayerBoundaryOffset(GeologyLayer layer,int x,int z){
+        int seed=layer.seed();
+        double a=layer.amplitude(),fx=layer.freqX(),fz=layer.freqZ();
+        double sx=x+seed*37.17,sz=z-seed*19.31;
+        return Math.sin(sx*fx+sz*fz)*a+Math.cos(sx*fz*1.7-sz*fx*1.3)*a*.45+Math.sin((sx+sz)*.035)*a*.18;
     }
 }
