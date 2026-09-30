@@ -344,12 +344,15 @@ public final class DepositFieldEngine {
             }
         }else if(r.kind()==1){
             double hydro=(1-Math.abs(r.normalizedY()+.05))*.65+r.score()*.55;
-            if(hydro>.48&&occupies(hydro-.35,grade,c,ctx.x(),y,ctx.z(),.12,.58))
+            if(hydro>.48&&occupies(hydro-.35,grade,c,ctx.x(),y,ctx.z(),.12,.58)){
+                if(r.radial()>.58&&mix>.43) return ore(ctx,c,2,host);
+                if(grade>.66&&mix>.64) return ore(ctx,c,1,host);
                 return ore(ctx,c,0,host);
+            }
         }else{
             double cupola=r.normalizedY()*.55+r.score()*.55;
             if(cupola>.32&&occupies(cupola-.25,grade,c,ctx.x(),y,ctx.z(),.10,.52))
-                return ore(ctx,c,0,host);
+                return ore(ctx,c,mix>.64-.18*r.radial()+.08*r.normalizedY()?1:0,host);
         }
         return host;
     }
@@ -456,14 +459,10 @@ public final class DepositFieldEngine {
             double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.075,3);
             if(!occupies(score,grade,c,ctx.x(),y,ctx.z(),.10,.78)) continue;
             double mix=GeologicalNoise.occupancy(ctx.x()+13,y,ctx.z()-7,c.oreSeed(),.12);
-            if(feeder*.70>lens){
-                if(mix<.51) return ore(ctx,c,0,state);
-                return ore(ctx,c,3,state);
-            }
+            if(feeder*.70>lens) return ore(ctx,c,mix<.70?0:1,state);
             if(mix<.43) return ore(ctx,c,0,state);
-            if(mix<.52) return ore(ctx,c,1,state);
-            if(mix<.57) return ore(ctx,c,2,state);
-            return ore(ctx,c,3,state);
+            if(mix<.78) return ore(ctx,c,1,state);
+            return ore(ctx,c,2,state);
         }
         return state;
     }
@@ -599,10 +598,22 @@ public final class DepositFieldEngine {
             if(score<-.12) continue;
             double p=GeologicalNoise.smoothstep(-.12,.25,score);
             if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.16)>p) continue;
-            double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.09,3);
-            if(grade>.88&&GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.13)<.18)
-                return ore(ctx,c,0,state);
-            return rock(ctx,c);
+            BlockState pipe=rock(ctx,c);
+            FieldDeposit.RichBody rich=field(ctx,c).settings().richBody();
+            if(rand01(c.oreSeed()^0xD1A0L)<rich.chance()){
+                double coreY=bottom+(top-bottom)*(.42+.18*rand01(c.shapeSeed()^0xC0DEL));
+                double coreT=(coreY-bottom)/(top-bottom);
+                double coreRadius=config.radiusXMin()+(config.x(c.shapeSeed())-config.radiusXMin())*Math.pow(coreT,.78);
+                double coreX=c.x()+(rand01(c.shapeSeed()^0x51L)-.5)*coreRadius*.40;
+                double coreZ=c.z()+(rand01(c.shapeSeed()^0xA7L)-.5)*coreRadius*.40;
+                double size=(rich.radiusMin()+(rich.radiusMax()-rich.radiusMin())*rand01(c.shapeSeed()^0xD1L))
+                        *config.satelliteScale();
+                double body=1-sq((ctx.x()+.5-coreX)/size)-sq((y+.5-coreY)/(size*.80))
+                        -sq((ctx.z()+.5-coreZ)/size)
+                        +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xD1A0L,.035,.11,.12,.07);
+                if(body>0) return ore(ctx,c,1,pipe);
+            }
+            return pipe;
         }
         return state;
     }

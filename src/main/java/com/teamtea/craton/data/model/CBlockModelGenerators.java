@@ -46,7 +46,10 @@ public class CBlockModelGenerators {
             addStoneFamily(collection.mossyBrick().get());
         }
         for (Holder<Block> oreBlock : CratonBlocks.ORE_BLOCKS) {
-            if (oreBlock == CratonBlocks.banded_iron_gneiss_ore) continue;
+            if (oreBlock == CratonBlocks.banded_iron_gneiss_ore) {
+                models.registerSimpleItemModel(oreBlock.value(), Craton.rl("block/banded_iron_gneiss_ore_1"));
+                continue;
+            }
             Block block = oreBlock.value();
             simpleBlockItem(block);
 //            models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));

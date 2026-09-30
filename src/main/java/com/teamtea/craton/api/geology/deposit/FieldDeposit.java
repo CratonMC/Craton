@@ -24,9 +24,10 @@ public record FieldDeposit(Identifier type, Settings settings) implements Deposi
                 return DataResult.error(() -> "Non-contact deposits require positive radii");
             int slots=switch(type.getPath()) {
                 case "vms" -> 3;
-                case "skarn" -> 4;
+                case "skarn" -> 5;
                 case "hydrothermal_vein" -> 3;
-                case "gabbro_intrusion", "placer" -> 2;
+                case "gabbro_intrusion", "placer", "granite_intrusion", "kimberlite" -> 2;
+                case "diorite_intrusion" -> 3;
                 default -> 1;
             };
             if(settings.ores().size()<slots) return DataResult.error(() -> "Deposit requires at least "+slots+" ore references");
@@ -43,14 +44,27 @@ public record FieldDeposit(Identifier type, Settings settings) implements Deposi
                 Math.max(p.reach(),settings.shape().horizontalReach()),p.frequency());
     }
 
-    public record Settings(Placement placement, Shape shape, BlockState rock, List<Holder<OreType>> ores, List<BlockState> alterationRocks) {
+    public record Settings(Placement placement, Shape shape, BlockState rock, List<Holder<OreType>> ores,
+                           List<BlockState> alterationRocks, RichBody richBody) {
         public static final Codec<Settings> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Placement.CODEC.fieldOf("placement").forGetter(Settings::placement),
                 Shape.CODEC.fieldOf("shape").forGetter(Settings::shape),
                 BlockState.CODEC.fieldOf("rock").forGetter(Settings::rock),
                 RegistryFixedCodec.create(CratonRegistries.ORE_TYPE).listOf().fieldOf("ores").forGetter(Settings::ores),
-                BlockState.CODEC.listOf().optionalFieldOf("alteration_rocks",List.of()).forGetter(Settings::alterationRocks)
+                BlockState.CODEC.listOf().optionalFieldOf("alteration_rocks",List.of()).forGetter(Settings::alterationRocks),
+                RichBody.CODEC.optionalFieldOf("rich_body",RichBody.NONE).forGetter(Settings::richBody)
         ).apply(i, Settings::new));
+    }
+
+    public record RichBody(double chance, double radiusMin, double radiusMax) {
+        public static final RichBody NONE=new RichBody(0,2.2,4.2);
+        public static final Codec<RichBody> CODEC=RecordCodecBuilder.<RichBody>create(i -> i.group(
+                Codec.doubleRange(0,1).fieldOf("chance").forGetter(RichBody::chance),
+                Codec.doubleRange(0,32).fieldOf("radius_min").forGetter(RichBody::radiusMin),
+                Codec.doubleRange(0,32).fieldOf("radius_max").forGetter(RichBody::radiusMax)
+        ).apply(i, RichBody::new)).flatXmap(r -> r.radiusMin()>r.radiusMax()||r.chance()>0&&r.radiusMin()<=0
+                ?DataResult.error(() -> "Rich body radius range must be positive and ordered when chance is nonzero")
+                :DataResult.success(r),DataResult::success);
     }
 
     public record Placement(int cellSize, int maxCandidates, double reach, double frequency) {

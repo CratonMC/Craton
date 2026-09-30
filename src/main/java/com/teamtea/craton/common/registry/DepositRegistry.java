@@ -29,7 +29,8 @@ public final class DepositRegistry {
         ctx.register(key(name), new FieldDeposit(type, new FieldDeposit.Settings(placement, shape, rock,
                 Arrays.stream(oreKeys).<Holder<OreType>>map(ores::getOrThrow).toList(),
                 type.equals(DepositTypes.WEATHERING)?List.of(Blocks.DYED_TERRACOTTA.red().defaultBlockState(),
-                        Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),Blocks.DYED_TERRACOTTA.brown().defaultBlockState()):List.of())));
+                        Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),Blocks.DYED_TERRACOTTA.brown().defaultBlockState()):List.of(),
+                type.equals(DepositTypes.KIMBERLITE)?new FieldDeposit.RichBody(.35,2.2,4.2):FieldDeposit.RichBody.NONE)));
     }
     private static FieldDeposit.Placement p(int cell, int count, double reach, double frequency) {
         return new FieldDeposit.Placement(cell, count, reach, frequency);

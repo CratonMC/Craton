@@ -12,6 +12,11 @@
       "reach": 95.0
     },
     "rock": "craton:diamond_bearing_kimberlite",
+    "rich_body": {
+      "chance": 0.35,
+      "radius_min": 2.2,
+      "radius_max": 4.2
+    },
     "shape": {
       "broad_noise": 0.18,
       "detail_noise": 0.06,
