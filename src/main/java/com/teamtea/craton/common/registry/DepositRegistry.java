@@ -5,6 +5,7 @@ import com.teamtea.craton.api.geology.deposit.BandedIronFormation;
 import com.teamtea.craton.api.geology.deposit.Deposit;
 import com.teamtea.craton.api.geology.deposit.DepositTypes;
 import com.teamtea.craton.api.geology.deposit.FieldDeposit;
+import com.teamtea.craton.api.geology.deposit.KimberliteDeposit;
 import com.teamtea.craton.api.geology.ore.OreType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -26,11 +27,13 @@ public final class DepositRegistry {
     private static void field(BootstrapContext<Deposit> ctx, HolderGetter<OreType> ores, String name, Identifier type,
                               FieldDeposit.Placement placement, FieldDeposit.Shape shape, BlockState rock,
                               ResourceKey<OreType>... oreKeys) {
-        ctx.register(key(name), new FieldDeposit(type, new FieldDeposit.Settings(placement, shape, rock,
+        FieldDeposit.Settings settings=new FieldDeposit.Settings(placement,shape,rock,
                 Arrays.stream(oreKeys).<Holder<OreType>>map(ores::getOrThrow).toList(),
                 type.equals(DepositTypes.WEATHERING)?List.of(Blocks.DYED_TERRACOTTA.red().defaultBlockState(),
-                        Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),Blocks.DYED_TERRACOTTA.brown().defaultBlockState()):List.of(),
-                type.equals(DepositTypes.KIMBERLITE)?new FieldDeposit.RichBody(.35,2.2,4.2):FieldDeposit.RichBody.NONE)));
+                        Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),Blocks.DYED_TERRACOTTA.brown().defaultBlockState()):List.of());
+        ctx.register(key(name),type.equals(DepositTypes.KIMBERLITE)
+                ?new KimberliteDeposit(settings,new KimberliteDeposit.RichBody(.35,2.2,4.2))
+                :DepositTypes.createField(type,settings));
     }
     private static FieldDeposit.Placement p(int cell, int count, double reach, double frequency) {
         return new FieldDeposit.Placement(cell, count, reach, frequency);

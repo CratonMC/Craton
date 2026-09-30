@@ -12,59 +12,58 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
+import java.util.function.Function;
 
-/** One datapack entry for a continuous, single-point deposit field. */
-public record FieldDeposit(Identifier type, Settings settings) implements Deposit {
-    public static MapCodec<FieldDeposit> codecFor(Identifier type) {
-        return Settings.CODEC.fieldOf("settings").flatXmap(settings -> {
-            Shape shape=settings.shape();
-            if(Math.max(settings.placement().reach(),shape.horizontalReach())/settings.placement().cellSize()>8)
-                return DataResult.error(() -> "Deposit reach must not exceed eight placement cells; increase cell_size");
-            if(!type.equals(DepositTypes.SKARN)&&(shape.radiusXMin()<=0||shape.radiusZMin()<=0||shape.radiusYMin()<=0))
-                return DataResult.error(() -> "Non-contact deposits require positive radii");
-            int slots=switch(type.getPath()) {
-                case "vms" -> 3;
-                case "skarn" -> 5;
-                case "hydrothermal_vein" -> 3;
-                case "gabbro_intrusion", "placer", "granite_intrusion", "kimberlite" -> 2;
-                case "diorite_intrusion" -> 3;
-                default -> 1;
-            };
-            if(settings.ores().size()<slots) return DataResult.error(() -> "Deposit requires at least "+slots+" ore references");
-            return DataResult.success(new FieldDeposit(type,settings));
-        },field -> DataResult.success(field.settings()));
+/** Common immutable state for typed, continuous deposit definitions. */
+public abstract class FieldDeposit extends AbstractDeposit {
+    private final Identifier type;
+    private final Settings settings;
+
+    protected FieldDeposit(Identifier type, Settings settings) {
+        super(resolvePlacement(settings));
+        this.type=type;
+        this.settings=settings;
     }
 
-    @Override public Identifier getType() { return type; }
-    @Override public MapCodec<? extends Deposit> codec() { return DepositTypes.DEPOSITS.get(type); }
+    public Identifier type() { return type; }
+    public Settings settings() { return settings; }
 
-    @Override public Deposit.Placement placement() {
+    private static Deposit.Placement resolvePlacement(Settings settings) {
         Placement p=settings.placement();
         return new Deposit.Placement(p.cellSize(),p.maxCandidates(),
                 Math.max(p.reach(),settings.shape().horizontalReach()),p.frequency());
     }
+    protected static <D extends FieldDeposit> MapCodec<D> codecFor(
+            int slots, boolean contact, Function<Settings,D> factory) {
+        return Settings.CODEC.fieldOf("settings").flatXmap(settings -> {
+            DataResult<Settings> valid=validate(settings,slots,contact);
+            return valid.map(factory);
+        },field -> DataResult.success(field.settings()));
+    }
+
+    protected static DataResult<Settings> validate(Settings settings,int slots,boolean contact) {
+        Shape shape=settings.shape();
+        if(Math.max(settings.placement().reach(),shape.horizontalReach())/settings.placement().cellSize()>8)
+            return DataResult.error(() -> "Deposit reach must not exceed eight placement cells; increase cell_size");
+        if(!contact&&(shape.radiusXMin()<=0||shape.radiusZMin()<=0||shape.radiusYMin()<=0))
+            return DataResult.error(() -> "Non-contact deposits require positive radii");
+        if(settings.ores().size()<slots)
+            return DataResult.error(() -> "Deposit requires at least "+slots+" ore references");
+        return DataResult.success(settings);
+    }
+
+    @Override public Identifier getType() { return type; }
+    @Override public abstract MapCodec<? extends Deposit> codec();
 
     public record Settings(Placement placement, Shape shape, BlockState rock, List<Holder<OreType>> ores,
-                           List<BlockState> alterationRocks, RichBody richBody) {
+                           List<BlockState> alterationRocks) {
         public static final Codec<Settings> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Placement.CODEC.fieldOf("placement").forGetter(Settings::placement),
                 Shape.CODEC.fieldOf("shape").forGetter(Settings::shape),
                 BlockState.CODEC.fieldOf("rock").forGetter(Settings::rock),
                 RegistryFixedCodec.create(CratonRegistries.ORE_TYPE).listOf().fieldOf("ores").forGetter(Settings::ores),
-                BlockState.CODEC.listOf().optionalFieldOf("alteration_rocks",List.of()).forGetter(Settings::alterationRocks),
-                RichBody.CODEC.optionalFieldOf("rich_body",RichBody.NONE).forGetter(Settings::richBody)
+                BlockState.CODEC.listOf().optionalFieldOf("alteration_rocks",List.of()).forGetter(Settings::alterationRocks)
         ).apply(i, Settings::new));
-    }
-
-    public record RichBody(double chance, double radiusMin, double radiusMax) {
-        public static final RichBody NONE=new RichBody(0,2.2,4.2);
-        public static final Codec<RichBody> CODEC=RecordCodecBuilder.<RichBody>create(i -> i.group(
-                Codec.doubleRange(0,1).fieldOf("chance").forGetter(RichBody::chance),
-                Codec.doubleRange(0,32).fieldOf("radius_min").forGetter(RichBody::radiusMin),
-                Codec.doubleRange(0,32).fieldOf("radius_max").forGetter(RichBody::radiusMax)
-        ).apply(i, RichBody::new)).flatXmap(r -> r.radiusMin()>r.radiusMax()||r.chance()>0&&r.radiusMin()<=0
-                ?DataResult.error(() -> "Rich body radius range must be positive and ordered when chance is nonzero")
-                :DataResult.success(r),DataResult::success);
     }
 
     public record Placement(int cellSize, int maxCandidates, double reach, double frequency) {
