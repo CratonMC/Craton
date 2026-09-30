@@ -23,8 +23,8 @@ public record FieldDeposit(Identifier type, Settings settings) implements Deposi
             if(!type.equals(DepositTypes.SKARN)&&(shape.radiusXMin()<=0||shape.radiusZMin()<=0||shape.radiusYMin()<=0))
                 return DataResult.error(() -> "Non-contact deposits require positive radii");
             int slots=switch(type.getPath()) {
-                case "vms" -> 4;
-                case "skarn" -> 5;
+                case "vms" -> 3;
+                case "skarn" -> 4;
                 case "hydrothermal_vein" -> 3;
                 case "gabbro_intrusion", "placer" -> 2;
                 default -> 1;

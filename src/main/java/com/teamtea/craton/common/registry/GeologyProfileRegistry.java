@@ -34,6 +34,9 @@ public final class GeologyProfileRegistry {
 
     public static final ResourceKey<GeologyProfile> DESERT = createKey("desert");
     public static final ResourceKey<GeologyProfile> BADLANDS = createKey("badlands");
+    public static final ResourceKey<GeologyProfile> STONY_SHORES = createKey("stony_shores");
+
+
     public static final ResourceKey<GeologyProfile> SAVANNA = createKey("savanna");
 
     public static final ResourceKey<GeologyProfile> OCEAN = createKey("ocean");
@@ -144,6 +147,10 @@ public final class GeologyProfileRegistry {
         ));
         context.register(BADLANDS, new GeologyProfile(
                 biomeGetter.getOrThrow(Tags.Biomes.IS_BADLANDS),
+                deserts
+        ));
+        context.register(STONY_SHORES, new GeologyProfile(
+                biomeGetter.getOrThrow(Tags.Biomes.IS_STONY_SHORES),
                 deserts
         ));
 

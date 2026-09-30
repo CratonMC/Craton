@@ -1,0 +1,11 @@
+{
+  "biomes": "#c:is_stony_shores",
+  "layers": [
+    "craton:limestone",
+    "craton:granite",
+    "craton:sandstone",
+    "craton:gabbro",
+    "craton:gneiss",
+    "craton:deepslate"
+  ]
+}
