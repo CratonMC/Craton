@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
+import com.teamtea.craton.common.core.DepositRandomSequences;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,15 +19,18 @@ import java.util.function.Function;
 public abstract class FieldDeposit extends AbstractDeposit {
     private final Identifier type;
     private final Settings settings;
+    private final DepositRandomSequences sequence;
 
-    protected FieldDeposit(Identifier type, Settings settings) {
+    protected FieldDeposit(Identifier type, Settings settings,DepositRandomSequences sequence) {
         super(resolvePlacement(settings));
         this.type=type;
         this.settings=settings;
+        this.sequence=sequence;
     }
 
     public Identifier type() { return type; }
     public Settings settings() { return settings; }
+    @Override public DepositRandomSequences sequence(){return sequence;}
 
     private static Deposit.Placement resolvePlacement(Settings settings) {
         Placement p=settings.placement();

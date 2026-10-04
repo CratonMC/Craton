@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.teamtea.craton.Craton;
 import net.minecraft.resources.Identifier;
+import com.teamtea.craton.common.core.DepositRandomSequences;
 
 public interface Deposit {
     Codec<Deposit> CODEC = Codec.lazyInitialized(() ->
@@ -29,6 +30,8 @@ public interface Deposit {
     MapCodec<? extends Deposit> codec();
 
     Placement placement();
+
+    DepositRandomSequences sequence();
 
     record Placement(int cellSize,int maxCandidates,double reach,double frequency) {}
 }

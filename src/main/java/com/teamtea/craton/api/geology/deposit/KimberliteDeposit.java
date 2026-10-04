@@ -3,6 +3,8 @@ package com.teamtea.craton.api.geology.deposit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
+import com.teamtea.craton.common.core.DepositRandomSequences;
+
 import net.minecraft.world.level.block.state.BlockState;
 import com.teamtea.craton.common.core.DepositFieldEngine.ColumnContext;
 import com.teamtea.craton.common.core.*;
@@ -16,7 +18,7 @@ import net.minecraft.core.registries.codec.RegistryFixedCodec;
 
 import java.util.List;
 
-public final class KimberliteDeposit extends FieldDeposit {
+public final class KimberliteDeposit extends OrdinaryDeposit {
     public static final MapCodec<KimberliteDeposit> CODEC=Configuration.CODEC.fieldOf("settings")
             .flatXmap(config -> validate(config.base(),2,false)
                     .map(valid -> new KimberliteDeposit(valid,config.richBody())),
@@ -25,7 +27,7 @@ public final class KimberliteDeposit extends FieldDeposit {
     private final RichBody richBody;
 
     public KimberliteDeposit(Settings settings,RichBody richBody) {
-        super(DepositTypes.KIMBERLITE,settings);
+        super(DepositTypes.KIMBERLITE,settings,DepositRandomSequences.SPECIAL,50);
         this.richBody=richBody;
     }
 
@@ -64,39 +66,38 @@ public final class KimberliteDeposit extends FieldDeposit {
 
 
 
-    public static BlockState applyKimberlite(ColumnContext ctx,BlockState state,int y){
-        for(DepositCandidateSampler.Candidate c:ctx.kimberlite()){
-            FieldDeposit.Shape config=shape(ctx,c);
-            double cy=config.height(ctx.minY(),c.verticalSeed());
-            double bottom=cy-config.y(c.shapeSeed()),top=cy+config.radiusYMax();
-            if(y<bottom||y>top) continue;
-            double t=(y-bottom)/(top-bottom);
-            double radius=config.radiusXMin()+(config.x(c.shapeSeed())-config.radiusXMin())*Math.pow(t,.78);
-            double dx=ctx.x()+.5-c.x()+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed(),.020,3)*5;
-            double dz=ctx.z()+.5-c.z()+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed()^71,.020,3)*5;
-            double score=1-Math.hypot(dx,dz)/radius
-                    +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xB64L,.011,.060,config.broadNoise(),config.detailNoise());
-            if(score<-.12) continue;
-            double p=GeologicalNoise.smoothstep(-.12,.25,score);
-            if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.16)>p) continue;
-            BlockState pipe=rock(ctx,c);
-            KimberliteDeposit.RichBody rich=((KimberliteDeposit)field(ctx,c)).richBody();
-            if(rand01(c.oreSeed()^0xD1A0L)<rich.chance()){
-                double coreY=bottom+(top-bottom)*(.42+.18*rand01(c.shapeSeed()^0xC0DEL));
-                double coreT=(coreY-bottom)/(top-bottom);
-                double coreRadius=config.radiusXMin()+(config.x(c.shapeSeed())-config.radiusXMin())*Math.pow(coreT,.78);
-                double coreX=c.x()+(rand01(c.shapeSeed()^0x51L)-.5)*coreRadius*.40;
-                double coreZ=c.z()+(rand01(c.shapeSeed()^0xA7L)-.5)*coreRadius*.40;
-                double size=(rich.radiusMin()+(rich.radiusMax()-rich.radiusMin())*rand01(c.shapeSeed()^0xD1L))
-                        *config.satelliteScale();
-                double body=1-sq((ctx.x()+.5-coreX)/size)-sq((y+.5-coreY)/(size*.80))
-                        -sq((ctx.z()+.5-coreZ)/size)
-                        +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xD1A0L,.035,.11,.12,.07);
-                if(body>0) return ore(ctx,c,1,pipe);
-            }
-            return pipe;
+    @Override
+    public BlockState place(ColumnContext ctx,DepositCandidateSampler.Candidate c,
+                            BlockState originalHost,BlockState state,int y){
+        Shape config=settings().shape();
+        double cy=config.height(ctx.minY(),c.verticalSeed());
+        double bottom=cy-config.y(c.shapeSeed()),top=cy+config.radiusYMax();
+        if(y<bottom||y>top) return null;
+        double t=(y-bottom)/(top-bottom);
+        double radius=config.radiusXMin()+(config.x(c.shapeSeed())-config.radiusXMin())*Math.pow(t,.78);
+        double dx=ctx.x()+.5-c.x()+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed(),.020,3)*5;
+        double dz=ctx.z()+.5-c.z()+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed()^71,.020,3)*5;
+        double score=1-Math.hypot(dx,dz)/radius
+                +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xB64L,.011,.060,config.broadNoise(),config.detailNoise());
+        if(score<-.12) return null;
+        double p=GeologicalNoise.smoothstep(-.12,.25,score);
+        if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.16)>p) return null;
+        BlockState pipe=settings().rock();
+        RichBody rich=richBody();
+        if(rand01(c.oreSeed()^0xD1A0L)<rich.chance()){
+            double coreY=bottom+(top-bottom)*(.42+.18*rand01(c.shapeSeed()^0xC0DEL));
+            double coreT=(coreY-bottom)/(top-bottom);
+            double coreRadius=config.radiusXMin()+(config.x(c.shapeSeed())-config.radiusXMin())*Math.pow(coreT,.78);
+            double coreX=c.x()+(rand01(c.shapeSeed()^0x51L)-.5)*coreRadius*.40;
+            double coreZ=c.z()+(rand01(c.shapeSeed()^0xA7L)-.5)*coreRadius*.40;
+            double size=(rich.radiusMin()+(rich.radiusMax()-rich.radiusMin())*rand01(c.shapeSeed()^0xD1L))
+                    *config.satelliteScale();
+            double body=1-sq((ctx.x()+.5-coreX)/size)-sq((y+.5-coreY)/(size*.80))
+                    -sq((ctx.z()+.5-coreZ)/size)
+                    +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xD1A0L,.035,.11,.12,.07);
+            if(body>0) return ore(this,1,pipe);
         }
-        return state;
+        return pipe;
     }
 
 }

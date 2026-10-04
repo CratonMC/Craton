@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.IdentityHashMap;
 
 public final class WorldSetter {
+    private static final boolean DEBUG_DEPOSITS=Boolean.getBoolean("craton.debugDeposits");
 
     public static final class ChunkContext {
         private final PositionalRandomFactory random;
@@ -46,7 +47,7 @@ public final class WorldSetter {
     public static void rebuildCloumnExtension(BlockColumn column,BlockPos.MutableBlockPos pos,int x,int z,
                                               int startingHeight,ChunkAccess chunk,Holder<Biome> biome,
                                               ChunkContext context){
-        boolean debugmode=true;
+        boolean debugmode=DEBUG_DEPOSITS;
         Optional<Holder<GeologyProfile>> optional=CratonContents.getGeologyProfile(biome);
         if(optional.isEmpty()) return;
         List<Holder<GeologyLayer>> layers=optional.get().value().layers();
@@ -76,6 +77,7 @@ public final class WorldSetter {
             }
             BlockState host=geology.sample(x,y,z);
             BlockState state=DepositFieldEngine.apply(depositContext,host,host,y);
+            if(!debugmode&&state==current) continue;
             if(debugmode)
                 if(state==host||state==current){
                 column.setBlock(y,Blocks.AIR.defaultBlockState());

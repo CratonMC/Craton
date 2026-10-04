@@ -1,6 +1,8 @@
 package com.teamtea.craton.api.geology.deposit;
 
 import com.mojang.serialization.MapCodec;
+import com.teamtea.craton.common.core.DepositRandomSequences;
+
 import com.teamtea.craton.common.registry.CratonBlocks;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,12 +13,12 @@ import com.teamtea.craton.common.core.*;
 import static com.teamtea.craton.common.core.DepositFieldSupport.*;
 
 
-public final class PlacerDeposit extends FieldDeposit {
+public final class PlacerDeposit extends OrdinaryDeposit {
     public static final MapCodec<PlacerDeposit> CODEC =
             codecFor(2, false, PlacerDeposit::new);
 
     public PlacerDeposit(Settings settings) {
-        super(DepositTypes.PLACER,settings);
+        super(DepositTypes.PLACER,settings,DepositRandomSequences.PLACER,70);
     }
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
@@ -25,33 +27,34 @@ public final class PlacerDeposit extends FieldDeposit {
 
     public record SourceStrength(double gold,double iron){}
 
-    public static BlockState applyPlacer(ColumnContext ctx,BlockState originalHost,BlockState state,int y){
-        if(ctx.topY()-y<0||!ctx.biome().is(Tags.Biomes.IS_RIVER)) return state;
+    @Override
+    public BlockState place(ColumnContext ctx,DepositCandidateSampler.Candidate c,
+                            BlockState originalHost,BlockState state,int y){
+        if(ctx.topY()-y<0||!ctx.biome().is(Tags.Biomes.IS_RIVER)) return null;
         boolean sediment=ctx.surfaceState().is(Blocks.SAND)||ctx.surfaceState().is(Blocks.RED_SAND)||ctx.surfaceState().is(Blocks.GRAVEL);
-        if(!sediment) return state;
-        SourceStrength source=ctx.sourceCache().computeIfAbsent(0, ignored -> primarySourceStrength(ctx));
-        if(source.gold()<=0&&source.iron()<=0) return state;
+        if(!sediment) return null;
+        SourceStrength source=ctx.sourceStrength(this);
+        if(source.gold()<=0&&source.iron()<=0) return null;
 
-        for(DepositCandidateSampler.Candidate c:ctx.placer()){
-            double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
-            FieldDeposit.Shape config=shape(ctx,c);
-            if(ctx.topY()-y>config.y(c.shapeSeed())) continue;
-            double r=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);
-            double score=1-sq(dx/r)-sq(dz/rz)
-                    +shapeNoise2(ctx.x(),ctx.z(),c.shapeSeed(),.015,.075,config.broadNoise(),config.detailNoise());
-            if(score<-.10) continue;
-            double placerGrade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.11,3);
-            double p=GeologicalNoise.smoothstep(-.10,.35,score)*(.30+.55*placerGrade);
-            if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.18)>p) continue;
-            if(source.gold()>=source.iron()&&source.gold()*placerGrade>.42)
-                return ore(ctx,c,0,state);
-            if(source.iron()*placerGrade>.38)
-                return ore(ctx,c,1,state);
-        }
-        return state;
+
+        double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
+        Shape config=settings().shape();
+        if(ctx.topY()-y>config.y(c.shapeSeed())) return null;
+        double r=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);
+        double score=1-sq(dx/r)-sq(dz/rz)
+                +shapeNoise2(ctx.x(),ctx.z(),c.shapeSeed(),.015,.075,config.broadNoise(),config.detailNoise());
+        if(score<-.10) return null;
+        double placerGrade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.11,3);
+        double p=GeologicalNoise.smoothstep(-.10,.35,score)*(.30+.55*placerGrade);
+        if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.18)>p) return null;
+        if(source.gold()>=source.iron()&&source.gold()*placerGrade>.42)
+            return ore(this,0,state);
+        if(source.iron()*placerGrade>.38)
+            return ore(this,1,state);
+        return null;
     }
 
-    private static SourceStrength primarySourceStrength(ColumnContext ctx){
+    public SourceStrength primarySourceStrength(ColumnContext ctx){
         double gold=0,iron=0;
         for(DepositCandidateSampler.Candidate c:ctx.epithermal()){
             double cy=shape(ctx,c).height(ctx.minY(),c.verticalSeed());

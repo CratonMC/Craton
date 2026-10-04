@@ -19,13 +19,23 @@ public final class StratiformDepositField {
 
     public static BlockState applyStratiform(ColumnContext ctx,BlockState host,int y){
         if(isLimestone(host)){
-            BlockState coal=StratiformCoalDeposit.place(ctx,host,y);
-            if(!coal.equals(host)) return coal;
-            BlockState copper=StratiformCopperDeposit.place(ctx,host,y);
-            if(!copper.equals(host)) return copper;
+            DepositSample coal=layerBoundSample(ctx,ctx.stratiformCoal(),CratonBlocks.LIMESTONE.getOrigin().getBaseBlock().defaultBlockState(),y,0x11);
+            if(coal!=null){
+                StratiformCoalDeposit definition=(StratiformCoalDeposit)ctx.owners().get(coal.candidate());
+                BlockState placed=definition.placeSample(ctx,host,y,coal);
+                if(!placed.equals(host)) return placed;
+            }
+            DepositSample copper=layerBoundSample(ctx,ctx.stratiformCopper(),CratonBlocks.LIMESTONE.getOrigin().getBaseBlock().defaultBlockState(),y,0x29);
+            if(copper!=null){
+                StratiformCopperDeposit definition=(StratiformCopperDeposit)ctx.owners().get(copper.candidate());
+                BlockState placed=definition.placeSample(ctx,host,y,copper);
+                if(!placed.equals(host)) return placed;
+            }
         }
         if(host.is(Blocks.SANDSTONE)||host.is(Blocks.RED_SANDSTONE)){
-            return SandstoneUraniumDeposit.place(ctx,host,y);
+            DepositSample uranium=sandstoneRollFront(ctx,y);
+            if(uranium!=null)
+                return ((SandstoneUraniumDeposit)ctx.owners().get(uranium.candidate())).placeSample(ctx,host,y,uranium);
         }
         return host;
     }
@@ -71,6 +81,17 @@ public final class StratiformDepositField {
             double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.065,3);
             if(best.candidate()==null||score>best.score()) best.set(score,grade,c);
         }
+        return best.candidate()==null?null:best;
+    }
+
+    private static DepositSample sandstoneRollFront(ColumnContext ctx,int y){
+        List<Integer> sandstoneLayers=matchingLayers(ctx,Blocks.SANDSTONE.defaultBlockState());
+        if(sandstoneLayers.isEmpty()) return null;
+        DepositSample best=ctx.stratiformSample();
+        best.reset();
+        for(DepositCandidateSampler.Candidate candidate:ctx.sandstoneUranium())
+            ((SandstoneUraniumDeposit)ctx.owners().get(candidate))
+                    .sampleRollFront(ctx,candidate,y,sandstoneLayers,best);
         return best.candidate()==null?null:best;
     }
 

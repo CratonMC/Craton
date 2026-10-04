@@ -1,6 +1,8 @@
 package com.teamtea.craton.api.geology.deposit;
 
 import com.mojang.serialization.MapCodec;
+import com.teamtea.craton.common.core.DepositRandomSequences;
+
 import com.teamtea.craton.common.registry.CratonBlocks;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,32 +18,27 @@ public final class SandstoneUraniumDeposit extends FieldDeposit {
             codecFor(1, false, SandstoneUraniumDeposit::new);
 
     public SandstoneUraniumDeposit(Settings settings) {
-        super(DepositTypes.URANIUM,settings);
+        super(DepositTypes.URANIUM,settings,DepositRandomSequences.STRATIFORM);
     }
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
-    public static BlockState place(ColumnContext ctx,BlockState host,int y){
-        DepositSample sample=sandstoneRollFront(ctx,ctx.sandstoneUranium(),y);
-        if(sample!=null&&occupies(sample.score(),sample.grade(),sample.candidate(),ctx.x(),y,ctx.z(),.12,.62))
-            return ore(ctx,sample.candidate(),0,host);
+    public BlockState placeSample(ColumnContext ctx,BlockState host,int y,DepositSample sample){
+        if(occupies(sample.score(),sample.grade(),sample.candidate(),ctx.x(),y,ctx.z(),.12,.62))
+            return ore(this,0,host);
         return host;
     }
 
 
 
-    public static DepositSample sandstoneRollFront(ColumnContext ctx,List<DepositCandidateSampler.Candidate> candidates,int y){
-        List<Integer> sandstoneLayers=matchingLayers(ctx,Blocks.SANDSTONE.defaultBlockState());
-        if(sandstoneLayers.isEmpty()) return null;
-        DepositSample best=ctx.stratiformSample();
-        best.reset();
-        for(DepositCandidateSampler.Candidate c:candidates){
+    public void sampleRollFront(ColumnContext ctx,DepositCandidateSampler.Candidate c,int y,
+                                List<Integer> sandstoneLayers,DepositSample best){
             int layer=sandstoneLayers.get(index(c.verticalSeed(),sandstoneLayers.size()));
             double angle=angle(c.rotationSeed());
             double rotDx=ctx.x()+.5-c.x(),rotDz=ctx.z()+.5-c.z();
             double rotCos=Math.cos(angle),rotSin=Math.sin(angle);
             double rotAlong=rotDx*rotCos+rotDz*rotSin,rotAcross=-rotDx*rotSin+rotDz*rotCos;
-            FieldDeposit.Shape config=shape(ctx,c);
+            Shape config=settings().shape();
             double rx=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);
             double sandstoneTop=ctx.geology().boundaryY(layer,ctx.x(),ctx.z());
             double thickness=ctx.geology().thickness(layer);
@@ -55,8 +52,6 @@ public final class SandstoneUraniumDeposit extends FieldDeposit {
             double score=Math.max(body,satellite*.65-.04);
             double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.07,3);
             if(best.candidate()==null||score>best.score()) best.set(score,grade,c);
-        }
-        return best.candidate()==null?null:best;
     }
 
 }

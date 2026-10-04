@@ -58,14 +58,22 @@ public final class DepositCandidateSampler {
 
         public List<Candidate> query(DepositRandomSequences sequence,long depositSalt,int x,int z,
                                      int cellSize,double horizontalReach,int maxCandidatesPerCell){
+            List<Candidate> result=new ArrayList<>();
+            queryInto(sequence,depositSalt,x,z,cellSize,horizontalReach,maxCandidatesPerCell,result);
+            return result;
+        }
+
+        /** Reuses a caller-owned temporary list; callers must consume it before the next query. */
+        public void queryInto(DepositRandomSequences sequence,long depositSalt,int x,int z,
+                              int cellSize,double horizontalReach,int maxCandidatesPerCell,List<Candidate> result){
         if(cellSize<=0||!Double.isFinite(horizontalReach)||horizontalReach<0||maxCandidatesPerCell<0)
             throw new IllegalArgumentException("Invalid deposit candidate query");
-        if(maxCandidatesPerCell==0) return List.of();
+        result.clear();
+        if(maxCandidatesPerCell==0) return;
         PositionalRandomFactory random=sequences.computeIfAbsent(sequence,s -> s.factory(rootRandom));
         long root=mix64(depositSalt);
         int cellX=Math.floorDiv(x,cellSize),cellZ=Math.floorDiv(z,cellSize);
         int cellRadius=Math.max(1,(int)Math.floor(horizontalReach/cellSize)+1);
-        List<Candidate> result=new ArrayList<>((cellRadius*2+1)*(cellRadius*2+1));
         for(int cx=cellX-cellRadius;cx<=cellX+cellRadius;cx++)
             for(int cz=cellZ-cellRadius;cz<=cellZ+cellRadius;cz++){
                 CellKey key=new CellKey(sequence,depositSalt,cx,cz,cellSize,maxCandidatesPerCell);
@@ -76,10 +84,10 @@ public final class DepositCandidateSampler {
                     candidates=List.copyOf(generated);
                     cells.put(key,candidates);
                 }
-                result.addAll(candidates);
+                for(Candidate candidate:candidates)
+                    if(Math.hypot(x+.5-candidate.x(),z+.5-candidate.z())<=horizontalReach)
+                        result.add(candidate);
             }
-        result.removeIf(c -> Math.hypot(x+.5-c.x(),z+.5-c.z())>horizontalReach);
-        return result;
         }
     }
 

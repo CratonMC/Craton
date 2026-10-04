@@ -1,9 +1,8 @@
 package com.teamtea.craton.common.core;
 
 import com.teamtea.craton.api.geology.deposit.FieldDeposit;
-import com.teamtea.craton.api.geology.deposit.GraniteIntrusionDeposit;
-import com.teamtea.craton.api.geology.deposit.DioriteIntrusionDeposit;
-import com.teamtea.craton.api.geology.deposit.GabbroIntrusionDeposit;
+import com.teamtea.craton.api.geology.deposit.IntrusionDeposit;
+import java.util.List;
 import net.minecraft.world.level.block.state.BlockState;
 
 
@@ -48,10 +47,18 @@ public final class IntrusiveDepositField {
     }
 
     static IntrusionResult sampleIntrusions(ColumnContext ctx,int y){
-        IntrusionResult best=GraniteIntrusionDeposit.sampleGranite(ctx,y);
-        best=better(best,DioriteIntrusionDeposit.sampleDiorite(ctx,y));
-        best=better(best,GabbroIntrusionDeposit.sampleGabbro(ctx,y));
+        IntrusionResult best=sampleFamily(ctx,ctx.granite(),y,ctx.graniteResult(),0);
+        best=better(best,sampleFamily(ctx,ctx.diorite(),y,ctx.dioriteResult(),1));
+        best=better(best,sampleFamily(ctx,ctx.gabbro(),y,ctx.gabbroResult(),2));
         return best;
+    }
+
+    private static IntrusionResult sampleFamily(ColumnContext ctx,List<DepositCandidateSampler.Candidate> candidates,
+                                                 int y,IntrusionResult result,int kind){
+        result.reset(kind);
+        for(DepositCandidateSampler.Candidate candidate:candidates)
+            ((IntrusionDeposit)field(ctx,candidate)).sample(ctx,candidate,y,result);
+        return result;
     }
 
     private static IntrusionResult better(IntrusionResult a,IntrusionResult b){return b.score()>a.score()?b:a;}
@@ -64,12 +71,7 @@ public final class IntrusiveDepositField {
     }
 
     static BlockState applyIntrusiveOre(ColumnContext ctx,BlockState host,int y,IntrusionResult r){
-        return switch(r.kind()){
-            case 0 -> GraniteIntrusionDeposit.placeOre(ctx,host,y,r);
-            case 1 -> DioriteIntrusionDeposit.placeOre(ctx,host,y,r);
-            case 2 -> GabbroIntrusionDeposit.placeOre(ctx,host,y,r);
-            default -> host;
-        };
+        return ((IntrusionDeposit)field(ctx,r.candidate())).placeOre(ctx,host,y,r);
     }
 
     static BlockState applyIntrusiveSatellite(ColumnContext ctx,BlockState host,int y){
