@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:shale",
+  "result": {
+    "id": "craton:shale_stairs"
+  }
+}

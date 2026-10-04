@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:mossy_skarn_brick",
+  "result": {
+    "id": "craton:mossy_skarn_brick_wall"
+  }
+}

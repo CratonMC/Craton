@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "craton:eclogite"
+  ],
+  "result": {
+    "id": "craton:eclogite_button"
+  }
+}

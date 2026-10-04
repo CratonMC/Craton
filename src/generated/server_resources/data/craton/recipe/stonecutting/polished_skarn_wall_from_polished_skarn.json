@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_skarn",
+  "result": {
+    "id": "craton:polished_skarn_wall"
+  }
+}

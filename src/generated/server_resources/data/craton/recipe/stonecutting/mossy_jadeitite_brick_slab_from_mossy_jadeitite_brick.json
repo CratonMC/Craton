@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:mossy_jadeitite_brick",
+  "result": {
+    "count": 2,
+    "id": "craton:mossy_jadeitite_brick_slab"
+  }
+}

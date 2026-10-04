@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/meteorite_slab"
+    },
+    "type=double": {
+      "model": "craton:block/meteorite"
+    },
+    "type=top": {
+      "model": "craton:block/meteorite_slab_top"
+    }
+  }
+}

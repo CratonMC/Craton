@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "craton:block/schist_brick",
+    "side": "craton:block/schist_brick",
+    "top": "craton:block/schist_brick"
+  }
+}

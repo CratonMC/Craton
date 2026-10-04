@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_eclogite",
+  "result": {
+    "count": 2,
+    "id": "craton:polished_eclogite_slab"
+  }
+}

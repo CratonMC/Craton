@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:meteorite_brick"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:meteorite_brick_pressure_plate"
+  }
+}

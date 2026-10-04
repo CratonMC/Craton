@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:arkose_sandstone_brick",
+  "result": {
+    "id": "craton:arkose_sandstone_brick_wall"
+  }
+}

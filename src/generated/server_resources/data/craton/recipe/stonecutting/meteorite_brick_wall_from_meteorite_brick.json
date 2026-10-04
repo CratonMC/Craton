@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:meteorite_brick",
+  "result": {
+    "id": "craton:meteorite_brick_wall"
+  }
+}

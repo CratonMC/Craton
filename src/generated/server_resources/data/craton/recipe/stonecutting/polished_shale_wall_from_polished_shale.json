@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_shale",
+  "result": {
+    "id": "craton:polished_shale_wall"
+  }
+}

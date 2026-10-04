@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_eclogite",
+  "result": {
+    "id": "craton:polished_eclogite_wall"
+  }
+}

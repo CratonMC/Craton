@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:jadeitite_brick",
+  "result": {
+    "id": "craton:jadeitite_brick_wall"
+  }
+}

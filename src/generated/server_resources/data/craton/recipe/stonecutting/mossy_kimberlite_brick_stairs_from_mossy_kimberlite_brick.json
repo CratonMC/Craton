@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:mossy_kimberlite_brick",
+  "result": {
+    "id": "craton:mossy_kimberlite_brick_stairs"
+  }
+}

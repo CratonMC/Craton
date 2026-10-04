@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/polished_skarn_slab"
+    },
+    "type=double": {
+      "model": "craton:block/polished_skarn"
+    },
+    "type=top": {
+      "model": "craton:block/polished_skarn_slab_top"
+    }
+  }
+}

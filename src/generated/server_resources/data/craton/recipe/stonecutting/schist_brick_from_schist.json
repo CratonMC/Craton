@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:schist",
+  "result": {
+    "id": "craton:schist_brick"
+  }
+}

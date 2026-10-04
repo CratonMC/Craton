@@ -28,6 +28,15 @@ public class Lang_EN extends LangHelper {
         addStoneCollection(CratonBlocks.GABBRO, "Gabbro");
         addStoneCollection(CratonBlocks.PEGMATITE, "Pegmatite");
 
+        addStoneCollection(CratonBlocks.ARKOSE_SANDSTONE, "Arkose Sandstone");
+        addStoneCollection(CratonBlocks.SHALE, "Shale");
+        addStoneCollection(CratonBlocks.ECLOGITE, "Eclogite");
+        addStoneCollection(CratonBlocks.SCHIST, "Schist");
+        addStoneCollection(CratonBlocks.KIMBERLITE, "Kimberlite");
+        addStoneCollection(CratonBlocks.SKARN, "Skarn");
+        addStoneCollection(CratonBlocks.METEORITE, "Meteorite");
+        addStoneCollection(CratonBlocks.JADEITITE, "Jadeitite");
+
         add(CratonBlocks.banded_iron_gneiss_ore.value().getDescriptionId(), "Banded Iron Ore");
 //        add(CratonBlocks.banded_iron_marble_ore.value().getDescriptionId(), "Marble Banded Iron Ore");
 //        add(CratonBlocks.banded_iron_stone_ore.value().getDescriptionId(), "Stone Banded Iron Ore");

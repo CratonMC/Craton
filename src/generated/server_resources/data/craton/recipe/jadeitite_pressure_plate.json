@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:jadeitite"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:jadeitite_pressure_plate"
+  }
+}

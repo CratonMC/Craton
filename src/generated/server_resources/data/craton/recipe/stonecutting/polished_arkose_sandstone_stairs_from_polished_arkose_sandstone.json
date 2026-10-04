@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_arkose_sandstone",
+  "result": {
+    "id": "craton:polished_arkose_sandstone_stairs"
+  }
+}

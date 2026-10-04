@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/kimberlite_slab"
+    },
+    "type=double": {
+      "model": "craton:block/kimberlite"
+    },
+    "type=top": {
+      "model": "craton:block/kimberlite_slab_top"
+    }
+  }
+}

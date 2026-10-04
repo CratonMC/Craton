@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:schist",
+  "result": {
+    "count": 2,
+    "id": "craton:schist_vertical_slab"
+  }
+}

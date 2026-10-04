@@ -30,6 +30,14 @@ public class Lang_ZH extends LangHelper {
         addStoneCollection(CratonBlocks.GABBRO, "辉长岩");
         addStoneCollection(CratonBlocks.PEGMATITE, "伟晶岩");
 
+        addStoneCollection(CratonBlocks.ARKOSE_SANDSTONE, "长石砂岩");
+        addStoneCollection(CratonBlocks.SHALE, "页岩");
+        addStoneCollection(CratonBlocks.ECLOGITE, "榴辉岩");
+        addStoneCollection(CratonBlocks.SCHIST, "片岩");
+        addStoneCollection(CratonBlocks.KIMBERLITE, "金伯利岩");
+        addStoneCollection(CratonBlocks.SKARN, "矽卡岩");
+        addStoneCollection(CratonBlocks.METEORITE, "陨石");
+        addStoneCollection(CratonBlocks.JADEITITE, "玉岩");
         add(CratonBlocks.banded_iron_gneiss_ore.value().getDescriptionId(), "条带铁矿石");
 //        add(CratonBlocks.banded_iron_marble_ore.value().getDescriptionId(), "大理岩条带铁矿石");
 //        add(CratonBlocks.banded_iron_stone_ore.value().getDescriptionId(), "石头条带铁矿石");

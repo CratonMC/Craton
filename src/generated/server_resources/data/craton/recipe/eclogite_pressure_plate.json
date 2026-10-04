@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:eclogite"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:eclogite_pressure_plate"
+  }
+}

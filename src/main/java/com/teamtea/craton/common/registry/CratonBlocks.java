@@ -36,6 +36,15 @@ public class CratonBlocks {
     public static final StoneCollection LIMESTONE = registerStoneCollection("limestone", MapColor.SAND);
     public static final StoneCollection GABBRO = registerStoneCollection("gabbro", MapColor.COLOR_BLACK);
     public static final StoneCollection PEGMATITE = registerStoneCollection("pegmatite", MapColor.COLOR_PINK);
+    public static final StoneCollection ARKOSE_SANDSTONE = registerStoneCollection("arkose_sandstone", MapColor.SAND);
+    public static final StoneCollection SHALE = registerStoneCollection("shale", MapColor.STONE);
+    public static final StoneCollection ECLOGITE = registerStoneCollection("eclogite", MapColor.COLOR_BLACK);
+    public static final StoneCollection SCHIST = registerStoneCollection("schist", MapColor.STONE);
+
+    public static final StoneCollection KIMBERLITE = registerStoneCollection("kimberlite", MapColor.COLOR_BLACK);
+    public static final StoneCollection SKARN = registerStoneCollection("skarn", MapColor.QUARTZ);
+    public static final StoneCollection METEORITE = registerStoneCollection("meteorite", MapColor.STONE);
+    public static final StoneCollection JADEITITE = registerStoneCollection("jadeitite", MapColor.COLOR_GREEN);
 
     public static final Holder<Block> banded_iron_gneiss_ore =registerOreBlock("banded_iron_gneiss_ore");
 //    public static final Holder<Block> banded_iron_marble_ore =registerOreBlock("banded_iron_marble_ore");
@@ -130,7 +139,15 @@ public class CratonBlocks {
             MARBLE,
             LIMESTONE,
             GABBRO,
-            PEGMATITE
+            PEGMATITE,
+            ARKOSE_SANDSTONE,
+            SHALE,
+            ECLOGITE,
+            SCHIST,
+            KIMBERLITE,
+            SKARN,
+            METEORITE,
+            JADEITITE
     );
 
     private static StoneCollection registerStoneCollection(String name, MapColor mapColor) {

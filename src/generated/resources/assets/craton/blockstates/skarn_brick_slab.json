@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/skarn_brick_slab"
+    },
+    "type=double": {
+      "model": "craton:block/skarn_brick"
+    },
+    "type=top": {
+      "model": "craton:block/skarn_brick_slab_top"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/polished_shale_slab"
+    },
+    "type=double": {
+      "model": "craton:block/polished_shale"
+    },
+    "type=top": {
+      "model": "craton:block/polished_shale_slab_top"
+    }
+  }
+}

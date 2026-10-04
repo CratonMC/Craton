@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "craton:meteorite"
+  ],
+  "result": {
+    "id": "craton:meteorite_button"
+  }
+}

@@ -5,6 +5,14 @@
     "craton:marble",
     "craton:limestone",
     "craton:gabbro",
-    "craton:pegmatite"
+    "craton:pegmatite",
+    "craton:arkose_sandstone",
+    "craton:shale",
+    "craton:eclogite",
+    "craton:schist",
+    "craton:kimberlite",
+    "craton:skarn",
+    "craton:meteorite",
+    "craton:jadeitite"
   ]
 }

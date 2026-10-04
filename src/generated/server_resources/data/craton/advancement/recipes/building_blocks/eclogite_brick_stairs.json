@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_eclogite_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:eclogite_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:eclogite_brick_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_eclogite_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:eclogite_brick_stairs"
+    ]
+  }
+}

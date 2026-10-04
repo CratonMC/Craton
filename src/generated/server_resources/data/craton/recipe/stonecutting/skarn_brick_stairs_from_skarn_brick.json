@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:skarn_brick",
+  "result": {
+    "id": "craton:skarn_brick_stairs"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:kimberlite",
+  "result": {
+    "id": "craton:kimberlite_wall"
+  }
+}

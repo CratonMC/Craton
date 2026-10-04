@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/polished_arkose_sandstone_slab"
+    },
+    "type=double": {
+      "model": "craton:block/polished_arkose_sandstone"
+    },
+    "type=top": {
+      "model": "craton:block/polished_arkose_sandstone_slab_top"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "craton:block/polished_meteorite",
+    "side": "craton:block/polished_meteorite",
+    "top": "craton:block/polished_meteorite"
+  }
+}

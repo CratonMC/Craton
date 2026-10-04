@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_arkose_sandstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:arkose_sandstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:stonecutting/arkose_sandstone_slab_from_arkose_sandstone"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_arkose_sandstone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:stonecutting/arkose_sandstone_slab_from_arkose_sandstone"
+    ]
+  }
+}

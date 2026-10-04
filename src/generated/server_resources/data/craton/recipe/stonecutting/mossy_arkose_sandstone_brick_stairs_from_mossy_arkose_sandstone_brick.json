@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:mossy_arkose_sandstone_brick",
+  "result": {
+    "id": "craton:mossy_arkose_sandstone_brick_stairs"
+  }
+}

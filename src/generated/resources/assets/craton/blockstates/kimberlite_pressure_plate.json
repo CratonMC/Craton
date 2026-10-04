@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "craton:block/kimberlite_pressure_plate"
+    },
+    "powered=true": {
+      "model": "craton:block/kimberlite_pressure_plate_down"
+    }
+  }
+}

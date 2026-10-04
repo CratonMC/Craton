@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "craton:skarn"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "craton:skarn_pressure_plate"
+  }
+}

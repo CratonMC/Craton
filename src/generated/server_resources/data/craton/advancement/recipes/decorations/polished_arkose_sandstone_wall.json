@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_polished_arkose_sandstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:polished_arkose_sandstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:polished_arkose_sandstone_wall"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_polished_arkose_sandstone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:polished_arkose_sandstone_wall"
+    ]
+  }
+}

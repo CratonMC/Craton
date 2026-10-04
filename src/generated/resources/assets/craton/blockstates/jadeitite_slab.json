@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "craton:block/jadeitite_slab"
+    },
+    "type=double": {
+      "model": "craton:block/jadeitite"
+    },
+    "type=top": {
+      "model": "craton:block/jadeitite_slab_top"
+    }
+  }
+}

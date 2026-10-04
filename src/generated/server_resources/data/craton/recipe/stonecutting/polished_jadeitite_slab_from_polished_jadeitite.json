@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:polished_jadeitite",
+  "result": {
+    "count": 2,
+    "id": "craton:polished_jadeitite_slab"
+  }
+}

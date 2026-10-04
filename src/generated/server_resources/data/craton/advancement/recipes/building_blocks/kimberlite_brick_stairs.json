@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_kimberlite_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:kimberlite_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:kimberlite_brick_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_kimberlite_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:kimberlite_brick_stairs"
+    ]
+  }
+}

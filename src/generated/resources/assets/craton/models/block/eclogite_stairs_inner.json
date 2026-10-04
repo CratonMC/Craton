@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "craton:block/eclogite",
+    "side": "craton:block/eclogite",
+    "top": "craton:block/eclogite"
+  }
+}

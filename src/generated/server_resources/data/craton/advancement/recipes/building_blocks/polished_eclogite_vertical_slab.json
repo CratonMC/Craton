@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_polished_eclogite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:polished_eclogite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:polished_eclogite_vertical_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_polished_eclogite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:polished_eclogite_vertical_slab"
+    ]
+  }
+}

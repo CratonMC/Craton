@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "craton:eclogite_brick",
+  "result": {
+    "id": "craton:eclogite_brick_wall"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_skarn": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:skarn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:stonecutting/skarn_slab_from_skarn"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_skarn"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:stonecutting/skarn_slab_from_skarn"
+    ]
+  }
+}
