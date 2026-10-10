@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "craton:block/iron_bearing_gravel"
+    "model": "craton:block/ferriferous_gravel"
   }
 }

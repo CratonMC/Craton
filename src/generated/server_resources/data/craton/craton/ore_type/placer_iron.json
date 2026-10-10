@@ -2,11 +2,11 @@
   "variants": [
     {
       "hosts": "minecraft:gravel",
-      "result": "craton:iron_bearing_gravel"
+      "result": "craton:ferriferous_gravel"
     },
     {
       "hosts": "minecraft:red_sand",
-      "result": "craton:iron_sand"
+      "result": "craton:ferriferous_sand"
     }
   ]
 }

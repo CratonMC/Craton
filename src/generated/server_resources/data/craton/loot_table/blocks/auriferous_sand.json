@@ -8,11 +8,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "craton:iron_sand"
+          "name": "craton:auriferous_sand"
         }
       ],
       "rolls": 1
     }
   ],
-  "random_sequence": "craton:blocks/iron_sand"
+  "random_sequence": "craton:blocks/auriferous_sand"
 }

@@ -66,9 +66,9 @@ public class Lang_EN extends LangHelper {
         add(CratonBlocks.bauxite_ore.value().getDescriptionId(), "Bauxite Ore");
         add(CratonBlocks.peat.value().getDescriptionId(), "Peat");
         add(CratonBlocks.auriferous_gravel.value().getDescriptionId(), "Auriferous Gravel");
-        add(CratonBlocks.iron_bearing_gravel.value().getDescriptionId(), "Iron-Bearing Gravel");
-        add(CratonBlocks.gold_bearing_sand.value().getDescriptionId(), "Gold-Bearing Sand");
-        add(CratonBlocks.iron_sand.value().getDescriptionId(), "Iron Sand");
+        add(CratonBlocks.ferriferous_gravel.value().getDescriptionId(), "Ferriferous Gravel");
+        add(CratonBlocks.auriferous_sand.value().getDescriptionId(), "Auriferous Sand");
+        add(CratonBlocks.ferriferous_sand.value().getDescriptionId(), "Ferriferous Sand");
         add(CratonBlocks.diamond_bearing_kimberlite.value().getDescriptionId(), "Diamond-Bearing Kimberlite");
         add(CratonBlocks.diamond_rich_kimberlite.value().getDescriptionId(), "Diamond-Rich Kimberlite");
         add(CratonBlocks.skarn_iron_ore.value().getDescriptionId(), "Skarn Iron Ore");

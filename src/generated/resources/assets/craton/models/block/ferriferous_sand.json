@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "craton:block/gold_bearing_sand"
+    "all": "craton:block/ferriferous_sand"
   }
 }

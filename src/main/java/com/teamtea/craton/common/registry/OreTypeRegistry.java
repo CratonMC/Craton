@@ -96,10 +96,10 @@ public final class OreTypeRegistry {
         register(context,PEAT,CratonBlocks.peat,Blocks.MUD);
         register(context,PLACER_GOLD,List.of(
                 variant(Blocks.GRAVEL,CratonBlocks.auriferous_gravel),
-                variant(Blocks.SAND,CratonBlocks.gold_bearing_sand)));
+                variant(Blocks.SAND,CratonBlocks.auriferous_sand)));
         register(context,PLACER_IRON,List.of(
-                variant(Blocks.GRAVEL,CratonBlocks.iron_bearing_gravel),
-                variant(Blocks.RED_SAND,CratonBlocks.iron_sand)));
+                variant(Blocks.GRAVEL,CratonBlocks.ferriferous_gravel),
+                variant(Blocks.RED_SAND,CratonBlocks.ferriferous_sand)));
         register(context,KIMBERLITE_DIAMOND,CratonBlocks.diamond_bearing_kimberlite,Blocks.BLACKSTONE);
         register(context,KIMBERLITE_DIAMOND_RICH,CratonBlocks.diamond_rich_kimberlite,
                 CratonBlocks.diamond_bearing_kimberlite.value());

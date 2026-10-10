@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "craton:block/iron_sand"
+    "model": "craton:block/auriferous_sand"
   }
 }

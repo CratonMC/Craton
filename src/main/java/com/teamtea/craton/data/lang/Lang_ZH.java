@@ -67,9 +67,9 @@ public class Lang_ZH extends LangHelper {
         add(CratonBlocks.bauxite_ore.value().getDescriptionId(), "铝土矿石");
         add(CratonBlocks.peat.value().getDescriptionId(), "泥炭");
         add(CratonBlocks.auriferous_gravel.value().getDescriptionId(), "含金砂砾");
-        add(CratonBlocks.iron_bearing_gravel.value().getDescriptionId(), "含铁砂砾");
-        add(CratonBlocks.gold_bearing_sand.value().getDescriptionId(), "金砂");
-        add(CratonBlocks.iron_sand.value().getDescriptionId(), "铁砂");
+        add(CratonBlocks.ferriferous_gravel.value().getDescriptionId(), "含铁砂砾");
+        add(CratonBlocks.auriferous_sand.value().getDescriptionId(), "金砂");
+        add(CratonBlocks.ferriferous_sand.value().getDescriptionId(), "铁砂");
         add(CratonBlocks.diamond_bearing_kimberlite.value().getDescriptionId(), "含钻金伯利岩");
         add(CratonBlocks.diamond_rich_kimberlite.value().getDescriptionId(), "金伯利钻石体");
         add(CratonBlocks.skarn_iron_ore.value().getDescriptionId(), "矽卡岩铁矿石");

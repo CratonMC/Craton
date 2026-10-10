@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "craton:block/gold_bearing_sand"
+    "model": "craton:block/ferriferous_sand"
   }
 }

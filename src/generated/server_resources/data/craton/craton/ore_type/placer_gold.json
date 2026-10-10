@@ -6,7 +6,7 @@
     },
     {
       "hosts": "minecraft:sand",
-      "result": "craton:gold_bearing_sand"
+      "result": "craton:auriferous_sand"
     }
   ]
 }

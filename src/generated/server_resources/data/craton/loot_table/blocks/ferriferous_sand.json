@@ -8,11 +8,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "craton:gold_bearing_sand"
+          "name": "craton:ferriferous_sand"
         }
       ],
       "rolls": 1
     }
   ],
-  "random_sequence": "craton:blocks/gold_bearing_sand"
+  "random_sequence": "craton:blocks/ferriferous_sand"
 }

@@ -77,9 +77,9 @@ public class CratonBlocks {
 
     public static final Holder<Block> peat = registerPlaceholderBlock("peat", Blocks.MUD);
     public static final Holder<Block> auriferous_gravel = registerPlaceholderBlock("auriferous_gravel", Blocks.GRAVEL);
-    public static final Holder<Block> iron_bearing_gravel = registerPlaceholderBlock("iron_bearing_gravel", Blocks.GRAVEL);
-    public static final Holder<Block> gold_bearing_sand = registerPlaceholderBlock("gold_bearing_sand", Blocks.SAND);
-    public static final Holder<Block> iron_sand = registerPlaceholderBlock("iron_sand", Blocks.RED_SAND);
+    public static final Holder<Block> ferriferous_gravel = registerPlaceholderBlock("ferriferous_gravel", Blocks.GRAVEL);
+    public static final Holder<Block> auriferous_sand = registerPlaceholderBlock("auriferous_sand", Blocks.SAND);
+    public static final Holder<Block> ferriferous_sand = registerPlaceholderBlock("ferriferous_sand", Blocks.RED_SAND);
 
     public static final Holder<Block> diamond_bearing_kimberlite = registerOreBlock("diamond_bearing_kimberlite");
     public static final Holder<Block> diamond_rich_kimberlite = registerOreBlock("diamond_rich_kimberlite");
@@ -119,9 +119,9 @@ public class CratonBlocks {
             bauxite_ore,
             peat,
             auriferous_gravel,
-            iron_bearing_gravel,
-            gold_bearing_sand,
-            iron_sand,
+            ferriferous_gravel,
+            auriferous_sand,
+            ferriferous_sand,
             diamond_bearing_kimberlite,
             diamond_rich_kimberlite,
             skarn_iron_ore,
