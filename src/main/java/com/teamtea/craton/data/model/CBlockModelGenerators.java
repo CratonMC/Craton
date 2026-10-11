@@ -48,10 +48,14 @@ public class CBlockModelGenerators {
         for (Holder<Block> oreBlock : CratonBlocks.ORE_BLOCKS) {
             if (oreBlock == CratonBlocks.banded_iron_gneiss_ore) {
                 models.registerSimpleItemModel(oreBlock.value(), Craton.rl("block/banded_iron_gneiss_ore_1"));
-                continue;
+            } else if (oreBlock == CratonBlocks.limestone_coal_ore
+                    || oreBlock == CratonBlocks.shale_coal_ore) {
+                models.createNonTemplateModelBlock(oreBlock.value());
+                models.registerSimpleItemModel(oreBlock.value(), ModelLocationUtils.getModelLocation(oreBlock.value()));
+            } else {
+                Block block = oreBlock.value();
+                simpleBlockItem(block);
             }
-            Block block = oreBlock.value();
-            simpleBlockItem(block);
 //            models.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(block));
         }
     }
@@ -75,7 +79,7 @@ public class CBlockModelGenerators {
     }
 
     private void simpleBlockItem(Block block) {
-        simpleBlockItem(block, ModelLocationUtils.getModelLocation(block),  true);
+        simpleBlockItem(block, ModelLocationUtils.getModelLocation(block), true);
     }
 
     private void simpleBlockItem(Block block, Identifier textureid, boolean item) {
