@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"end": "craton:block/limestone_coal_ore_top",
+		"side": "craton:block/limestone_coal_ore_side"
+	}
+}
