@@ -22,7 +22,7 @@ public final class GabbroIntrusionDeposit extends IntrusionDeposit {
 
     @Override
     public Prepared prepare(DepositCandidateSampler.Candidate c,int minY){
-        return prepare(c,minY,17,71);
+        return prepare(c,minY,17,71,0,0,0x77,.009,.050);
     }
 
     @Override
@@ -46,14 +46,13 @@ public final class GabbroIntrusionDeposit extends IntrusionDeposit {
     @Override
     public void sample(ColumnContext ctx,Prepared prepared,int y,IntrusionResult best){
         if(prepared.outside(y)) return;
-        Shape config=settings().shape();
         DepositCandidateSampler.Candidate c=prepared.candidate;
         double radial=prepared.radial,bowl=prepared.bowl,half=prepared.ry;
         double vertical=Math.abs(y+.5-bowl)/half;
         double body=1-radial-vertical*.78;
         if(prepared.cannotImprove(body+prepared.noiseAmplitude,best)) return;
         double score=body
-                +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0x77,.009,.050,config.broadNoise(),config.detailNoise());
+                +prepared.noise().shape(ctx.x(),y,ctx.z());
         double dist=score*prepared.minRadius;
         double ny=(y+.5-bowl)/half;
         if(score>best.score()) best.set(score,dist,c,ny,radial);
@@ -62,12 +61,13 @@ public final class GabbroIntrusionDeposit extends IntrusionDeposit {
     @Override
     public BlockState placeOre(ColumnContext ctx,BlockState host,int y,IntrusionResult intrusion){
         DepositCandidateSampler.Candidate c=intrusion.candidate();
+        Prepared prepared=ctx.preparedIntrusion(c);
         if(intrusion.score()<=.02) return host;
-        double floor=(-intrusion.normalizedY()-.12)+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.alterationSeed(),.033,3)*.20;
+        double floor=(-intrusion.normalizedY()-.12)+prepared.noise().floor(ctx.x(),y,ctx.z())*.20;
         if(floor<=.18) return host;
-        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.050,3);
-        if(occupies(intrusion.score()+floor*.35,grade,c,ctx.x(),y,ctx.z(),.05,.70)){
-            double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
+        double grade=prepared.noise().grade(ctx.x(),y,ctx.z());
+        if(prepared.occupies(intrusion.score()+floor*.35,grade,ctx.x(),y,ctx.z(),.05,.70,1)){
+            double mix=prepared.noise().mix(ctx.x(),y,ctx.z());
             return ore(this,mix>.78?1:0,host);
         }
         return host;

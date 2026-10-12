@@ -66,7 +66,7 @@ public final class IntrusiveDepositField {
         double p=GeologicalNoise.smoothstep(-.08,.20,r.score());
         if(p<=0) return false;
         if(r.score()>.28) p=.985;
-        double occ=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),r.candidate().occupancySeed(),.12);
+        double occ=ctx.preparedIntrusion(r.candidate()).noise().rockOccupancy(ctx.x(),y,ctx.z());
         return occ<p;
     }
 
@@ -93,11 +93,10 @@ public final class IntrusiveDepositField {
 
     private static BlockState intrusivePod(ColumnContext ctx,BlockState host,int y,IntrusionDeposit.Prepared prepared){
         DepositCandidateSampler.Candidate c=prepared.candidate;
-        double pod=satellitePods(c,ctx.x(),y,ctx.z(),c.x(),prepared.cy,c.z(),prepared.rx,prepared.ry,prepared.rz,
-                prepared.angle,0x1A7L,prepared.deposit.settings().shape());
+        double pod=prepared.satelliteScore(ctx.x(),y,ctx.z());
         if(pod<-.12) return host;
-        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.057,3);
-        if(!occupies(pod*.62,grade,c,ctx.x(),y,ctx.z(),.06,.50)) return host;
+        double grade=prepared.noise().satelliteGrade(ctx.x(),y,ctx.z());
+        if(!prepared.occupies(pod*.62,grade,ctx.x(),y,ctx.z(),.06,.50,1)) return host;
         return rock(ctx,c);
     }
 }

@@ -69,7 +69,7 @@ public final class DioriteIntrusionDeposit extends IntrusionDeposit {
 
     @Override
     public Prepared prepare(DepositCandidateSampler.Candidate c,int minY){
-        return prepare(c,minY,17,31);
+        return prepare(c,minY,17,31,.013,0x91,0xD1,.010,.046);
     }
 
     @Override
@@ -80,21 +80,20 @@ public final class DioriteIntrusionDeposit extends IntrusionDeposit {
     @Override
     public void sample(ColumnContext ctx,Prepared prepared,int y,IntrusionResult best){
         if(prepared.outside(y)) return;
-        Shape config=settings().shape();
         DepositCandidateSampler.Candidate c=prepared.candidate;
         double rx=prepared.rx,rz=prepared.rz,ry=prepared.ry,cy=prepared.cy;
         double ny=(y+.5-cy)/ry;
         double radialLower=prepared.radialLower;
         double upper=1-Math.sqrt(radialLower*radialLower+ny*ny)+prepared.noiseAmplitude;
         if(prepared.cannotImprove(upper,best)) return;
-        double wx=ctx.x()+.5+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed(),.013,3)*7-c.x();
-        double wz=ctx.z()+.5+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed()^0x91,.013,3)*7-c.z();
+        double wx=ctx.x()+.5+prepared.noise().warpX.sample(ctx.x(),y,ctx.z())*7-c.x();
+        double wz=ctx.z()+.5+prepared.noise().warpZ.sample(ctx.x(),y,ctx.z())*7-c.z();
         double rotDx=wx,rotDz=wz;
         double rotCos=prepared.rotCos,rotSin=prepared.rotSin;
         double rotAlong=rotDx*rotCos+rotDz*rotSin,rotAcross=-rotDx*rotSin+rotDz*rotCos;
         double rad=Math.sqrt(sq(rotAlong/rx)+sq(rotAcross/rz));
         double score=1-Math.sqrt(rad*rad+ny*ny)
-                +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xD1,.010,.046,config.broadNoise(),config.detailNoise());
+                +prepared.noise().shape(ctx.x(),y,ctx.z());
         double dist=score*Math.min(Math.min(rx,rz),ry);
         if(score>best.score()) best.set(score,dist,c,ny,rad);
     }
@@ -102,6 +101,7 @@ public final class DioriteIntrusionDeposit extends IntrusionDeposit {
     @Override
     public BlockState placeOre(ColumnContext ctx,BlockState host,int y,IntrusionResult intrusion){
         DepositCandidateSampler.Candidate c=intrusion.candidate();
+        Prepared prepared=ctx.preparedIntrusion(c);
         if(mineralization.oreDensity()<=0||rand01(c.alterationSeed()^0xD10C0A7L)>=mineralization.fertileChance()) return host;
         if(mineralization.radiusFraction()>0&&mineralization.heightFraction()>0){
             double zone=sq(intrusion.radial()/mineralization.radiusFraction())
@@ -110,10 +110,10 @@ public final class DioriteIntrusionDeposit extends IntrusionDeposit {
         }
         double hydro=(1-Math.abs(intrusion.normalizedY()+.05))*.65+intrusion.score()*.55;
         if(hydro<=.48) return host;
-        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.050,3);
-        if(occupies(hydro-.35,grade,c,ctx.x(),y,ctx.z(),
+        double grade=prepared.noise().grade(ctx.x(),y,ctx.z());
+        if(prepared.occupies(hydro-.35,grade,ctx.x(),y,ctx.z(),
                 .12,.58,mineralization.oreDensity())){
-            double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
+            double mix=prepared.noise().mix(ctx.x(),y,ctx.z());
             // The sulfide halo is the outer part of the mineralized zone, not
             // the outer part of the whole intrusion. A small radius_fraction
             // must not squeeze the halo into an almost invisible rim.

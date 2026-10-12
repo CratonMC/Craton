@@ -8,13 +8,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.PositionalRandomFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
-/** Single-point stratigraphy sampler with correlated, probabilistic layer contacts. */
+/** Stratigraphy sampler with a bounded column cache, owned by one chunk generation context. */
 public final class GeologyFieldSampler {
     private final List<Holder<GeologyLayer>> layers;
     private final int minY;
     private final long boundaryRootSeed;
     private final double thicknessScale;
+    private final double[] cumulativeThickness;
+    private Column lastColumn;
+    private final Map<Long,Column> columns=new LinkedHashMap<>(256,.75f,true){
+        @Override protected boolean removeEldestEntry(Map.Entry<Long,Column> eldest){return size()>1024;}
+    };
+
+    private record Column(int x,int z,double regionalWarp,double[] interfaces,double[] rawThresholds){}
 
     public GeologyFieldSampler(List<Holder<GeologyLayer>> layers,int minY,PositionalRandomFactory random){
         this.layers=layers;
@@ -25,6 +34,31 @@ public final class GeologyFieldSampler {
         // Keep a full profile within the nominal -64..64 overworld section without
         // making layer contacts follow each column's local terrain height.
         this.thicknessScale=total>0?Math.min(1,128.0/total):1;
+        cumulativeThickness=new double[layers.size()];
+        double boundary=0;
+        for(int i=layers.size()-1;i>=0;i--){
+            boundary+=thickness(i);
+            cumulativeThickness[i]=boundary;
+        }
+    }
+
+    private Column column(int x,int z){
+        if(lastColumn!=null&&lastColumn.x()==x&&lastColumn.z()==z) return lastColumn;
+        long key=((long)x<<32)^(z&0xffffffffL);
+        Column column=columns.get(key);
+        if(column==null){
+            double regional=regionalWarp(x,z);
+            double[] interfaces=new double[layers.size()],thresholds=new double[layers.size()];
+            for(int i=0;i<layers.size();i++){
+                double offset=boundaryOffset(layers.get(i).value(),x,z);
+                interfaces[i]=minY+cumulativeThickness[i]+offset-regional;
+                thresholds[i]=Math.max(1,cumulativeThickness[i]+offset);
+            }
+            column=new Column(x,z,regional,interfaces,thresholds);
+            columns.put(key,column);
+        }
+        lastColumn=column;
+        return column;
     }
 
     public List<Holder<GeologyLayer>> layers(){return layers;}
@@ -35,10 +69,11 @@ public final class GeologyFieldSampler {
         if(layers.isEmpty()) throw new IllegalArgumentException("Geology profile has no layers");
 
         // Only the nearest interface is blended. Far from an interface the original stratigraphy is exact.
+        Column column=column(x,z);
         int nearest=-1;
         double nearestAbs=Double.MAX_VALUE,nearestDistance=0;
         for(int lowerIndex=1;lowerIndex<layers.size();lowerIndex++){
-            double d=y+.5-boundaryY(lowerIndex,x,z);
+            double d=y+.5-column.interfaces()[lowerIndex];
             double a=Math.abs(d);
             if(a<nearestAbs){nearestAbs=a;nearest=lowerIndex;nearestDistance=d;}
         }
@@ -59,21 +94,17 @@ public final class GeologyFieldSampler {
 
     /** Raw layer membership without contact mixing, useful for locating a named stratigraphic horizon. */
     public BlockState sampleRaw(int x,int y,int z){
-        double depth=y-minY+regionalWarp(x,z),boundary=0;
+        Column column=column(x,z);
+        double depth=y-minY+column.regionalWarp();
         for(int i=layers.size()-1;i>=0;i--){
-            GeologyLayer layer=layers.get(i).value();
-            boundary+=thickness(i);
-            if(depth<Math.max(1,boundary+boundaryOffset(layer,x,z))) return layer.blockState();
+            if(depth<column.rawThresholds()[i]) return layers.get(i).value().blockState();
         }
         return layers.getFirst().value().blockState();
     }
 
     /** Top boundary of the requested layer index. Layers are stored top-to-bottom. */
     public double boundaryY(int layerIndex,int x,int z){
-        double boundary=0;
-        for(int i=layers.size()-1;i>=layerIndex;i--) boundary+=thickness(i);
-        GeologyLayer layer=layers.get(layerIndex).value();
-        return minY+boundary+boundaryOffset(layer,x,z)-regionalWarp(x,z);
+        return column(x,z).interfaces()[layerIndex];
     }
 
     public double[] strike(int layerIndex,int x,int z){

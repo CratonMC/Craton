@@ -144,10 +144,21 @@ public final class DepositFieldEngine {
             for(IntrusionDeposit.Prepared p:graniteColumns) cutoff=Math.min(cutoff,-maximumSkarnReach/p.minRadius);
             for(IntrusionDeposit.Prepared p:dioriteColumns) cutoff=Math.min(cutoff,-maximumSkarnReach/p.minRadius);
             for(IntrusionDeposit.Prepared p:gabbroColumns) cutoff=Math.min(cutoff,-maximumSkarnReach/p.minRadius);
-            for(IntrusionDeposit.Prepared p:graniteColumns) p.deposit.prepareColumn(this,p,cutoff);
-            for(IntrusionDeposit.Prepared p:dioriteColumns) p.deposit.prepareColumn(this,p,cutoff);
-            for(IntrusionDeposit.Prepared p:gabbroColumns) p.deposit.prepareColumn(this,p,cutoff);
+            for(IntrusionDeposit.Prepared p:graniteColumns){
+                p.deposit.prepareColumn(this,p,cutoff);
+                p.prepareSatellites();
+            }
+            for(IntrusionDeposit.Prepared p:dioriteColumns){
+                p.deposit.prepareColumn(this,p,cutoff);
+                p.prepareSatellites();
+            }
+            for(IntrusionDeposit.Prepared p:gabbroColumns){
+                p.deposit.prepareColumn(this,p,cutoff);
+                p.prepareSatellites();
+            }
         }
+
+        public IntrusionDeposit.Prepared preparedIntrusion(DepositCandidateSampler.Candidate candidate){return preparedIntrusions.get(candidate);}
 
         public List<IntrusionDeposit.Prepared> graniteColumns(){return graniteColumns;}
         public List<IntrusionDeposit.Prepared> dioriteColumns(){return dioriteColumns;}
