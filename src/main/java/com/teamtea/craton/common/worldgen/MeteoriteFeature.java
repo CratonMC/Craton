@@ -3,6 +3,7 @@ package com.teamtea.craton.common.worldgen;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamtea.craton.api.geology.ore.OreType;
+import com.teamtea.craton.common.core.GeologicalNoise;
 import com.teamtea.craton.common.registry.CratonRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -41,26 +42,61 @@ public record MeteoriteFeature(Holder<OreType> ore, BlockState rock, int minRadi
         int radius = minRadius + random.nextInt(maxRadius - minRadius + 1);
         int surface = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, origin.getX(), origin.getZ()) - 1;
         if (surface <= level.getMinY() + 4) return false;
+        if (!level.getFluidState(new BlockPos(origin.getX(), surface, origin.getZ())).isEmpty()) return false;
+        int craterRadius = radius * 2 + 2;
+        int craterDepth = Math.max(2, (int)Math.round(radius * .85));
+        int centerY = surface - craterDepth + Math.max(1, radius / 3);
+        long shapeSeed = random.nextLong();
         int changed = 0;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        for (int dx = -radius; dx <= radius; dx++) for (int dz = -radius; dz <= radius; dz++) {
-            double r = Math.hypot(dx, dz);
-            if (r > radius + .25) continue;
+        // Cut the bowl first. Each column follows its own ground level so the
+        // impact remains a depression instead of a flat disk on uneven terrain.
+        for (int dx = -craterRadius-1; dx <= craterRadius+1; dx++) for (int dz = -craterRadius-1; dz <= craterRadius+1; dz++) {
+            double distance = Math.hypot(dx, dz);
+            if (distance > craterRadius + 1) continue;
             int localSurface = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, origin.getX()+dx, origin.getZ()+dz)-1;
-            if (Math.abs(localSurface-surface)>3) continue;
-            int crater = (int)Math.round(Math.max(0, 1-r/radius)*2);
-            for (int dy = -crater; dy <= 0; dy++) {
-                pos.set(origin.getX()+dx, localSurface+dy, origin.getZ()+dz);
+            if (Math.abs(localSurface-surface)>5) continue;
+            double normalized = distance / craterRadius;
+            double bowl = Math.max(0, 1-normalized*normalized);
+            int cut = (int)Math.round(craterDepth*bowl*bowl);
+            for (int depth = 0; depth < cut; depth++) {
+                pos.set(origin.getX()+dx, localSurface-depth, origin.getZ()+dz);
                 BlockState old = level.getBlockState(pos);
-                if (old.hasBlockEntity() || !(old.is(BlockTags.BASE_STONE_OVERWORLD)
-                        || old.is(BlockTags.STONE_ORE_REPLACEABLES)
-                        || old.is(Blocks.DIRT) || old.is(Blocks.GRASS_BLOCK) || old.is(Blocks.COARSE_DIRT)
-                        || old.is(Blocks.SAND) || old.is(Blocks.RED_SAND) || old.is(Blocks.GRAVEL)
-                        || old.is(Blocks.BASALT) || old.is(Blocks.TUFF))) continue;
-                BlockState state = random.nextFloat()<oreChance ? ore.value().getOreState(rock) : rock;
-                if (level.setBlock(pos, state, 2)) changed++;
+                if (naturalGround(old) && level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2)) changed++;
+            }
+            // A discontinuous, low ejecta rim leaves the bowl easy to read.
+            if (normalized > .81 && normalized < 1.08 && random.nextFloat() < .44f) {
+                pos.set(origin.getX()+dx, localSurface, origin.getZ()+dz);
+                if (naturalGround(level.getBlockState(pos))) {
+                    pos.setY(localSurface+1);
+                    if (level.getBlockState(pos).isAir() && level.setBlock(pos, Blocks.COBBLESTONE.defaultBlockState(), 2)) changed++;
+                }
             }
         }
+        // A coherent sphere lies partly buried in the floor, with richer iron
+        // toward its center. Noise roughens its surface without fragmenting it.
+        for (int dx = -radius-1; dx <= radius+1; dx++) for (int dy = -radius-1; dy <= radius+1; dy++)
+            for (int dz = -radius-1; dz <= radius+1; dz++) {
+                int x=origin.getX()+dx, y=centerY+dy, z=origin.getZ()+dz;
+                double distance=Math.sqrt(dx*dx+dy*dy+dz*dz);
+                double rough=GeologicalNoise.fbm(x,y,z,shapeSeed,.18,2)*.10;
+                if (distance > radius*(1+rough)) continue;
+                pos.set(x,y,z);
+                BlockState old=level.getBlockState(pos);
+                if (!old.isAir() && !naturalGround(old)) continue;
+                float chance=Math.min(.8f,oreChance*(float)(1+.7*Math.max(0,1-distance/radius)));
+                BlockState state=random.nextFloat()<chance ? ore.value().getOreState(rock) : rock;
+                if (level.setBlock(pos,state,2)) changed++;
+            }
         return changed > 0;
+    }
+
+    private static boolean naturalGround(BlockState state) {
+        return !state.hasBlockEntity() && (state.is(BlockTags.BASE_STONE_OVERWORLD)
+                || state.is(BlockTags.STONE_ORE_REPLACEABLES)
+                || state.is(BlockTags.DIRT) || state.is(Blocks.GRASS_BLOCK)
+                || state.is(Blocks.SAND) || state.is(Blocks.RED_SAND)
+                || state.is(Blocks.GRAVEL) || state.is(Blocks.BASALT)
+                || state.is(Blocks.TUFF) || state.is(Blocks.SNOW_BLOCK));
     }
 }
