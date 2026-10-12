@@ -40,6 +40,7 @@ public final class DepositFieldEngine {
                     context.ordinaryCandidates.computeIfAbsent(ordinary.order(),ignored -> new ArrayList<>()).add(candidate);
             }
         }
+        context.prepareIntrusions();
         context.bif=BandedIronFormation.prepareBif(context.bifCandidates(),context.owners(),geology,x,z);
         return context;
     }
@@ -53,6 +54,11 @@ public final class DepositFieldEngine {
         private final List<DepositCandidateSampler.Candidate> queryBuffer=new ArrayList<>();
         private final List<PreparedDefinition> preparedDefinitions;
         private final List<SkarnRule> skarns;
+        private final double maximumSkarnReach;
+        private final Map<DepositCandidateSampler.Candidate,IntrusionDeposit.Prepared> preparedIntrusions=new java.util.IdentityHashMap<>();
+        private final List<IntrusionDeposit.Prepared> graniteColumns=new ArrayList<>();
+        private final List<IntrusionDeposit.Prepared> dioriteColumns=new ArrayList<>();
+        private final List<IntrusionDeposit.Prepared> gabbroColumns=new ArrayList<>();
         private final Map<DepositCandidateSampler.Candidate,Deposit> owners=new java.util.IdentityHashMap<>();
         private final Map<Identifier,List<DepositCandidateSampler.Candidate>> candidatesByType=new HashMap<>();
         private final java.util.NavigableMap<Integer,List<DepositCandidateSampler.Candidate>> ordinaryCandidates=new java.util.TreeMap<>();
@@ -85,6 +91,7 @@ public final class DepositFieldEngine {
             double reach=0;
             for(SkarnRule rule:contacts)
                 reach=Math.max(reach,rule.deposit().settings().shape().radiusYMax());
+            this.maximumSkarnReach=reach;
             List<PreparedDefinition> resolved=new ArrayList<>(entries.size());
             for(PreparedDefinition entry:entries){
                 Deposit deposit=entry.deposit();
@@ -113,6 +120,38 @@ public final class DepositFieldEngine {
                 return result;
             });
         }
+
+        private void collectIntrusions(List<DepositCandidateSampler.Candidate> candidates,
+                                       List<IntrusionDeposit.Prepared> columns){
+            columns.clear();
+            for(DepositCandidateSampler.Candidate candidate:candidates){
+                IntrusionDeposit.Prepared prepared=preparedIntrusions.get(candidate);
+                if(prepared==null||prepared.originMinY!=minY){
+                    prepared=((IntrusionDeposit)owners.get(candidate)).prepare(candidate,minY);
+                    preparedIntrusions.put(candidate,prepared);
+                }
+                columns.add(prepared);
+            }
+        }
+
+        private void prepareIntrusions(){
+            collectIntrusions(granite(),graniteColumns);
+            collectIntrusions(diorite(),dioriteColumns);
+            collectIntrusions(gabbro(),gabbroColumns);
+            // All candidates use the same cutoff: an irrelevant, higher-score
+            // body must still suppress a lower-score contact halo as before.
+            double cutoff=-.08;
+            for(IntrusionDeposit.Prepared p:graniteColumns) cutoff=Math.min(cutoff,-maximumSkarnReach/p.minRadius);
+            for(IntrusionDeposit.Prepared p:dioriteColumns) cutoff=Math.min(cutoff,-maximumSkarnReach/p.minRadius);
+            for(IntrusionDeposit.Prepared p:gabbroColumns) cutoff=Math.min(cutoff,-maximumSkarnReach/p.minRadius);
+            for(IntrusionDeposit.Prepared p:graniteColumns) p.deposit.prepareColumn(this,p,cutoff);
+            for(IntrusionDeposit.Prepared p:dioriteColumns) p.deposit.prepareColumn(this,p,cutoff);
+            for(IntrusionDeposit.Prepared p:gabbroColumns) p.deposit.prepareColumn(this,p,cutoff);
+        }
+
+        public List<IntrusionDeposit.Prepared> graniteColumns(){return graniteColumns;}
+        public List<IntrusionDeposit.Prepared> dioriteColumns(){return dioriteColumns;}
+        public List<IntrusionDeposit.Prepared> gabbroColumns(){return gabbroColumns;}
 
         public PositionalRandomFactory random(){return random;}
         public DepositCandidateSampler.CellCache cellCache(){return cellCache;}

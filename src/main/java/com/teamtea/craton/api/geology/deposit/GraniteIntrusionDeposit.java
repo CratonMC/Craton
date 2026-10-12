@@ -21,17 +21,33 @@ public final class GraniteIntrusionDeposit extends IntrusionDeposit {
 
 
     @Override
-    public void sample(ColumnContext ctx,DepositCandidateSampler.Candidate c,int y,IntrusionResult best){
+    public Prepared prepare(DepositCandidateSampler.Candidate c,int minY){
+        return prepare(c,minY,0xA7,0xC3);
+    }
+
+    @Override
+    public void prepareColumn(ColumnContext ctx,Prepared prepared,double scoreCutoff){
+        prepared.prepareEllipsoidColumn(ctx.x(),ctx.z(),scoreCutoff,8,true);
+    }
+
+    @Override
+    public void sample(ColumnContext ctx,Prepared prepared,int y,IntrusionResult best){
+        if(prepared.outside(y)) return;
         Shape config=settings().shape();
-        double angle=angle(c.rotationSeed());
+        DepositCandidateSampler.Candidate c=prepared.candidate;
+        double rx=prepared.rx,rz=prepared.rz,ry=prepared.ry,cy=prepared.cy;
+        double ny=(y+.5-cy)/ry;
+        double radialLower=prepared.radialLower;
+        double upper=Math.max(1-Math.sqrt(radialLower*radialLower+ny*ny),
+                1-Math.sqrt(sq(radialLower/.46)+sq((y+.5-(cy+ry*.62))/(ry*.42))))
+                +prepared.noiseAmplitude;
+        if(prepared.cannotImprove(upper,best)) return;
         double wx=ctx.x()+.5+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed(),.009,3)*8-c.x();
         double wz=ctx.z()+.5+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed()^0x51,.009,3)*8-c.z();
         double rotDx=wx,rotDz=wz;
-        double rotCos=Math.cos(angle),rotSin=Math.sin(angle);
+        double rotCos=prepared.rotCos,rotSin=prepared.rotSin;
         double rotAlong=rotDx*rotCos+rotDz*rotSin,rotAcross=-rotDx*rotSin+rotDz*rotCos;
-        double rx=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^0xA7),ry=config.y(c.shapeSeed()^0xC3);
-        double cy=config.height(ctx.minY(),c.verticalSeed());
-        double ny=(y+.5-cy)/ry,rad=Math.sqrt(sq(rotAlong/rx)+sq(rotAcross/rz));
+        double rad=Math.sqrt(sq(rotAlong/rx)+sq(rotAcross/rz));
         double chamber=1-Math.sqrt(rad*rad+ny*ny);
         double cupolaCy=cy+ry*.62, cupola=1-Math.sqrt(sq(rotAlong/(rx*.46))+sq(rotAcross/(rz*.46))+sq((y+.5-cupolaCy)/(ry*.42)));
         double score=Math.max(chamber,cupola)
@@ -43,11 +59,13 @@ public final class GraniteIntrusionDeposit extends IntrusionDeposit {
     @Override
     public BlockState placeOre(ColumnContext ctx,BlockState host,int y,IntrusionResult intrusion){
         DepositCandidateSampler.Candidate c=intrusion.candidate();
-        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.050,3);
-        double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
         double cupola=intrusion.normalizedY()*.55+intrusion.score()*.55;
-        if(cupola>.32&&occupies(cupola-.25,grade,c,ctx.x(),y,ctx.z(),.10,.52))
+        if(cupola<=.32) return host;
+        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.050,3);
+        if(occupies(cupola-.25,grade,c,ctx.x(),y,ctx.z(),.10,.52)){
+            double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
             return ore(this,mix>.64-.18*intrusion.radial()+.08*intrusion.normalizedY()?1:0,host);
+        }
         return host;
     }
 

@@ -21,21 +21,40 @@ public final class GabbroIntrusionDeposit extends IntrusionDeposit {
 
 
     @Override
-    public void sample(ColumnContext ctx,DepositCandidateSampler.Candidate c,int y,IntrusionResult best){
+    public Prepared prepare(DepositCandidateSampler.Candidate c,int minY){
+        return prepare(c,minY,17,71);
+    }
+
+    @Override
+    public void prepareColumn(ColumnContext ctx,Prepared prepared,double scoreCutoff){
+        prepared.rotateColumn(ctx.x(),ctx.z());
+        prepared.scoreCutoff=scoreCutoff;
+        prepared.radial=Math.sqrt(sq(prepared.along/prepared.rx)+sq(prepared.across/prepared.rz));
+        double extent=1+prepared.noiseAmplitude-scoreCutoff-prepared.radial;
+        if(extent<-1.0e-9*(1+Math.abs(scoreCutoff))){
+            prepared.minimumY=Double.POSITIVE_INFINITY;
+            prepared.maximumY=Double.NEGATIVE_INFINITY;
+            return;
+        }
+        prepared.bowl=prepared.cy+18*prepared.radial*prepared.radial
+                +GeologicalNoise.fbm2(ctx.x(),ctx.z(),prepared.candidate.shapeSeed(),.014,3)*5;
+        double halfHeight=prepared.ry*Math.max(0,extent)/.78;
+        prepared.minimumY=prepared.bowl-halfHeight;
+        prepared.maximumY=prepared.bowl+halfHeight;
+    }
+
+    @Override
+    public void sample(ColumnContext ctx,Prepared prepared,int y,IntrusionResult best){
+        if(prepared.outside(y)) return;
         Shape config=settings().shape();
-        double angle=angle(c.rotationSeed());
-        double rotDx=ctx.x()+.5-c.x(),rotDz=ctx.z()+.5-c.z();
-        double rotCos=Math.cos(angle),rotSin=Math.sin(angle);
-        double rotAlong=rotDx*rotCos+rotDz*rotSin,rotAcross=-rotDx*rotSin+rotDz*rotCos;
-        double rx=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^17);
-        double cy=config.height(ctx.minY(),c.verticalSeed());
-        double radial=Math.sqrt(sq(rotAlong/rx)+sq(rotAcross/rz));
-        double bowl=cy+18*radial*radial+GeologicalNoise.fbm2(ctx.x(),ctx.z(),c.shapeSeed(),.014,3)*5;
-        double half=config.y(c.shapeSeed()^71);
+        DepositCandidateSampler.Candidate c=prepared.candidate;
+        double radial=prepared.radial,bowl=prepared.bowl,half=prepared.ry;
         double vertical=Math.abs(y+.5-bowl)/half;
-        double score=1-radial-vertical*.78
+        double body=1-radial-vertical*.78;
+        if(prepared.cannotImprove(body+prepared.noiseAmplitude,best)) return;
+        double score=body
                 +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0x77,.009,.050,config.broadNoise(),config.detailNoise());
-        double dist=score*Math.min(Math.min(rx,rz),half);
+        double dist=score*prepared.minRadius;
         double ny=(y+.5-bowl)/half;
         if(score>best.score()) best.set(score,dist,c,ny,radial);
     }
@@ -43,11 +62,14 @@ public final class GabbroIntrusionDeposit extends IntrusionDeposit {
     @Override
     public BlockState placeOre(ColumnContext ctx,BlockState host,int y,IntrusionResult intrusion){
         DepositCandidateSampler.Candidate c=intrusion.candidate();
-        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.050,3);
-        double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
+        if(intrusion.score()<=.02) return host;
         double floor=(-intrusion.normalizedY()-.12)+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.alterationSeed(),.033,3)*.20;
-        if(intrusion.score()>.02&&floor>.18&&occupies(intrusion.score()+floor*.35,grade,c,ctx.x(),y,ctx.z(),.05,.70))
+        if(floor<=.18) return host;
+        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.050,3);
+        if(occupies(intrusion.score()+floor*.35,grade,c,ctx.x(),y,ctx.z(),.05,.70)){
+            double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
             return ore(this,mix>.78?1:0,host);
+        }
         return host;
     }
 

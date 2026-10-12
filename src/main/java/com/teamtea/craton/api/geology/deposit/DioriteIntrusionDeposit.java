@@ -68,17 +68,31 @@ public final class DioriteIntrusionDeposit extends IntrusionDeposit {
 
 
     @Override
-    public void sample(ColumnContext ctx,DepositCandidateSampler.Candidate c,int y,IntrusionResult best){
+    public Prepared prepare(DepositCandidateSampler.Candidate c,int minY){
+        return prepare(c,minY,17,31);
+    }
+
+    @Override
+    public void prepareColumn(ColumnContext ctx,Prepared prepared,double scoreCutoff){
+        prepared.prepareEllipsoidColumn(ctx.x(),ctx.z(),scoreCutoff,7,false);
+    }
+
+    @Override
+    public void sample(ColumnContext ctx,Prepared prepared,int y,IntrusionResult best){
+        if(prepared.outside(y)) return;
         Shape config=settings().shape();
-        double angle=angle(c.rotationSeed());
+        DepositCandidateSampler.Candidate c=prepared.candidate;
+        double rx=prepared.rx,rz=prepared.rz,ry=prepared.ry,cy=prepared.cy;
+        double ny=(y+.5-cy)/ry;
+        double radialLower=prepared.radialLower;
+        double upper=1-Math.sqrt(radialLower*radialLower+ny*ny)+prepared.noiseAmplitude;
+        if(prepared.cannotImprove(upper,best)) return;
         double wx=ctx.x()+.5+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed(),.013,3)*7-c.x();
         double wz=ctx.z()+.5+GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.shapeSeed()^0x91,.013,3)*7-c.z();
         double rotDx=wx,rotDz=wz;
-        double rotCos=Math.cos(angle),rotSin=Math.sin(angle);
+        double rotCos=prepared.rotCos,rotSin=prepared.rotSin;
         double rotAlong=rotDx*rotCos+rotDz*rotSin,rotAcross=-rotDx*rotSin+rotDz*rotCos;
-        double rx=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^17),ry=config.y(c.shapeSeed()^31);
-        double cy=config.height(ctx.minY(),c.verticalSeed());
-        double ny=(y+.5-cy)/ry,rad=Math.sqrt(sq(rotAlong/rx)+sq(rotAcross/rz));
+        double rad=Math.sqrt(sq(rotAlong/rx)+sq(rotAcross/rz));
         double score=1-Math.sqrt(rad*rad+ny*ny)
                 +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xD1,.010,.046,config.broadNoise(),config.detailNoise());
         double dist=score*Math.min(Math.min(rx,rz),ry);
