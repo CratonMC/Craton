@@ -1,0 +1,27 @@
+{
+  "type": "shale_pb_zn",
+  "settings": {
+    "ores": [
+      "craton:shale_pb_zn"
+    ],
+    "placement": {
+      "cell_size": 192,
+      "max_candidates": 2,
+      "reach": 190,
+      "frequency": 0.38
+    },
+    "rock": "craton:shale",
+    "shape": {
+      "radius_x_min": 65,
+      "radius_x_max": 115,
+      "radius_z_min": 28,
+      "radius_z_max": 62,
+      "radius_y_min": 2,
+      "radius_y_max": 4.5,
+      "height_min": 0,
+      "height_max": 0,
+      "broad_noise": 0.25,
+      "detail_noise": 0.08
+    }
+  }
+}

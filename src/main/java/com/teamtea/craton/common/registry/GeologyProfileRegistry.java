@@ -54,9 +54,10 @@ public final class GeologyProfileRegistry {
 
         List<Holder<GeologyLayer>> common = layers(layerGetter,
                 GeologyLayerRegistry.LIMESTONE,
-                GeologyLayerRegistry.STONE,
+                GeologyLayerRegistry.SHALE,
                 GeologyLayerRegistry.TUFF,
                 GeologyLayerRegistry.ANDESITE,
+                GeologyLayerRegistry.SCHIST,
                 GeologyLayerRegistry.GNEISS,
                 GeologyLayerRegistry.DEEPSLATE
         );
@@ -89,7 +90,8 @@ public final class GeologyProfileRegistry {
         List<Holder<GeologyLayer>> foresetGroup = layers(layerGetter,
                 GeologyLayerRegistry.STONE,
                 GeologyLayerRegistry.LIMESTONE,
-                GeologyLayerRegistry.ANDESITE,
+                GeologyLayerRegistry.SHALE,
+                GeologyLayerRegistry.SCHIST,
                 GeologyLayerRegistry.GNEISS,
                 GeologyLayerRegistry.GRANITE,
                 GeologyLayerRegistry.DEEPSLATE
@@ -114,8 +116,10 @@ public final class GeologyProfileRegistry {
                         GeologyLayerRegistry.ANDESITE,
                         GeologyLayerRegistry.STONE,
                         GeologyLayerRegistry.GRANITE,
+                        GeologyLayerRegistry.SCHIST,
                         GeologyLayerRegistry.GNEISS,
                         GeologyLayerRegistry.GABBRO,
+                        GeologyLayerRegistry.ECLOGITE,
                         GeologyLayerRegistry.DEEPSLATE
                 )
         ));
@@ -128,6 +132,8 @@ public final class GeologyProfileRegistry {
                         GeologyLayerRegistry.PEGMATITE,
                         GeologyLayerRegistry.GABBRO,
                         GeologyLayerRegistry.RHYOLITE,
+                        GeologyLayerRegistry.SCHIST,
+                        GeologyLayerRegistry.ECLOGITE,
                         GeologyLayerRegistry.DEEPSLATE
                 )
         ));
@@ -135,7 +141,7 @@ public final class GeologyProfileRegistry {
         List<Holder<GeologyLayer>> deserts = layers(layerGetter,
                 GeologyLayerRegistry.LIMESTONE,
                 GeologyLayerRegistry.GRANITE,
-                GeologyLayerRegistry.SANDSTONE,
+                GeologyLayerRegistry.ARKOSE_SANDSTONE,
                 GeologyLayerRegistry.GABBRO,
                 GeologyLayerRegistry.GNEISS,
                 GeologyLayerRegistry.DEEPSLATE

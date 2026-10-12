@@ -1,11 +1,7 @@
 {
   "variants": [
     {
-      "hosts": "minecraft:sandstone",
-      "result": "craton:sedimentary_uranium_ore"
-    },
-    {
-      "hosts": "minecraft:red_sandstone",
+      "hosts": "craton:arkose_sandstone",
       "result": "craton:sedimentary_uranium_ore"
     }
   ]

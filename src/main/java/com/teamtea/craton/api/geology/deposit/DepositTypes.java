@@ -28,7 +28,9 @@ public class DepositTypes {
             PLACER = Craton.rl("placer"),
             COAL = Craton.rl("stratiform_coal"),
             COPPER = Craton.rl("stratiform_copper"),
-            URANIUM = Craton.rl("sandstone_uranium");
+            URANIUM = Craton.rl("sandstone_uranium"),
+            SHALE_PB_ZN = Craton.rl("shale_pb_zn"),
+            DEEP_REDSTONE = Craton.rl("deep_hydrothermal_redstone");
 
     public static void register(
             Identifier id,
@@ -65,5 +67,7 @@ public class DepositTypes {
         registerField(COAL,StratiformCoalDeposit.CODEC,StratiformCoalDeposit::new);
         registerField(COPPER,StratiformCopperDeposit.CODEC,StratiformCopperDeposit::new);
         registerField(URANIUM,SandstoneUraniumDeposit.CODEC,SandstoneUraniumDeposit::new);
+        registerField(SHALE_PB_ZN,ShaleLeadZincDeposit.CODEC,ShaleLeadZincDeposit::new);
+        registerField(DEEP_REDSTONE,DeepHydrothermalRedstoneDeposit.CODEC,DeepHydrothermalRedstoneDeposit::new);
     }
 }

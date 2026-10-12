@@ -1,0 +1,27 @@
+{
+  "type": "deep_hydrothermal_redstone",
+  "settings": {
+    "ores": [
+      "craton:deep_hydrothermal_redstone"
+    ],
+    "placement": {
+      "cell_size": 192,
+      "max_candidates": 2,
+      "reach": 140,
+      "frequency": 0.36
+    },
+    "rock": "craton:eclogite",
+    "shape": {
+      "radius_x_min": 28,
+      "radius_x_max": 56,
+      "radius_z_min": 3,
+      "radius_z_max": 7,
+      "radius_y_min": 3,
+      "radius_y_max": 6,
+      "height_min": 0,
+      "height_max": 0,
+      "broad_noise": 0.24,
+      "detail_noise": 0.08
+    }
+  }
+}

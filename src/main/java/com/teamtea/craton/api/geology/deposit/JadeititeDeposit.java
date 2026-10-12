@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.teamtea.craton.common.core.DepositRandomSequences;
 
 import com.teamtea.craton.common.registry.CratonBlocks;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import com.teamtea.craton.common.core.DepositFieldEngine.ColumnContext;
 import com.teamtea.craton.common.core.*;
@@ -26,8 +25,8 @@ public final class JadeititeDeposit extends OrdinaryDeposit {
     @Override
     public BlockState place(ColumnContext ctx,DepositCandidateSampler.Candidate c,
                             BlockState originalHost,BlockState state,int y){
-        // Current rock registry has no eclogite/schist yet; gneiss/deepslate are conservative HP-background proxies.
-        if(!originalHost.is(CratonBlocks.GNEISS.getOrigin().getBaseBlock())&&!originalHost.is(Blocks.DEEPSLATE)) return null;
+        if(!originalHost.is(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock())
+                &&!originalHost.is(CratonBlocks.SCHIST.getOrigin().getBaseBlock())) return null;
 
             double angle=angle(c.rotationSeed());
             double rotDx=ctx.x()+.5-c.x(),rotDz=ctx.z()+.5-c.z();
@@ -43,7 +42,9 @@ public final class JadeititeDeposit extends OrdinaryDeposit {
         if(score<-.12) return null;
         double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.085,3);
         if(occupies(score,grade,c,ctx.x(),y,ctx.z(),.08,.74))
-            return ore(this,0,state);
+            return ore(this,0,settings().rock());
+        if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.16)
+                <GeologicalNoise.smoothstep(-.12,.25,score)) return settings().rock();
         return null;
     }
 

@@ -97,6 +97,8 @@ public final class KimberliteDeposit extends OrdinaryDeposit {
                     +shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed()^0xD1A0L,.035,.11,.12,.07);
             if(body>0) return ore(this,1,pipe);
         }
+        if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.10)<.10+.18*p)
+            return ore(this,0,pipe);
         return pipe;
     }
 

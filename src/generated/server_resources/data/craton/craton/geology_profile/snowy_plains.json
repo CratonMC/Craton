@@ -2,9 +2,10 @@
   "biomes": "#c:is_snowy_plains",
   "layers": [
     "craton:limestone",
-    "craton:stone",
+    "craton:shale",
     "craton:tuff",
     "craton:andesite",
+    "craton:schist",
     "craton:gneiss",
     "craton:deepslate"
   ]

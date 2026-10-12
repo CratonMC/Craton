@@ -6,6 +6,8 @@
     "craton:pegmatite",
     "craton:gabbro",
     "craton:rhyolite",
+    "craton:schist",
+    "craton:eclogite",
     "craton:deepslate"
   ]
 }

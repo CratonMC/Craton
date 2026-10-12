@@ -24,6 +24,10 @@ public final class GeologyLayerRegistry {
     public static final ResourceKey<GeologyLayer> MARBLE = createKey("marble");
     public static final ResourceKey<GeologyLayer> RHYOLITE = createKey("rhyolite");
     public static final ResourceKey<GeologyLayer> PEGMATITE = createKey("pegmatite");
+    public static final ResourceKey<GeologyLayer> ARKOSE_SANDSTONE = createKey("arkose_sandstone");
+    public static final ResourceKey<GeologyLayer> SHALE = createKey("shale");
+    public static final ResourceKey<GeologyLayer> ECLOGITE = createKey("eclogite");
+    public static final ResourceKey<GeologyLayer> SCHIST = createKey("schist");
 
     private static ResourceKey<GeologyLayer> createKey(String name) {
         return ResourceKey.create(CratonRegistries.GEOLOGY_LAYER, Craton.rl(name));
@@ -46,6 +50,10 @@ public final class GeologyLayerRegistry {
         context.register(MARBLE, layer(CratonBlocks.MARBLE.getOrigin().getBaseBlock(), 22.0, 14.0, 0.009, 0.011, 404));
         context.register(RHYOLITE, layer(CratonBlocks.RHYOLITE.getOrigin().getBaseBlock(), 28.0, 12.0, 0.012, 0.007, 505));
         context.register(PEGMATITE, layer(CratonBlocks.PEGMATITE.getOrigin().getBaseBlock(), 12.0, 6.0, 0.004, 0.005, 606));
+        context.register(ARKOSE_SANDSTONE, layer(CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock(), 18.0, 7.0, 0.008, 0.011, 707));
+        context.register(SHALE, layer(CratonBlocks.SHALE.getOrigin().getBaseBlock(), 15.0, 6.0, 0.007, 0.009, 808));
+        context.register(ECLOGITE, layer(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock(), 19.0, 11.0, 0.006, 0.009, 909));
+        context.register(SCHIST, layer(CratonBlocks.SCHIST.getOrigin().getBaseBlock(), 17.0, 9.0, 0.007, 0.010, 1001));
 
     }
 

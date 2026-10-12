@@ -65,6 +65,12 @@ public final class OreTypeRegistry {
         Block gabbro=CratonBlocks.GABBRO.getOrigin().getBaseBlock();
         Block pegmatite=CratonBlocks.PEGMATITE.getOrigin().getBaseBlock();
         Block rhyolite=CratonBlocks.RHYOLITE.getOrigin().getBaseBlock();
+        Block arkose=CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock();
+        Block shale=CratonBlocks.SHALE.getOrigin().getBaseBlock();
+        Block eclogite=CratonBlocks.ECLOGITE.getOrigin().getBaseBlock();
+        Block skarn=CratonBlocks.SKARN.getOrigin().getBaseBlock();
+        Block kimberlite=CratonBlocks.KIMBERLITE.getOrigin().getBaseBlock();
+        Block jadeitite=CratonBlocks.JADEITITE.getOrigin().getBaseBlock();
 
         register(context,BIF_IRON,List.of(
                 variant(gneiss,CratonBlocks.banded_iron_gneiss_ore)));
@@ -78,11 +84,10 @@ public final class OreTypeRegistry {
         register(context,QUARTZ_VEIN_GOLD,CratonBlocks.quartz_vein_gold_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
         register(context,QUARTZ_VEIN_PYRITE,CratonBlocks.quartz_vein_pyrite_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
         register(context,HYDROTHERMAL_FLUORITE,CratonBlocks.fluorite_vein_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
-        register(context,SANDSTONE_URANIUM,CratonBlocks.sedimentary_uranium_ore,Blocks.SANDSTONE,Blocks.RED_SANDSTONE);
-        // Shale and eclogite are not registered yet; these use temporary host proxies.
-        register(context,SHALE_PB_ZN,CratonBlocks.sedimentary_pb_zn_ore,Blocks.DEEPSLATE);
-        register(context,SHALE_COAL,CratonBlocks.shale_coal_ore,Blocks.DEEPSLATE);
-        register(context,DEEP_HYDROTHERMAL_REDSTONE,CratonBlocks.deep_hydrothermal_redstone_ore,Blocks.DEEPSLATE);
+        register(context,SANDSTONE_URANIUM,CratonBlocks.sedimentary_uranium_ore,arkose);
+        register(context,SHALE_PB_ZN,CratonBlocks.sedimentary_pb_zn_ore,shale);
+        register(context,SHALE_COAL,CratonBlocks.shale_coal_ore,shale);
+        register(context,DEEP_HYDROTHERMAL_REDSTONE,CratonBlocks.deep_hydrothermal_redstone_ore,eclogite);
         register(context,GRANITE_CASSITERITE,CratonBlocks.granite_cassiterite_ore,Blocks.GRANITE);
         register(context,GRANITE_WOLFRAMITE,CratonBlocks.granite_wolframite_ore,Blocks.GRANITE);
         register(context,PORPHYRY_GOLD,CratonBlocks.porphyry_gold_ore,Blocks.DIORITE);
@@ -96,20 +101,20 @@ public final class OreTypeRegistry {
         register(context,PEAT,CratonBlocks.peat,Blocks.MUD);
         register(context,PLACER_GOLD,List.of(
                 variant(Blocks.GRAVEL,CratonBlocks.auriferous_gravel),
-                variant(Blocks.SAND,CratonBlocks.auriferous_sand)));
+                variant(Blocks.SAND,CratonBlocks.gold_bearing_sand)));
         register(context,PLACER_IRON,List.of(
-                variant(Blocks.GRAVEL,CratonBlocks.ferriferous_gravel),
-                variant(Blocks.RED_SAND,CratonBlocks.ferriferous_sand)));
-        register(context,KIMBERLITE_DIAMOND,CratonBlocks.diamond_bearing_kimberlite,Blocks.BLACKSTONE);
+                variant(Blocks.GRAVEL,CratonBlocks.iron_bearing_gravel),
+                variant(Blocks.RED_SAND,CratonBlocks.iron_sand)));
+        register(context,KIMBERLITE_DIAMOND,CratonBlocks.diamond_bearing_kimberlite,kimberlite);
         register(context,KIMBERLITE_DIAMOND_RICH,CratonBlocks.diamond_rich_kimberlite,
-                CratonBlocks.diamond_bearing_kimberlite.value());
-        register(context,SKARN_IRON,CratonBlocks.skarn_iron_ore,marble);
-        register(context,SKARN_COPPER,CratonBlocks.skarn_copper_ore,marble);
-        register(context,SKARN_W_SN,CratonBlocks.skarn_w_sn_ore,marble);
-        register(context,SKARN_PB_ZN_AG,CratonBlocks.skarn_pb_zn_ore,marble);
-        register(context,SKARN_GOLD,CratonBlocks.skarn_gold_ore,marble);
-        register(context,METEORITIC_IRON,CratonBlocks.meteoric_iron_ore,Blocks.BASALT);
-        register(context,JADEITITE_JADE,CratonBlocks.suspicious_jadeitite,gneiss,Blocks.DEEPSLATE);
+                kimberlite);
+        register(context,SKARN_IRON,CratonBlocks.skarn_iron_ore,skarn);
+        register(context,SKARN_COPPER,CratonBlocks.skarn_copper_ore,skarn);
+        register(context,SKARN_W_SN,CratonBlocks.skarn_w_sn_ore,skarn);
+        register(context,SKARN_PB_ZN_AG,CratonBlocks.skarn_pb_zn_ore,skarn);
+        register(context,SKARN_GOLD,CratonBlocks.skarn_gold_ore,skarn);
+        register(context,METEORITIC_IRON,CratonBlocks.meteoric_iron_ore,CratonBlocks.METEORITE.getOrigin().getBaseBlock());
+        register(context,JADEITITE_JADE,CratonBlocks.suspicious_jadeitite,jadeitite);
     }
 
     private static OreType.Variant variant(Block host,Holder<Block> result){

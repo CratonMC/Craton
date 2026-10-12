@@ -20,7 +20,7 @@ public final class MeteoriteFeatures {
 
     public static void bootstrap(BootstrapContext<Feature> context) {
         context.register(METEORITE, new MeteoriteFeature(context.lookup(CratonRegistries.ORE_TYPE).getOrThrow(OreTypeRegistry.METEORITIC_IRON),
-                Blocks.BASALT.defaultBlockState(), 3, 6, .13f));
+                CratonBlocks.METEORITE.getOrigin().getBaseBlock().defaultBlockState(), 3, 6, .13f));
     }
 
     public static void bootstrapPlaced(BootstrapContext<PlacedFeature> context) {

@@ -1,7 +1,7 @@
 {
   "variants": [
     {
-      "hosts": "craton:marble",
+      "hosts": "craton:skarn",
       "result": "craton:skarn_gold_ore"
     }
   ]

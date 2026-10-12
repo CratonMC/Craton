@@ -1,11 +1,7 @@
 {
   "variants": [
     {
-      "hosts": "craton:gneiss",
-      "result": "craton:suspicious_jadeitite"
-    },
-    {
-      "hosts": "minecraft:deepslate",
+      "hosts": "craton:jadeitite",
       "result": "craton:suspicious_jadeitite"
     }
   ]

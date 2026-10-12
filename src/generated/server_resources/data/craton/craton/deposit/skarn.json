@@ -14,7 +14,7 @@
       "max_candidates": 0,
       "reach": 0.0
     },
-    "rock": "craton:marble",
+    "rock": "craton:skarn",
     "shape": {
       "broad_noise": 0.46,
       "detail_noise": 0.15,

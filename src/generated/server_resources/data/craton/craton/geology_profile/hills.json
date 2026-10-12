@@ -4,8 +4,10 @@
     "craton:andesite",
     "craton:stone",
     "craton:granite",
+    "craton:schist",
     "craton:gneiss",
     "craton:gabbro",
+    "craton:eclogite",
     "craton:deepslate"
   ]
 }

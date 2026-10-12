@@ -53,6 +53,7 @@ public record MeteoriteFeature(Holder<OreType> ore, BlockState rock, int minRadi
                 pos.set(origin.getX()+dx, localSurface+dy, origin.getZ()+dz);
                 BlockState old = level.getBlockState(pos);
                 if (old.hasBlockEntity() || !(old.is(BlockTags.BASE_STONE_OVERWORLD)
+                        || old.is(BlockTags.STONE_ORE_REPLACEABLES)
                         || old.is(Blocks.DIRT) || old.is(Blocks.GRASS_BLOCK) || old.is(Blocks.COARSE_DIRT)
                         || old.is(Blocks.SAND) || old.is(Blocks.RED_SAND) || old.is(Blocks.GRAVEL)
                         || old.is(Blocks.BASALT) || old.is(Blocks.TUFF))) continue;

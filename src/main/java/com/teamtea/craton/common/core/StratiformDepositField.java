@@ -2,6 +2,7 @@ package com.teamtea.craton.common.core;
 
 import com.teamtea.craton.api.geology.deposit.FieldDeposit;
 import com.teamtea.craton.api.geology.deposit.SandstoneUraniumDeposit;
+import com.teamtea.craton.api.geology.deposit.ShaleLeadZincDeposit;
 import com.teamtea.craton.api.geology.deposit.StratiformCoalDeposit;
 import com.teamtea.craton.api.geology.deposit.StratiformCopperDeposit;
 import com.teamtea.craton.common.registry.CratonBlocks;
@@ -32,7 +33,21 @@ public final class StratiformDepositField {
                 if(!placed.equals(host)) return placed;
             }
         }
-        if(host.is(Blocks.SANDSTONE)||host.is(Blocks.RED_SANDSTONE)){
+        if(host.is(CratonBlocks.SHALE.getOrigin().getBaseBlock())){
+            DepositSample coal=layerBoundSample(ctx,ctx.stratiformCoal(),host,y,0x11);
+            if(coal!=null){
+                StratiformCoalDeposit definition=(StratiformCoalDeposit)ctx.owners().get(coal.candidate());
+                BlockState placed=definition.placeSample(ctx,host,y,coal);
+                if(!placed.equals(host)) return placed;
+            }
+            DepositSample leadZinc=layerBoundSample(ctx,ctx.shaleLeadZinc(),host,y,0x5A);
+            if(leadZinc!=null){
+                ShaleLeadZincDeposit definition=(ShaleLeadZincDeposit)ctx.owners().get(leadZinc.candidate());
+                BlockState placed=definition.placeSample(ctx,host,y,leadZinc);
+                if(!placed.equals(host)) return placed;
+            }
+        }
+        if(host.is(CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock())){
             DepositSample uranium=sandstoneRollFront(ctx,y);
             if(uranium!=null)
                 return ((SandstoneUraniumDeposit)ctx.owners().get(uranium.candidate())).placeSample(ctx,host,y,uranium);
@@ -87,7 +102,7 @@ public final class StratiformDepositField {
     }
 
     private static DepositSample sandstoneRollFront(ColumnContext ctx,int y){
-        List<Integer> sandstoneLayers=matchingLayers(ctx,Blocks.SANDSTONE.defaultBlockState());
+        List<Integer> sandstoneLayers=matchingLayers(ctx,CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock().defaultBlockState());
         if(sandstoneLayers.isEmpty()) return null;
         DepositSample best=ctx.stratiformSample();
         best.reset();

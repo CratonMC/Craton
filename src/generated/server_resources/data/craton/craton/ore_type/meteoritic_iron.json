@@ -1,7 +1,7 @@
 {
   "variants": [
     {
-      "hosts": "minecraft:basalt",
+      "hosts": "craton:meteorite",
       "result": "craton:meteoric_iron_ore"
     }
   ]

@@ -3,7 +3,8 @@
   "layers": [
     "craton:stone",
     "craton:limestone",
-    "craton:andesite",
+    "craton:shale",
+    "craton:schist",
     "craton:gneiss",
     "craton:granite",
     "craton:deepslate"

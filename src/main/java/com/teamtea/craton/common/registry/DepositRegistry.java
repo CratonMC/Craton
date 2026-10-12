@@ -61,14 +61,16 @@ public final class DepositRegistry {
         field(ctx,ores,"gabbro_intrusion",DepositTypes.GABBRO,p(224,2,220,.22),s(82,160,55,115,17,34,28,96,.17,.06),CratonBlocks.GABBRO.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.GABBRO_NI_CU,OreTypeRegistry.GABBRO_PGE);
         field(ctx,ores,"epithermal",DepositTypes.EPITHERMAL,p(160,2,205,.42),s(88,88,3.6,3.6,55,55,45,125,.20,.09),Blocks.QUARTZ_BLOCK.defaultBlockState(),OreTypeRegistry.EPITHERMAL_AU_AG);
         field(ctx,ores,"vms",DepositTypes.VMS,p(192,2,130,.55),s(42,88,26,61,6,14,0,0,.29,.09),Blocks.TUFF.defaultBlockState(),OreTypeRegistry.VMS_CHALCOPYRITE,OreTypeRegistry.VMS_SPHALERITE,OreTypeRegistry.VMS_GALENA);
-        field(ctx,ores,"skarn",DepositTypes.SKARN,p(160,0,0,1),s(0,0,0,0,12,12,0,0,.46,.15),CratonBlocks.MARBLE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.SKARN_W_SN,OreTypeRegistry.SKARN_PB_ZN_AG,OreTypeRegistry.SKARN_COPPER,OreTypeRegistry.SKARN_GOLD,OreTypeRegistry.SKARN_IRON);
+        field(ctx,ores,"skarn",DepositTypes.SKARN,p(160,0,0,1),s(0,0,0,0,12,12,0,0,.46,.15),CratonBlocks.SKARN.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.SKARN_W_SN,OreTypeRegistry.SKARN_PB_ZN_AG,OreTypeRegistry.SKARN_COPPER,OreTypeRegistry.SKARN_GOLD,OreTypeRegistry.SKARN_IRON);
         field(ctx,ores,"hydrothermal_vein",DepositTypes.VEIN,p(192,2,245,.40),s(125,125,2.5,2.5,82,82,45,125,.20,.09),Blocks.QUARTZ_BLOCK.defaultBlockState(),OreTypeRegistry.QUARTZ_VEIN_GOLD,OreTypeRegistry.QUARTZ_VEIN_PYRITE,OreTypeRegistry.HYDROTHERMAL_FLUORITE);
         field(ctx,ores,"weathering",DepositTypes.WEATHERING,p(160,2,160,.36),s(62,110,62,110,13,13,0,0,.28,.08),Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),OreTypeRegistry.BASALT_BAUXITE);
-        field(ctx,ores,"kimberlite",DepositTypes.KIMBERLITE,p(256,1,95,.18),s(6,26,6,26,48,62,48,92,.18,.06),CratonBlocks.diamond_bearing_kimberlite.value().defaultBlockState(),OreTypeRegistry.KIMBERLITE_DIAMOND,OreTypeRegistry.KIMBERLITE_DIAMOND_RICH);
-        field(ctx,ores,"jadeitite",DepositTypes.JADEITITE,p(224,1,120,.22),s(48,48,19,19,11,11,18,68,.22,.07),Blocks.DYED_TERRACOTTA.green().defaultBlockState(),OreTypeRegistry.JADEITITE_JADE);
+        field(ctx,ores,"kimberlite",DepositTypes.KIMBERLITE,p(256,1,95,.18),s(6,26,6,26,48,62,48,92,.18,.06),CratonBlocks.KIMBERLITE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.KIMBERLITE_DIAMOND,OreTypeRegistry.KIMBERLITE_DIAMOND_RICH);
+        field(ctx,ores,"jadeitite",DepositTypes.JADEITITE,p(224,1,120,.22),s(48,48,19,19,11,11,18,68,.22,.07),CratonBlocks.JADEITITE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.JADEITITE_JADE);
         field(ctx,ores,"placer",DepositTypes.PLACER,p(128,2,95,.48),s(28,64,28,64,4,4,0,0,.25,.08),Blocks.GRAVEL.defaultBlockState(),OreTypeRegistry.PLACER_GOLD,OreTypeRegistry.PLACER_IRON);
-        field(ctx,ores,"stratiform_coal",DepositTypes.COAL,p(192,2,190,.40),s(72,130,32,74,2.3,6.5,0,0,.25,.07),Blocks.DYED_TERRACOTTA.black().defaultBlockState(),OreTypeRegistry.LIMESTONE_COAL);
+        field(ctx,ores,"stratiform_coal",DepositTypes.COAL,p(192,2,190,.40),s(72,130,32,74,2.3,6.5,0,0,.25,.07),Blocks.DYED_TERRACOTTA.black().defaultBlockState(),OreTypeRegistry.LIMESTONE_COAL,OreTypeRegistry.SHALE_COAL);
         field(ctx,ores,"stratiform_copper",DepositTypes.COPPER,p(192,2,190,.38),s(72,130,32,74,2.3,6.5,0,0,.25,.07),Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),OreTypeRegistry.SEDIMENTARY_COPPER);
         field(ctx,ores,"sandstone_uranium",DepositTypes.URANIUM,p(192,2,190,.34),s(80,135,36,74,2.8,5,0,0,.22,.07),Blocks.DYED_TERRACOTTA.lime().defaultBlockState(),OreTypeRegistry.SANDSTONE_URANIUM);
+        field(ctx,ores,"shale_pb_zn",DepositTypes.SHALE_PB_ZN,p(192,2,190,.38),s(65,115,28,62,2,4.5,0,0,.25,.08),CratonBlocks.SHALE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.SHALE_PB_ZN);
+        field(ctx,ores,"deep_hydrothermal_redstone",DepositTypes.DEEP_REDSTONE,p(192,2,140,.36),s(28,56,3,7,3,6,0,0,.24,.08),CratonBlocks.ECLOGITE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.DEEP_HYDROTHERMAL_REDSTONE);
     }
 }

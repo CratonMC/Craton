@@ -5,6 +5,7 @@ import com.teamtea.craton.common.core.DepositRandomSequences;
 
 import com.teamtea.craton.common.core.DepositFieldEngine.ColumnContext;
 import com.teamtea.craton.common.core.StratiformDepositField;
+import com.teamtea.craton.common.registry.CratonBlocks;
 import net.minecraft.world.level.block.state.BlockState;
 import static com.teamtea.craton.common.core.DepositFieldSupport.*;
 
@@ -20,7 +21,7 @@ public final class StratiformCoalDeposit extends FieldDeposit {
 
     public BlockState placeSample(ColumnContext ctx,BlockState host,int y,StratiformDepositField.DepositSample sample){
         if(occupies(sample.score(),sample.grade(),sample.candidate(),ctx.x(),y,ctx.z(),.10,.82))
-            return ore(this,0,host);
+            return ore(this,host.is(CratonBlocks.SHALE.getOrigin().getBaseBlock())?1:0,host);
         return host;
     }
 }

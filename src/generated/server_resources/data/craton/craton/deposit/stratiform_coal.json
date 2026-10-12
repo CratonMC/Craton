@@ -2,7 +2,8 @@
   "type": "stratiform_coal",
   "settings": {
     "ores": [
-      "craton:limestone_coal"
+      "craton:limestone_coal",
+      "craton:shale_coal"
     ],
     "placement": {
       "cell_size": 192,

@@ -1,7 +1,7 @@
 {
   "variants": [
     {
-      "hosts": "minecraft:deepslate",
+      "hosts": "craton:shale",
       "result": "craton:shale_coal_ore"
     }
   ]

@@ -152,6 +152,7 @@ public final class DepositFieldEngine {
         public List<DepositCandidateSampler.Candidate> stratiformCoal(){return candidates(DepositTypes.COAL);}
         public List<DepositCandidateSampler.Candidate> stratiformCopper(){return candidates(DepositTypes.COPPER);}
         public List<DepositCandidateSampler.Candidate> sandstoneUranium(){return candidates(DepositTypes.URANIUM);}
+        public List<DepositCandidateSampler.Candidate> shaleLeadZinc(){return candidates(DepositTypes.SHALE_PB_ZN);}
         public List<DepositCandidateSampler.Candidate> bifCandidates(){return candidates(DepositTypes.BIF);}
         public BandedIronFormation.BifData bif(){return bif;}
 

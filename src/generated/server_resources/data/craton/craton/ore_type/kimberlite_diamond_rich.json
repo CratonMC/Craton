@@ -1,7 +1,7 @@
 {
   "variants": [
     {
-      "hosts": "craton:diamond_bearing_kimberlite",
+      "hosts": "craton:kimberlite",
       "result": "craton:diamond_rich_kimberlite"
     }
   ]

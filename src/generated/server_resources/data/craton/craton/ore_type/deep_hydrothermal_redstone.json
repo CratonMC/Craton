@@ -1,7 +1,7 @@
 {
   "variants": [
     {
-      "hosts": "minecraft:deepslate",
+      "hosts": "craton:eclogite",
       "result": "craton:deep_hydrothermal_redstone_ore"
     }
   ]
