@@ -22,7 +22,11 @@ public abstract class FieldDeposit extends AbstractDeposit {
     private final DepositRandomSequences sequence;
 
     protected FieldDeposit(Identifier type, Settings settings,DepositRandomSequences sequence) {
-        super(resolvePlacement(settings));
+        this(type,settings,sequence,settings.shape().horizontalReach());
+    }
+
+    protected FieldDeposit(Identifier type, Settings settings,DepositRandomSequences sequence,double requiredReach) {
+        super(resolvePlacement(settings,requiredReach));
         this.type=type;
         this.settings=settings;
         this.sequence=sequence;
@@ -32,10 +36,10 @@ public abstract class FieldDeposit extends AbstractDeposit {
     public Settings settings() { return settings; }
     @Override public DepositRandomSequences sequence(){return sequence;}
 
-    private static Deposit.Placement resolvePlacement(Settings settings) {
+    private static Deposit.Placement resolvePlacement(Settings settings,double requiredReach) {
         Placement p=settings.placement();
         return new Deposit.Placement(p.cellSize(),p.maxCandidates(),
-                Math.max(p.reach(),settings.shape().horizontalReach()),p.frequency());
+                Math.max(p.reach(),requiredReach),p.frequency());
     }
     protected static <D extends FieldDeposit> MapCodec<D> codecFor(
             int slots, boolean contact, Function<Settings,D> factory) {

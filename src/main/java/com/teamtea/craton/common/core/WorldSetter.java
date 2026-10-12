@@ -2,6 +2,7 @@ package com.teamtea.craton.common.core;
 
 import com.teamtea.craton.api.geology.GeologyLayer;
 import com.teamtea.craton.api.geology.GeologyProfile;
+import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.registry.CratonContents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -48,6 +49,7 @@ public final class WorldSetter {
                                               int startingHeight,ChunkAccess chunk,Holder<Biome> biome,
                                               ChunkContext context){
         boolean debugmode=DEBUG_DEPOSITS;
+        // DEBUG_DEPOSITS
         Optional<Holder<GeologyProfile>> optional=CratonContents.getGeologyProfile(biome);
         if(optional.isEmpty()) return;
         List<Holder<GeologyLayer>> layers=optional.get().value().layers();
@@ -79,7 +81,7 @@ public final class WorldSetter {
             BlockState state=DepositFieldEngine.apply(depositContext,host,host,y);
             if(!debugmode&&state==current) continue;
             if(debugmode)
-                if(state==host||state==current){
+                if(state==host||state==current||state.getBlock()==Blocks.DIORITE||state.getBlock()==Blocks.GRANITE||state.getBlock()== CratonBlocks.GABBRO.getOrigin().getBaseBlock()){
                 column.setBlock(y,Blocks.AIR.defaultBlockState());
                 continue;
             }

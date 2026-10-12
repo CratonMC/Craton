@@ -24,6 +24,12 @@
       "radius_y_min": 42.0,
       "radius_z_max": 82.0,
       "radius_z_min": 40.0
+    },
+    "mineralization": {
+      "fertile_chance": 0.42,
+      "radius_fraction": 0.68,
+      "height_fraction": 0.75,
+      "ore_density": 0.55
     }
   }
 }

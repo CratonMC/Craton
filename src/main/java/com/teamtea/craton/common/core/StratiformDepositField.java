@@ -77,7 +77,9 @@ public final class StratiformDepositField {
             double warp=shapeNoise(ctx.x(),y,ctx.z(),c.shapeSeed(),.011,.054,config.broadNoise(),config.detailNoise());
             double center=boundary-offset;
             double satellite=satellitePods(c,ctx.x(),y,ctx.z(),c.x(),center,c.z(),rx,thickness*1.6,rz,angle,variant,config);
-            double score=Math.max(1-d2-vertical*.72+warp,satellite*.65-.04);
+            // A lens pinches out toward its rim instead of keeping nearly full
+            // thickness right up to the horizontal boundary.
+            double score=Math.max(1-d2-sq(vertical)+warp,satellite*.65-.04);
             double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.065,3);
             if(best.candidate()==null||score>best.score()) best.set(score,grade,c);
         }

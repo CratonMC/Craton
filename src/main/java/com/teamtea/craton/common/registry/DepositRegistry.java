@@ -4,6 +4,7 @@ import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.geology.deposit.BandedIronFormation;
 import com.teamtea.craton.api.geology.deposit.Deposit;
 import com.teamtea.craton.api.geology.deposit.DepositTypes;
+import com.teamtea.craton.api.geology.deposit.DioriteIntrusionDeposit;
 import com.teamtea.craton.api.geology.deposit.FieldDeposit;
 import com.teamtea.craton.api.geology.deposit.KimberliteDeposit;
 import com.teamtea.craton.api.geology.ore.OreType;
@@ -31,9 +32,13 @@ public final class DepositRegistry {
                 Arrays.stream(oreKeys).<Holder<OreType>>map(ores::getOrThrow).toList(),
                 type.equals(DepositTypes.WEATHERING)?List.of(Blocks.DYED_TERRACOTTA.red().defaultBlockState(),
                         Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),Blocks.DYED_TERRACOTTA.brown().defaultBlockState()):List.of());
-        ctx.register(key(name),type.equals(DepositTypes.KIMBERLITE)
-                ?new KimberliteDeposit(settings,new KimberliteDeposit.RichBody(.35,2.2,4.2))
-                :DepositTypes.createField(type,settings));
+        Deposit deposit;
+        if(type.equals(DepositTypes.KIMBERLITE))
+            deposit=new KimberliteDeposit(settings,new KimberliteDeposit.RichBody(.35,2.2,4.2));
+        else if(type.equals(DepositTypes.DIORITE))
+            deposit=new DioriteIntrusionDeposit(settings,new DioriteIntrusionDeposit.Mineralization(.42,.68,.75,.55));
+        else deposit=DepositTypes.createField(type,settings);
+        ctx.register(key(name),deposit);
     }
     private static FieldDeposit.Placement p(int cell, int count, double reach, double frequency) {
         return new FieldDeposit.Placement(cell, count, reach, frequency);
@@ -45,8 +50,12 @@ public final class DepositRegistry {
 
     public static void bootstrap(BootstrapContext<Deposit> ctx) {
         var ores=ctx.lookup(CratonRegistries.ORE_TYPE);
-        for (int i=0;i<3;i++) ctx.register(i==0?BIF:i==1?BIF2:BIF3,
-                new BandedIronFormation(ores.getOrThrow(OreTypeRegistry.BIF_IRON),800,300,i==0?3:i==1?6:5,0,30,4,120,.25,8,.32,.075));
+        ctx.register(BIF,new BandedIronFormation(ores.getOrThrow(OreTypeRegistry.BIF_IRON),
+                360,90,5,0,30,4,100,.90,.28,5,.32,.075));
+        ctx.register(BIF2,new BandedIronFormation(ores.getOrThrow(OreTypeRegistry.BIF_IRON),
+                240,65,4,0,30,4,80,.85,.22,4,.32,.075));
+        ctx.register(BIF3,new BandedIronFormation(ores.getOrThrow(OreTypeRegistry.BIF_IRON),
+                160,45,3.5,0,30,4,60,.80,.12,3,.32,.075));
         field(ctx,ores,"granite_intrusion",DepositTypes.GRANITE,p(224,2,210,.35),s(75,140,58,110,38,72,35,112,.18,.06),Blocks.GRANITE.defaultBlockState(),OreTypeRegistry.GRANITE_CASSITERITE,OreTypeRegistry.GRANITE_WOLFRAMITE);
         field(ctx,ores,"diorite_intrusion",DepositTypes.DIORITE,p(192,2,165,.30),s(52,104,40,82,42,84,38,120,.21,.07),Blocks.DIORITE.defaultBlockState(),OreTypeRegistry.PORPHYRY_COPPER,OreTypeRegistry.PORPHYRY_GOLD,OreTypeRegistry.PORPHYRY_SULFIDE);
         field(ctx,ores,"gabbro_intrusion",DepositTypes.GABBRO,p(224,2,220,.22),s(82,160,55,115,17,34,28,96,.17,.06),CratonBlocks.GABBRO.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.GABBRO_NI_CU,OreTypeRegistry.GABBRO_PGE);

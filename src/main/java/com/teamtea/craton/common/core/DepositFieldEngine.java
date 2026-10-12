@@ -31,7 +31,7 @@ public final class DepositFieldEngine {
             Deposit.Placement p=deposit.placement();
             if(p.frequency()<=0||p.maxCandidates()==0) continue;
             context.cellCache.queryInto(deposit.sequence(),entry.salt(),x,z,
-                    p.cellSize(),p.reach(),p.maxCandidates(),context.queryBuffer);
+                    p.cellSize(),entry.reach(),p.maxCandidates(),context.queryBuffer);
             for(DepositCandidateSampler.Candidate candidate:context.queryBuffer){
                 if(rand01(candidate.shapeSeed()^entry.salt())>=p.frequency()) continue;
                 context.owners.put(candidate,deposit);
@@ -44,7 +44,7 @@ public final class DepositFieldEngine {
         return context;
     }
 
-    private record PreparedDefinition(Deposit deposit,long salt){}
+    private record PreparedDefinition(Deposit deposit,long salt,double reach){}
     private record SkarnRule(SkarnDeposit deposit,long salt){}
 
     public static final class ColumnContext {
@@ -78,11 +78,21 @@ public final class DepositFieldEngine {
             for(Holder<Deposit> holder:CratonContents.getDeposits()){
                 Deposit deposit=holder.value();
                 long salt=DepositCandidateSampler.salt(holder.unwrapKey().orElseThrow().identifier().toString());
-                entries.add(new PreparedDefinition(deposit,salt));
+                entries.add(new PreparedDefinition(deposit,salt,deposit.placement().reach()));
                 if(deposit instanceof SkarnDeposit skarn) contacts.add(new SkarnRule(skarn,salt));
             }
-            this.preparedDefinitions=List.copyOf(entries);
             this.skarns=List.copyOf(contacts);
+            double reach=0;
+            for(SkarnRule rule:contacts)
+                reach=Math.max(reach,rule.deposit().settings().shape().radiusYMax());
+            List<PreparedDefinition> resolved=new ArrayList<>(entries.size());
+            for(PreparedDefinition entry:entries){
+                Deposit deposit=entry.deposit();
+                double candidateReach=deposit instanceof IntrusionDeposit intrusion
+                        ?Math.max(entry.reach(),intrusion.contactReach(reach)):entry.reach();
+                resolved.add(new PreparedDefinition(deposit,entry.salt(),candidateReach));
+            }
+            this.preparedDefinitions=List.copyOf(resolved);
         }
 
         private void reset(GeologyFieldSampler geology,int x,int z,int minY,int topY,

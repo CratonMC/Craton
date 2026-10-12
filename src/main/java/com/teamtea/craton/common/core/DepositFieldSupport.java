@@ -114,10 +114,16 @@ public final class DepositFieldSupport {
 
     public static boolean occupies(double body,double grade,DepositCandidateSampler.Candidate c,int x,int y,int z,
                                     double outer,double innerProbability){
+        return occupies(body,grade,c,x,y,z,outer,innerProbability,1);
+    }
+
+    public static boolean occupies(double body,double grade,DepositCandidateSampler.Candidate c,int x,int y,int z,
+                                    double outer,double innerProbability,double density){
+        if(density<=0) return false;
         double envelope=GeologicalNoise.smoothstep(-.18,.42,body);
         double p=envelope*(outer+(innerProbability-outer)*GeologicalNoise.clamp(grade,0,1));
         if(body>.55) p=Math.max(p,Math.min(.96,innerProbability+.12));
-        return GeologicalNoise.occupancy(x,y,z,c.occupancySeed(),.16)<p;
+        return GeologicalNoise.occupancy(x,y,z,c.occupancySeed(),.16)<p*density;
     }
 
     public static List<Integer> matchingLayers(ColumnContext ctx,BlockState target){
