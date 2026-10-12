@@ -100,7 +100,12 @@ public final class DioriteIntrusionDeposit extends IntrusionDeposit {
         if(occupies(hydro-.35,grade,c,ctx.x(),y,ctx.z(),
                 .12,.58,mineralization.oreDensity())){
             double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
-            if(intrusion.radial()>.58&&mix>.43) return ore(this,2,host);
+            // The sulfide halo is the outer part of the mineralized zone, not
+            // the outer part of the whole intrusion. A small radius_fraction
+            // must not squeeze the halo into an almost invisible rim.
+            double mineralizedRadius=mineralization.radiusFraction()>0
+                    ?mineralization.radiusFraction():1.0;
+            if(intrusion.radial()>mineralizedRadius*.58&&mix>.43) return ore(this,2,host);
             if(grade>.66&&mix>.64) return ore(this,1,host);
             return ore(this,0,host);
         }

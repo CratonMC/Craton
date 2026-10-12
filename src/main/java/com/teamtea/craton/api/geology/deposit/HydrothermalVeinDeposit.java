@@ -12,7 +12,7 @@ import static com.teamtea.craton.common.core.DepositFieldSupport.*;
 
 public final class HydrothermalVeinDeposit extends OrdinaryDeposit {
     public static final MapCodec<HydrothermalVeinDeposit> CODEC =
-            codecFor(3, false, HydrothermalVeinDeposit::new);
+            codecFor(4, false, HydrothermalVeinDeposit::new);
 
     public HydrothermalVeinDeposit(Settings settings) {
         super(DepositTypes.VEIN,settings,DepositRandomSequences.VEIN,30);
@@ -34,10 +34,12 @@ public final class HydrothermalVeinDeposit extends OrdinaryDeposit {
         double p=GeologicalNoise.smoothstep(-.14,.38,score)*(.34+.58*grade);
         if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.18)>p) return null;
         double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.105);
-        if(grade>.73&&mix<.24) return ore(this,0,state);
-        if(grade>.60&&mix<.52) return ore(this,1,state);
-        if(mix>.78) return ore(this,2,state);
-        return settings().rock();
+        BlockState pegmatite=settings().rock();
+        if(grade>.68&&mix<.34) return ore(this,0,pegmatite);
+        if(grade>.58&&mix<.55) return ore(this,1,pegmatite);
+        if(mix>.82) return ore(this,2,pegmatite);
+        if(mix<.72) return ore(this,3,pegmatite);
+        return pegmatite;
     }
 
 }

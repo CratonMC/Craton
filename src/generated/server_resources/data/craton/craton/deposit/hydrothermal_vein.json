@@ -4,7 +4,8 @@
     "ores": [
       "craton:quartz_vein_gold",
       "craton:quartz_vein_pyrite",
-      "craton:hydrothermal_fluorite"
+      "craton:hydrothermal_fluorite",
+      "craton:pegmatite_quartz"
     ],
     "placement": {
       "cell_size": 192,
@@ -12,7 +13,7 @@
       "max_candidates": 2,
       "reach": 245.0
     },
-    "rock": "minecraft:quartz_block",
+    "rock": "craton:pegmatite",
     "shape": {
       "broad_noise": 0.2,
       "detail_noise": 0.09,
