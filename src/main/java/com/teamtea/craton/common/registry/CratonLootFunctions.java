@@ -2,6 +2,7 @@ package com.teamtea.craton.common.registry;
 
 import com.mojang.serialization.MapCodec;
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.common.block.OreBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.item.ItemStack;
@@ -34,9 +35,9 @@ public final class CratonLootFunctions {
 
         @Override public ItemStack apply(ItemStack stack, LootContext context) {
             BlockState state = context.getOptional(LootContextParams.BLOCK_STATE);
-            if (state == null) return stack;
-            CratonDataMaps.OreDrops data = state.getBlock().builtInRegistryHolder().getData(CratonDataMaps.ORE_DROPS);
-            if (data == null || data.drops().isEmpty()) return stack;
+            if (state == null || !(state.getBlock() instanceof OreBlock ore)) return ItemStack.EMPTY;
+            CratonDataMaps.OreDrops data = ore.oreDrops();
+            if (data == null || data.drops().isEmpty()) return ItemStack.EMPTY;
             int total = 0;
             for (CratonDataMaps.Product drop : data.drops()) total += drop.weight();
             int roll = context.getRandom().nextInt(total);
@@ -48,7 +49,7 @@ public final class CratonLootFunctions {
                     return new ItemStack(drop.item(), count);
                 }
             }
-            return stack;
+            return ItemStack.EMPTY;
         }
     }
 
