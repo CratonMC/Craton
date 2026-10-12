@@ -2,6 +2,10 @@ package com.teamtea.craton;
 
 
 import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.registry.CratonBlockTypes;
+import com.teamtea.craton.common.registry.CratonItems;
+import com.teamtea.craton.common.registry.CratonDataMaps;
+import com.teamtea.craton.common.registry.CratonLootFunctions;
 import com.teamtea.craton.common.registry.CratonFeatures;
 import com.teamtea.craton.common.registry.CratonTab;
 import com.teamtea.craton.data.DataInit;
@@ -37,6 +41,10 @@ public class Craton {
 
         CratonBlocks.BLOCKS.register(modEventBus);
         CratonBlocks.ITEMS.register(modEventBus);
+        // CratonBlockTypes.TYPES.register(modEventBus);
+        CratonItems.ITEMS.register(modEventBus);
+        CratonLootFunctions.TYPES.register(modEventBus);
+        modEventBus.addListener(CratonDataMaps::register);
         CratonTab.TABS.register(modEventBus);
         CratonFeatures.DEFERRED_REGISTER.register(modEventBus);
 

@@ -59,7 +59,7 @@ public final class GeologyProfileRegistry {
                 GeologyLayerRegistry.ANDESITE,
                 GeologyLayerRegistry.SCHIST,
                 GeologyLayerRegistry.GNEISS,
-                GeologyLayerRegistry.DEEPSLATE
+                GeologyLayerRegistry.ECLOGITE
         );
 
         context.register(PLAINS, new GeologyProfile(
@@ -88,13 +88,12 @@ public final class GeologyProfileRegistry {
         ));
 
         List<Holder<GeologyLayer>> foresetGroup = layers(layerGetter,
-                GeologyLayerRegistry.STONE,
                 GeologyLayerRegistry.LIMESTONE,
                 GeologyLayerRegistry.SHALE,
                 GeologyLayerRegistry.SCHIST,
                 GeologyLayerRegistry.GNEISS,
                 GeologyLayerRegistry.GRANITE,
-                GeologyLayerRegistry.DEEPSLATE
+                GeologyLayerRegistry.ECLOGITE
         );
 
         context.register(FOREST, new GeologyProfile(
@@ -114,13 +113,11 @@ public final class GeologyProfileRegistry {
                 biomeGetter.getOrThrow(Tags.Biomes.IS_HILL),
                 layers(layerGetter,
                         GeologyLayerRegistry.ANDESITE,
-                        GeologyLayerRegistry.STONE,
                         GeologyLayerRegistry.GRANITE,
                         GeologyLayerRegistry.SCHIST,
                         GeologyLayerRegistry.GNEISS,
                         GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.ECLOGITE,
-                        GeologyLayerRegistry.DEEPSLATE
+                        GeologyLayerRegistry.ECLOGITE
                 )
         ));
 
@@ -133,8 +130,7 @@ public final class GeologyProfileRegistry {
                         GeologyLayerRegistry.GABBRO,
                         GeologyLayerRegistry.RHYOLITE,
                         GeologyLayerRegistry.SCHIST,
-                        GeologyLayerRegistry.ECLOGITE,
-                        GeologyLayerRegistry.DEEPSLATE
+                        GeologyLayerRegistry.ECLOGITE
                 )
         ));
 
@@ -144,7 +140,7 @@ public final class GeologyProfileRegistry {
                 GeologyLayerRegistry.ARKOSE_SANDSTONE,
                 GeologyLayerRegistry.GABBRO,
                 GeologyLayerRegistry.GNEISS,
-                GeologyLayerRegistry.DEEPSLATE
+                GeologyLayerRegistry.ECLOGITE
         );
         context.register(DESERT, new GeologyProfile(
                 new OrHolderSet<>(biomeGetter.getOrThrow(Tags.Biomes.IS_DESERT),
@@ -169,7 +165,7 @@ public final class GeologyProfileRegistry {
                         GeologyLayerRegistry.ANDESITE,
                         GeologyLayerRegistry.GABBRO,
                         GeologyLayerRegistry.BASALT,
-                        GeologyLayerRegistry.DEEPSLATE
+                        GeologyLayerRegistry.ECLOGITE
                 )
         ));
 
@@ -179,7 +175,7 @@ public final class GeologyProfileRegistry {
                         GeologyLayerRegistry.BASALT,
                         GeologyLayerRegistry.TUFF,
                         GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.DEEPSLATE
+                        GeologyLayerRegistry.ECLOGITE
                 )
         ));
     }

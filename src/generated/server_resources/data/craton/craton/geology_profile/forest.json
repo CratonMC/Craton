@@ -1,12 +1,11 @@
 {
   "biomes": "#c:is_forest",
   "layers": [
-    "craton:stone",
     "craton:limestone",
     "craton:shale",
     "craton:schist",
     "craton:gneiss",
     "craton:granite",
-    "craton:deepslate"
+    "craton:eclogite"
   ]
 }

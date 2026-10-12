@@ -2,7 +2,6 @@
   "amplitude": 9.0,
   "block": "craton:schist",
   "freq_x": 0.007,
-  "freq_z": 0.01,
   "seed": 1001,
   "thickness": 17.0
 }

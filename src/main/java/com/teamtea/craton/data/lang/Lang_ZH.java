@@ -4,6 +4,7 @@ package com.teamtea.craton.data.lang;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.registry.CratonItems;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
@@ -22,6 +23,7 @@ public class Lang_ZH extends LangHelper {
     protected void addTranslations() {
 
         add("itemGroup." + modid + ".core", "克拉通");
+        add("itemGroup." + modid + ".ores", "克拉通矿产");
 
         addStoneCollection(CratonBlocks.GNEISS, "片麻岩");
         addStoneCollection(CratonBlocks.RHYOLITE, "流纹岩");
@@ -29,7 +31,6 @@ public class Lang_ZH extends LangHelper {
         addStoneCollection(CratonBlocks.LIMESTONE, "石灰岩");
         addStoneCollection(CratonBlocks.GABBRO, "辉长岩");
         addStoneCollection(CratonBlocks.PEGMATITE, "伟晶岩");
-
         addStoneCollection(CratonBlocks.ARKOSE_SANDSTONE, "长石砂岩");
         addStoneCollection(CratonBlocks.SHALE, "页岩");
         addStoneCollection(CratonBlocks.ECLOGITE, "榴辉岩");
@@ -38,6 +39,7 @@ public class Lang_ZH extends LangHelper {
         addStoneCollection(CratonBlocks.SKARN, "矽卡岩");
         addStoneCollection(CratonBlocks.METEORITE, "陨石");
         addStoneCollection(CratonBlocks.JADEITITE, "玉岩");
+
         add(CratonBlocks.banded_iron_gneiss_ore.value().getDescriptionId(), "条带铁矿石");
 //        add(CratonBlocks.banded_iron_marble_ore.value().getDescriptionId(), "大理岩条带铁矿石");
 //        add(CratonBlocks.banded_iron_stone_ore.value().getDescriptionId(), "石头条带铁矿石");
@@ -70,6 +72,7 @@ public class Lang_ZH extends LangHelper {
         add(CratonBlocks.ferriferous_gravel.value().getDescriptionId(), "含铁砂砾");
         add(CratonBlocks.auriferous_sand.value().getDescriptionId(), "金砂");
         add(CratonBlocks.ferriferous_sand.value().getDescriptionId(), "铁砂");
+        CratonItems.addChinese(this::add);
         add(CratonBlocks.diamond_bearing_kimberlite.value().getDescriptionId(), "含钻金伯利岩");
         add(CratonBlocks.diamond_rich_kimberlite.value().getDescriptionId(), "金伯利钻石体");
         add(CratonBlocks.skarn_iron_ore.value().getDescriptionId(), "矽卡岩铁矿石");

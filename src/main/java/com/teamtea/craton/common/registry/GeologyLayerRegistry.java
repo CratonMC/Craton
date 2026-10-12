@@ -8,8 +8,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public final class GeologyLayerRegistry {
-    public static final ResourceKey<GeologyLayer> DEEPSLATE = createKey("deepslate");
-    public static final ResourceKey<GeologyLayer> STONE = createKey("stone");
     public static final ResourceKey<GeologyLayer> GRANITE = createKey("granite");
     public static final ResourceKey<GeologyLayer> DIORITE = createKey("diorite");
     public static final ResourceKey<GeologyLayer> ANDESITE = createKey("andesite");
@@ -34,8 +32,6 @@ public final class GeologyLayerRegistry {
     }
 
     public static void bootstrap(BootstrapContext<GeologyLayer> context) {
-        context.register(DEEPSLATE, layer(Blocks.DEEPSLATE, 48, 8.0, 0.006, 0.009, 77));
-        context.register(STONE, layer(Blocks.STONE, 28.0, 8.0, 0.006, 0.009, 11));
         context.register(GRANITE, layer(Blocks.GRANITE, 24.0, 14.0, 0.008, 0.011, 22));
         context.register(DIORITE, layer(Blocks.DIORITE, 22.0, 12.0, 0.009, 0.010, 33));
         context.register(ANDESITE, layer(Blocks.ANDESITE, 26.0, 10.0, 0.007, 0.012, 44));
@@ -52,7 +48,7 @@ public final class GeologyLayerRegistry {
         context.register(PEGMATITE, layer(CratonBlocks.PEGMATITE.getOrigin().getBaseBlock(), 12.0, 6.0, 0.004, 0.005, 606));
         context.register(ARKOSE_SANDSTONE, layer(CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock(), 18.0, 7.0, 0.008, 0.011, 707));
         context.register(SHALE, layer(CratonBlocks.SHALE.getOrigin().getBaseBlock(), 15.0, 6.0, 0.007, 0.009, 808));
-        context.register(ECLOGITE, layer(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock(), 19.0, 11.0, 0.006, 0.009, 909));
+        context.register(ECLOGITE, layer(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock(), 48.0, 11.0, 0.006, 0.009, 909));
         context.register(SCHIST, layer(CratonBlocks.SCHIST.getOrigin().getBaseBlock(), 17.0, 9.0, 0.007, 0.010, 1001));
 
     }

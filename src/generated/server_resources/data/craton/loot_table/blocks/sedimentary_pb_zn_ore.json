@@ -2,13 +2,28 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "craton:sedimentary_pb_zn_ore"
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "condition": "minecraft:tool/can_silk_touch",
+              "name": "craton:sedimentary_pb_zn_ore"
+            },
+            {
+              "type": "minecraft:item",
+              "modifier": [
+                {
+                  "type": "craton:ore_product"
+                },
+                {
+                  "type": "minecraft:explosion_decay"
+                }
+              ],
+              "name": "craton:sedimentary_pb_zn_ore"
+            }
+          ]
         }
       ],
       "rolls": 1

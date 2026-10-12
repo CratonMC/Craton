@@ -33,6 +33,17 @@ public class CratonTab {
                     .build()
     );
 
+    public static final Supplier<CreativeModeTab> ORES = TABS.register("ores", () ->
+            CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup." + Craton.MODID + ".ores"))
+                    .icon(() -> new ItemStack(CratonBlocks.banded_iron_gneiss_ore.value()))
+                    .displayItems((parameters, output) -> {
+                        CratonBlocks.ORE_BLOCKS.forEach(holder -> output.accept(holder.value()));
+                        CratonItems.ALL.forEach(holder -> output.accept(holder.value()));
+                    })
+                    .build()
+    );
+
     private static void acceptFamily(CreativeModeTab.Output output, BlockFamily family) {
         output.accept(family.getBaseBlock());
         for (Block value : family.getVariants().values()) {

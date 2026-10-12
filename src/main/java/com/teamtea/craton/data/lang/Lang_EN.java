@@ -3,6 +3,7 @@ package com.teamtea.craton.data.lang;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
+import com.teamtea.craton.common.registry.CratonItems;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
@@ -20,6 +21,7 @@ public class Lang_EN extends LangHelper {
     @Override
     protected void addTranslations() {
         add("itemGroup." + modid + ".core", "Craton");
+        add("itemGroup." + modid + ".ores", "Craton Ores");
 
         addStoneCollection(CratonBlocks.GNEISS, "Gneiss");
         addStoneCollection(CratonBlocks.RHYOLITE, "Rhyolite");
@@ -27,7 +29,6 @@ public class Lang_EN extends LangHelper {
         addStoneCollection(CratonBlocks.LIMESTONE, "Limestone");
         addStoneCollection(CratonBlocks.GABBRO, "Gabbro");
         addStoneCollection(CratonBlocks.PEGMATITE, "Pegmatite");
-
         addStoneCollection(CratonBlocks.ARKOSE_SANDSTONE, "Arkose Sandstone");
         addStoneCollection(CratonBlocks.SHALE, "Shale");
         addStoneCollection(CratonBlocks.ECLOGITE, "Eclogite");
@@ -69,6 +70,7 @@ public class Lang_EN extends LangHelper {
         add(CratonBlocks.ferriferous_gravel.value().getDescriptionId(), "Ferriferous Gravel");
         add(CratonBlocks.auriferous_sand.value().getDescriptionId(), "Auriferous Sand");
         add(CratonBlocks.ferriferous_sand.value().getDescriptionId(), "Ferriferous Sand");
+        CratonItems.addEnglish(this::add);
         add(CratonBlocks.diamond_bearing_kimberlite.value().getDescriptionId(), "Diamond-Bearing Kimberlite");
         add(CratonBlocks.diamond_rich_kimberlite.value().getDescriptionId(), "Diamond-Rich Kimberlite");
         add(CratonBlocks.skarn_iron_ore.value().getDescriptionId(), "Skarn Iron Ore");

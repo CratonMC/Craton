@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
+import com.teamtea.craton.common.block.OreBlock;
 import com.teamtea.craton.common.core.StoneCollection;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -46,50 +47,50 @@ public class CratonBlocks {
     public static final StoneCollection METEORITE = registerStoneCollection("meteorite", MapColor.STONE);
     public static final StoneCollection JADEITITE = registerStoneCollection("jadeitite", MapColor.COLOR_GREEN);
 
-    public static final Holder<Block> banded_iron_gneiss_ore =registerOreBlock("banded_iron_gneiss_ore");
+    public static final Holder<Block> banded_iron_gneiss_ore =registerOreBlock("banded_iron_gneiss_ore", () -> GNEISS.getOrigin().getBaseBlock());
 //    public static final Holder<Block> banded_iron_marble_ore =registerOreBlock("banded_iron_marble_ore");
 //    public static final Holder<Block> banded_iron_stone_ore =registerOreBlock("banded_iron_stone_ore");
 
-    public static final Holder<Block> limestone_coal_ore = registerOreBlock("limestone_coal_ore");
-    public static final Holder<Block> sedimentary_copper_ore = registerOreBlock("sedimentary_copper_ore");
-    public static final Holder<Block> metasomatic_lapis_ore = registerOreBlock("metasomatic_lapis_ore");
-    public static final Holder<Block> magmatic_pge_ore = registerOreBlock("magmatic_pge_ore");
-    public static final Holder<Block> magmatic_ni_cu_ore = registerOreBlock("magmatic_ni_cu_ore");
-    public static final Holder<Block> pegmatite_quartz_ore = registerOreBlock("pegmatite_quartz_ore");
-    public static final Holder<Block> pegmatite_emerald_ore = registerOreBlock("pegmatite_emerald_ore");
-    public static final Holder<Block> quartz_vein_gold_ore = registerOreBlock("quartz_vein_gold_ore");
-    public static final Holder<Block> quartz_vein_pyrite_ore = registerOreBlock("quartz_vein_pyrite_ore");
-    public static final Holder<Block> fluorite_vein_ore = registerOreBlock("fluorite_vein_ore");
-    public static final Holder<Block> sedimentary_uranium_ore = registerOreBlock("sedimentary_uranium_ore");
-    public static final Holder<Block> sedimentary_pb_zn_ore = registerOreBlock("sedimentary_pb_zn_ore");
-    public static final Holder<Block> shale_coal_ore = registerOreBlock("shale_coal_ore");
-    public static final Holder<Block> deep_hydrothermal_redstone_ore = registerOreBlock("deep_hydrothermal_redstone_ore");
-    public static final Holder<Block> granite_cassiterite_ore = registerOreBlock("granite_cassiterite_ore");
-    public static final Holder<Block> granite_wolframite_ore = registerOreBlock("granite_wolframite_ore");
-    public static final Holder<Block> porphyry_gold_ore = registerOreBlock("porphyry_gold_ore");
-    public static final Holder<Block> porphyry_copper_ore = registerOreBlock("porphyry_copper_ore");
-    public static final Holder<Block> porphyry_sulfide_ore = registerOreBlock("porphyry_sulfide_ore");
-    public static final Holder<Block> epithermal_au_ag_ore = registerOreBlock("epithermal_au_ag_ore");
-    public static final Holder<Block> vms_copper_ore = registerOreBlock("vms_copper_ore");
-    public static final Holder<Block> vms_zinc_ore = registerOreBlock("vms_zinc_ore");
-    public static final Holder<Block> vms_pb_ag_ore = registerOreBlock("vms_pb_ag_ore");
-    public static final Holder<Block> bauxite_ore = registerOreBlock("bauxite_ore");
+    public static final Holder<Block> limestone_coal_ore = registerOreBlock("limestone_coal_ore", () -> LIMESTONE.getOrigin().getBaseBlock());
+    public static final Holder<Block> sedimentary_copper_ore = registerOreBlock("sedimentary_copper_ore", () -> LIMESTONE.getOrigin().getBaseBlock());
+    public static final Holder<Block> metasomatic_lapis_ore = registerOreBlock("metasomatic_lapis_ore", () -> MARBLE.getOrigin().getBaseBlock());
+    public static final Holder<Block> magmatic_pge_ore = registerOreBlock("magmatic_pge_ore", () -> GABBRO.getOrigin().getBaseBlock());
+    public static final Holder<Block> magmatic_ni_cu_ore = registerOreBlock("magmatic_ni_cu_ore", () -> GABBRO.getOrigin().getBaseBlock());
+    public static final Holder<Block> pegmatite_quartz_ore = registerOreBlock("pegmatite_quartz_ore", () -> PEGMATITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> pegmatite_emerald_ore = registerOreBlock("pegmatite_emerald_ore", () -> PEGMATITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> quartz_vein_gold_ore = registerOreBlock("quartz_vein_gold_ore", () -> PEGMATITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> quartz_vein_pyrite_ore = registerOreBlock("quartz_vein_pyrite_ore", () -> PEGMATITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> fluorite_vein_ore = registerOreBlock("fluorite_vein_ore", () -> PEGMATITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> sedimentary_uranium_ore = registerOreBlock("sedimentary_uranium_ore", () -> ARKOSE_SANDSTONE.getOrigin().getBaseBlock());
+    public static final Holder<Block> sedimentary_pb_zn_ore = registerOreBlock("sedimentary_pb_zn_ore", () -> SHALE.getOrigin().getBaseBlock());
+    public static final Holder<Block> shale_coal_ore = registerOreBlock("shale_coal_ore", () -> SHALE.getOrigin().getBaseBlock());
+    public static final Holder<Block> deep_hydrothermal_redstone_ore = registerOreBlock("deep_hydrothermal_redstone_ore", () -> ECLOGITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> granite_cassiterite_ore = registerOreBlock("granite_cassiterite_ore", () -> Blocks.GRANITE);
+    public static final Holder<Block> granite_wolframite_ore = registerOreBlock("granite_wolframite_ore", () -> Blocks.GRANITE);
+    public static final Holder<Block> porphyry_gold_ore = registerOreBlock("porphyry_gold_ore", () -> Blocks.DIORITE);
+    public static final Holder<Block> porphyry_copper_ore = registerOreBlock("porphyry_copper_ore", () -> Blocks.DIORITE);
+    public static final Holder<Block> porphyry_sulfide_ore = registerOreBlock("porphyry_sulfide_ore", () -> Blocks.DIORITE);
+    public static final Holder<Block> epithermal_au_ag_ore = registerOreBlock("epithermal_au_ag_ore", () -> Blocks.ANDESITE);
+    public static final Holder<Block> vms_copper_ore = registerOreBlock("vms_copper_ore", () -> Blocks.TUFF);
+    public static final Holder<Block> vms_zinc_ore = registerOreBlock("vms_zinc_ore", () -> Blocks.TUFF);
+    public static final Holder<Block> vms_pb_ag_ore = registerOreBlock("vms_pb_ag_ore", () -> Blocks.TUFF);
+    public static final Holder<Block> bauxite_ore = registerOreBlock("bauxite_ore", () -> Blocks.BASALT);
 
-    public static final Holder<Block> peat = registerPlaceholderBlock("peat", Blocks.MUD);
-    public static final Holder<Block> auriferous_gravel = registerPlaceholderBlock("auriferous_gravel", Blocks.GRAVEL);
-    public static final Holder<Block> ferriferous_gravel = registerPlaceholderBlock("ferriferous_gravel", Blocks.GRAVEL);
-    public static final Holder<Block> auriferous_sand = registerPlaceholderBlock("auriferous_sand", Blocks.SAND);
-    public static final Holder<Block> ferriferous_sand = registerPlaceholderBlock("ferriferous_sand", Blocks.RED_SAND);
+    public static final Holder<Block> peat = registerOreBlock("peat", () -> Blocks.MUD);
+    public static final Holder<Block> auriferous_gravel = registerOreBlock("auriferous_gravel", () -> Blocks.GRAVEL);
+    public static final Holder<Block> ferriferous_gravel = registerOreBlock("ferriferous_gravel", () -> Blocks.GRAVEL);
+    public static final Holder<Block> auriferous_sand = registerOreBlock("auriferous_sand", () -> Blocks.SAND);
+    public static final Holder<Block> ferriferous_sand = registerOreBlock("ferriferous_sand", () -> Blocks.RED_SAND);
 
-    public static final Holder<Block> diamond_bearing_kimberlite = registerOreBlock("diamond_bearing_kimberlite");
-    public static final Holder<Block> diamond_rich_kimberlite = registerOreBlock("diamond_rich_kimberlite");
-    public static final Holder<Block> skarn_iron_ore = registerOreBlock("skarn_iron_ore");
-    public static final Holder<Block> skarn_copper_ore = registerOreBlock("skarn_copper_ore");
-    public static final Holder<Block> skarn_w_sn_ore = registerOreBlock("skarn_w_sn_ore");
-    public static final Holder<Block> skarn_pb_zn_ore = registerOreBlock("skarn_pb_zn_ore");
-    public static final Holder<Block> skarn_gold_ore = registerOreBlock("skarn_gold_ore");
-    public static final Holder<Block> meteoric_iron_ore = registerOreBlock("meteoric_iron_ore");
-    public static final Holder<Block> suspicious_jadeitite = registerOreBlock("suspicious_jadeitite");
+    public static final Holder<Block> diamond_bearing_kimberlite = registerOreBlock("diamond_bearing_kimberlite", () -> KIMBERLITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> diamond_rich_kimberlite = registerOreBlock("diamond_rich_kimberlite", () -> KIMBERLITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> skarn_iron_ore = registerOreBlock("skarn_iron_ore", () -> SKARN.getOrigin().getBaseBlock());
+    public static final Holder<Block> skarn_copper_ore = registerOreBlock("skarn_copper_ore", () -> SKARN.getOrigin().getBaseBlock());
+    public static final Holder<Block> skarn_w_sn_ore = registerOreBlock("skarn_w_sn_ore", () -> SKARN.getOrigin().getBaseBlock());
+    public static final Holder<Block> skarn_pb_zn_ore = registerOreBlock("skarn_pb_zn_ore", () -> SKARN.getOrigin().getBaseBlock());
+    public static final Holder<Block> skarn_gold_ore = registerOreBlock("skarn_gold_ore", () -> SKARN.getOrigin().getBaseBlock());
+    public static final Holder<Block> meteoric_iron_ore = registerOreBlock("meteoric_iron_ore", () -> METEORITE.getOrigin().getBaseBlock());
+    public static final Holder<Block> suspicious_jadeitite = registerOreBlock("suspicious_jadeitite", () -> JADEITITE.getOrigin().getBaseBlock());
 
     public static final List<Holder<Block>> ORE_BLOCKS = List.of(
             banded_iron_gneiss_ore,
@@ -329,16 +330,17 @@ public class CratonBlocks {
         ));
     }
 
-    private static DeferredBlock<Block> registerOreBlock(String name) {
-        return registerPlaceholderBlock(name, Blocks.STONE);
-    }
-
-    private static DeferredBlock<Block> registerPlaceholderBlock(String name, Block template) {
+    private static DeferredBlock<Block> registerOreBlock(String name, Supplier<Block> host) {
         Identifier id = Identifier.fromNamespaceAndPath(Craton.MODID, name);
-        DeferredBlock<Block> block = BLOCKS.register(name, () -> new Block(
-                BlockBehaviour.Properties.ofFullCopy(template)
-                        .setId(ResourceKey.create(Registries.BLOCK, id))
-        ));
+        DeferredBlock<Block> block = BLOCKS.register(name, () -> {
+            Block hostBlock = host.get();
+            BlockBehaviour.Properties properties = BlockBehaviour.Properties.ofFullCopy(hostBlock)
+                    .setId(ResourceKey.create(Registries.BLOCK, id));
+            if (hostBlock != Blocks.MUD && hostBlock != Blocks.GRAVEL
+                    && hostBlock != Blocks.SAND && hostBlock != Blocks.RED_SAND)
+                properties.requiresCorrectToolForDrops();
+            return new OreBlock(hostBlock, properties);
+        });
         registerBlockItem(name, block);
         return block;
     }

@@ -35,6 +35,18 @@ public final class CBlockTagProvider extends BlockTagsProvider {
             }
             tag(BlockTags.STONE_ORE_REPLACEABLES).add(collection.getOrigin().getBaseBlock());
         }
+        for (var holder : CratonBlocks.ORE_BLOCKS) {
+            Block ore = holder.value();
+            if (ore == CratonBlocks.peat.value() || ore == CratonBlocks.auriferous_gravel.value()
+                    || ore == CratonBlocks.ferriferous_gravel.value()
+                    || ore == CratonBlocks.auriferous_sand.value()
+                    || ore == CratonBlocks.ferriferous_sand.value()) {
+                tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ore);
+            } else {
+                tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ore);
+                tag(BlockTags.NEEDS_STONE_TOOL).add(ore);
+            }
+        }
     }
 
     private void addStoneFamilyTags(BlockFamily family) {

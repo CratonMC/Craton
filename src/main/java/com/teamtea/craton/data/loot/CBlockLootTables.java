@@ -2,6 +2,8 @@ package com.teamtea.craton.data.loot;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
+import com.teamtea.craton.common.block.OreBlock;
+import com.teamtea.craton.common.registry.CratonLootFunctions;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -14,6 +16,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.jspecify.annotations.NonNull;
@@ -73,7 +76,15 @@ public class CBlockLootTables extends BlockLootSubProvider {
                 .filter(block -> block.asItem() != Items.AIR)
                 .collect(Collectors.toSet());
 
-        dropSelfWithContents(blocks);
+        for (Block block : blocks) {
+            if (block instanceof OreBlock) {
+                add(block, createSilkTouchDispatchTable(block,
+                        applyExplosionDecay(block, LootItem.lootTableItem(block)
+                                .apply((LootItemFunction.Builder) () -> CratonLootFunctions.PRODUCT))));
+            } else {
+                dropSelfWithContents(Set.of(block));
+            }
+        }
 
     }
 
