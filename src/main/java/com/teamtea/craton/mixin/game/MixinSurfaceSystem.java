@@ -7,12 +7,14 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.teamtea.craton.common.core.WorldSetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.chunk.BlockColumn;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
+import net.neoforged.neoforge.common.Tags;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,6 +30,9 @@ public abstract class MixinSurfaceSystem {
     @Shadow
     @Final
     private PositionalRandomFactory noiseRandom;
+
+    @Shadow
+    public abstract int getSeaLevel();
 
     @Inject(method = "buildSurface", at = @At("HEAD"))
     private void craton$beginChunk(CallbackInfo ci,
@@ -56,8 +61,15 @@ public abstract class MixinSurfaceSystem {
             @Local(name = "blockX") int blockX,
             @Local(name = "blockZ") int blockZ,
             @Local(name = "startingHeight") int startingHeight,
+            @Local(name = "maxY") int maxY,
             @Local(name = "blockPos") BlockPos.MutableBlockPos blockPos,
             @Share("cratonChunk") LocalRef<WorldSetter.ChunkContext> chunkContext) {
+
+        if(surfaceBiome.is(Tags.Biomes.IS_CAVE)){
+            surfaceBiome=biomeManager.getBiome(
+                    blockPos.setY(Math.clamp(startingHeight + 20, getSeaLevel(), maxY-1))
+            );
+        }
         WorldSetter.rebuildCloumnExtension(column, blockPos, blockX, blockZ, startingHeight, protoChunk,
                 surfaceBiome, chunkContext.get());
     }
