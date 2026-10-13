@@ -48,7 +48,7 @@ public final class WorldSetter {
     public static void rebuildCloumnExtension(BlockColumn column,BlockPos.MutableBlockPos pos,int x,int z,
                                               int startingHeight,ChunkAccess chunk,Holder<Biome> biome,
                                               ChunkContext context){
-        boolean debugmode=true;
+        boolean debugmode=DEBUG_DEPOSITS;
         // DEBUG_DEPOSITS
         Optional<Holder<GeologyProfile>> optional=CratonContents.getGeologyProfile(biome);
         if(optional.isEmpty()) return;

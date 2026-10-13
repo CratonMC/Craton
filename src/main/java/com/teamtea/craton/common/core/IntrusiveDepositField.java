@@ -1,6 +1,5 @@
 package com.teamtea.craton.common.core;
 
-import com.teamtea.craton.api.geology.deposit.FieldDeposit;
 import com.teamtea.craton.api.geology.deposit.IntrusionDeposit;
 import java.util.List;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,17 +46,17 @@ public final class IntrusiveDepositField {
     }
 
     static IntrusionResult sampleIntrusions(ColumnContext ctx,int y){
-        IntrusionResult best=sampleFamily(ctx,ctx.granite(),y,ctx.graniteResult(),0);
-        best=better(best,sampleFamily(ctx,ctx.diorite(),y,ctx.dioriteResult(),1));
-        best=better(best,sampleFamily(ctx,ctx.gabbro(),y,ctx.gabbroResult(),2));
+        IntrusionResult best=sampleFamily(ctx,ctx.graniteColumns(),y,ctx.graniteResult(),0);
+        best=better(best,sampleFamily(ctx,ctx.dioriteColumns(),y,ctx.dioriteResult(),1));
+        best=better(best,sampleFamily(ctx,ctx.gabbroColumns(),y,ctx.gabbroResult(),2));
         return best;
     }
 
-    private static IntrusionResult sampleFamily(ColumnContext ctx,List<DepositCandidateSampler.Candidate> candidates,
+    private static IntrusionResult sampleFamily(ColumnContext ctx,List<IntrusionDeposit.Prepared> candidates,
                                                  int y,IntrusionResult result,int kind){
         result.reset(kind);
-        for(DepositCandidateSampler.Candidate candidate:candidates)
-            ((IntrusionDeposit)field(ctx,candidate)).sample(ctx,candidate,y,result);
+        for(IntrusionDeposit.Prepared prepared:candidates)
+            prepared.deposit.sample(ctx,prepared,y,result);
         return result;
     }
 
@@ -65,8 +64,9 @@ public final class IntrusiveDepositField {
 
     static boolean intrusionOccupies(ColumnContext ctx,int y,IntrusionResult r){
         double p=GeologicalNoise.smoothstep(-.08,.20,r.score());
+        if(p<=0) return false;
         if(r.score()>.28) p=.985;
-        double occ=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),r.candidate().occupancySeed(),.12);
+        double occ=ctx.preparedIntrusion(r.candidate()).noise().rockOccupancy(ctx.x(),y,ctx.z());
         return occ<p;
     }
 
@@ -76,46 +76,27 @@ public final class IntrusiveDepositField {
 
     static BlockState applyIntrusiveSatellite(ColumnContext ctx,BlockState host,int y){
         BlockState state=host;
-        for(DepositCandidateSampler.Candidate c:ctx.granite()){
-            state=intrusivePod(ctx,state,y,c,0);
+        for(IntrusionDeposit.Prepared prepared:ctx.graniteColumns()){
+            state=intrusivePod(ctx,state,y,prepared);
             if(!state.equals(host)) return state;
         }
-        for(DepositCandidateSampler.Candidate c:ctx.diorite()){
-            state=intrusivePod(ctx,state,y,c,1);
+        for(IntrusionDeposit.Prepared prepared:ctx.dioriteColumns()){
+            state=intrusivePod(ctx,state,y,prepared);
             if(!state.equals(host)) return state;
         }
-        for(DepositCandidateSampler.Candidate c:ctx.gabbro()){
-            state=intrusivePod(ctx,state,y,c,2);
+        for(IntrusionDeposit.Prepared prepared:ctx.gabbroColumns()){
+            state=intrusivePod(ctx,state,y,prepared);
             if(!state.equals(host)) return state;
         }
         return host;
     }
 
-    private static BlockState intrusivePod(ColumnContext ctx,BlockState host,int y,DepositCandidateSampler.Candidate c,int kind){
-        double cy,rx,ry,rz;
-        if(kind==0){
-            FieldDeposit.Shape config=shape(ctx,c);
-            cy=config.height(ctx.minY(),c.verticalSeed());
-            rx=config.x(c.shapeSeed());
-            rz=config.z(c.shapeSeed()^0xA7);
-            ry=config.y(c.shapeSeed()^0xC3);
-        }else if(kind==1){
-            FieldDeposit.Shape config=shape(ctx,c);
-            cy=config.height(ctx.minY(),c.verticalSeed());
-            rx=config.x(c.shapeSeed());
-            rz=config.z(c.shapeSeed()^17);
-            ry=config.y(c.shapeSeed()^31);
-        }else{
-            FieldDeposit.Shape config=shape(ctx,c);
-            cy=config.height(ctx.minY(),c.verticalSeed());
-            rx=config.x(c.shapeSeed());
-            rz=config.z(c.shapeSeed()^17);
-            ry=config.y(c.shapeSeed()^71);
-        }
-        double pod=satellitePods(c,ctx.x(),y,ctx.z(),c.x(),cy,c.z(),rx,ry,rz,angle(c.rotationSeed()),0x1A7L,shape(ctx,c));
+    private static BlockState intrusivePod(ColumnContext ctx,BlockState host,int y,IntrusionDeposit.Prepared prepared){
+        DepositCandidateSampler.Candidate c=prepared.candidate;
+        double pod=prepared.satelliteScore(ctx.x(),y,ctx.z());
         if(pod<-.12) return host;
-        double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.057,3);
-        if(!occupies(pod*.62,grade,c,ctx.x(),y,ctx.z(),.06,.50)) return host;
+        double grade=prepared.noise().satelliteGrade(ctx.x(),y,ctx.z());
+        if(!prepared.occupies(pod*.62,grade,ctx.x(),y,ctx.z(),.06,.50,1)) return host;
         return rock(ctx,c);
     }
 }
