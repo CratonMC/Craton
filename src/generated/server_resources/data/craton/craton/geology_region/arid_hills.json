@@ -1,0 +1,13 @@
+{
+  "erosion": {
+    "max": 0.05
+  },
+  "humidity": {
+    "max": -0.35
+  },
+  "peaks_and_valleys": {
+    "min": -0.6,
+    "min_inclusive": false
+  },
+  "priority": 710
+}

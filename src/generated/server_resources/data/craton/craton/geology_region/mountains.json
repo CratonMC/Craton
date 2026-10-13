@@ -1,0 +1,13 @@
+{
+  "continentalness": {
+    "min": 0.03
+  },
+  "erosion": {
+    "max": -0.375
+  },
+  "peaks_and_valleys": {
+    "min": -0.05,
+    "min_inclusive": false
+  },
+  "priority": 800
+}

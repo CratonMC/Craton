@@ -14,13 +14,13 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Set;
 
-public final class CratonLootFunctions {
+public class CratonLootFunctions {
     public static final DeferredRegister<MapCodec<? extends LootItemFunction>> TYPES =
             DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, Craton.MODID);
     public static final OreProduct PRODUCT = OreProduct.INSTANCE;
     static { TYPES.register("ore_product", () -> OreProduct.CODEC); }
 
-    public static final class OreProduct implements LootItemFunction {
+    public static class OreProduct implements LootItemFunction {
         public static final OreProduct INSTANCE = new OreProduct();
         public static final MapCodec<OreProduct> CODEC = MapCodec.unit(INSTANCE);
 

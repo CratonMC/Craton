@@ -1,18 +1,20 @@
 package com.teamtea.craton.api.geology.deposit;
 
+import com.teamtea.craton.common.worldgen.deposit.DepositCandidateSampler;
+import com.teamtea.craton.common.worldgen.noise.GeologicalNoise;
+
 import com.mojang.serialization.MapCodec;
-import com.teamtea.craton.common.core.DepositRandomSequences;
+import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
-import com.teamtea.craton.common.core.DepositFieldEngine.ColumnContext;
-import com.teamtea.craton.common.core.IntrusiveDepositField.IntrusionResult;
-import com.teamtea.craton.common.core.*;
-import static com.teamtea.craton.common.core.DepositFieldSupport.*;
+import com.teamtea.craton.common.worldgen.deposit.DepositGenerationContext;
+import com.teamtea.craton.common.worldgen.deposit.IntrusiveDepositField.IntrusionResult;
 
+import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
 
-public final class SkarnDeposit extends FieldDeposit {
+public class SkarnDeposit extends FieldDeposit {
     public static final MapCodec<SkarnDeposit> CODEC =
             codecFor(5, true, SkarnDeposit::new);
 
@@ -22,9 +24,7 @@ public final class SkarnDeposit extends FieldDeposit {
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
-
-
-    public BlockState placeContact(ColumnContext ctx,BlockState originalHost,BlockState state,int y,IntrusionResult intrusion,long salt){
+    public BlockState placeContact(DepositGenerationContext ctx,BlockState originalHost,BlockState state,int y,IntrusionResult intrusion,long salt){
         if(!isCarbonate(originalHost)||intrusion.candidate()==null) return state;
         if(rand01(intrusion.candidate().alterationSeed()^salt)>=settings().placement().frequency()) return state;
         double reach=settings().shape().y(intrusion.candidate().shapeSeed());
@@ -41,19 +41,28 @@ public final class SkarnDeposit extends FieldDeposit {
         double alterP=GeologicalNoise.smoothstep(-.15,.45,score)*(.42+.42*grade);
         if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.alterationSeed()^salt,.15)>alterP) return state;
 
+        // A carbonate-marble contact facies is distinct from the silicate skarn assemblage.
+        // Fertility is fixed per parent; local mineralization still follows the contact field.
+        if(settings().ores().size()>5&&intrusion.kind()==0
+                &&rand01(c.alterationSeed()^salt^0x4C41504953L)<.40&&broad>-.03){
+            BlockState marble=com.teamtea.craton.common.registry.CratonBlocks.MARBLE.getOrigin().getBaseBlock().defaultBlockState();
+            if(grade>.53&&detail>-.04)return abundantOre(this,ctx,c,y,5,marble);
+            return marble;
+        }
+
         BlockState altered=settings().rock();
         if(grade<.62) return altered;
         double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed()^salt,.115);
         return switch(intrusion.kind()){
             case 0 -> mix<.50
-                    ?ore(this,0,altered)
-                    :ore(this,1,altered);
+                    ?abundantOre(this,ctx,c,y,0,altered)
+                    :abundantOre(this,ctx,c,y,1,altered);
             case 1 -> mix<.51
-                    ?ore(this,2,altered)
-                    :ore(this,3,altered);
+                    ?abundantOre(this,ctx,c,y,2,altered)
+                    :abundantOre(this,ctx,c,y,3,altered);
             default -> mix<.58
-                    ?ore(this,4,altered)
-                    :ore(this,2,altered);
+                    ?abundantOre(this,ctx,c,y,4,altered)
+                    :abundantOre(this,ctx,c,y,2,altered);
         };
     }
 

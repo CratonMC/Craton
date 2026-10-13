@@ -1,6 +1,5 @@
 package com.teamtea.craton.mixin.data;
 
-
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;

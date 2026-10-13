@@ -10,7 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
-import com.teamtea.craton.common.core.DepositRandomSequences;
+import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 
 import java.util.List;
 import java.util.function.Function;
@@ -64,13 +64,22 @@ public abstract class FieldDeposit extends AbstractDeposit {
     @Override public abstract MapCodec<? extends Deposit> codec();
 
     public record Settings(Placement placement, Shape shape, BlockState rock, List<Holder<OreType>> ores,
-                           List<BlockState> alterationRocks) {
+                           List<BlockState> alterationRocks, Abundance abundance) {
+        public Settings(Placement placement,Shape shape,BlockState rock,List<Holder<OreType>> ores,List<BlockState> alterationRocks){
+            this(placement,shape,rock,ores,alterationRocks,Abundance.NONE);
+        }
+        public Settings withAbundance(Abundance value){return new Settings(placement,shape,rock,ores,alterationRocks,value);}
+        public Settings {
+            ores = List.copyOf(ores);
+            alterationRocks = List.copyOf(alterationRocks);
+        }
         public static final Codec<Settings> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Placement.CODEC.fieldOf("placement").forGetter(Settings::placement),
                 Shape.CODEC.fieldOf("shape").forGetter(Settings::shape),
                 BlockState.CODEC.fieldOf("rock").forGetter(Settings::rock),
                 RegistryFixedCodec.create(CratonRegistries.ORE_TYPE).listOf().fieldOf("ores").forGetter(Settings::ores),
-                BlockState.CODEC.listOf().optionalFieldOf("alteration_rocks",List.of()).forGetter(Settings::alterationRocks)
+                BlockState.CODEC.listOf().optionalFieldOf("alteration_rocks",List.of()).forGetter(Settings::alterationRocks),
+                Abundance.CODEC.optionalFieldOf("abundance",Abundance.NONE).forGetter(Settings::abundance)
         ).apply(i, Settings::new));
     }
 

@@ -1,10 +1,9 @@
 package com.teamtea.craton.data.tag;
 
-
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import com.teamtea.craton.common.registry.CratonTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.BlockFamily;
@@ -22,8 +21,7 @@ import net.minecraft.world.item.Item;
 
 import java.util.concurrent.CompletableFuture;
 
-
-public final class CItemTagProvider extends ItemTagsProvider {
+public class CItemTagProvider extends ItemTagsProvider {
 
     public CItemTagProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> providerCompletableFuture) {
         super(packOutput, providerCompletableFuture, Craton.MODID);
@@ -99,14 +97,14 @@ public final class CItemTagProvider extends ItemTagsProvider {
 
         public Appender add(Item... items) {
             for (Item item : items) {
-                add(BuiltInRegistries.ITEM.wrapAsHolder(item).getKey());
+                add(BuiltInRegistries.ITEM.wrapAsHolder(item).keyOrNull());
             }
             return this;
         }
 
         public Appender add(Holder<Item>... items) {
             for (Holder<Item> item : items) {
-                add(item.getKey());
+                add(item.keyOrNull());
             }
             return this;
         }

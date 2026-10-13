@@ -14,7 +14,7 @@ import net.minecraft.world.level.levelgen.placement.RarityFilter;
 
 import java.util.List;
 
-public final class MeteoriteFeatures {
+public class MeteoriteFeatures {
     public static final ResourceKey<Feature> METEORITE = ResourceKey.create(Registries.FEATURE, Craton.rl("meteorite"));
     public static final ResourceKey<PlacedFeature> PLACED_METEORITE = ResourceKey.create(Registries.PLACED_FEATURE, Craton.rl("meteorite"));
 

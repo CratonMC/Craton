@@ -5,9 +5,9 @@
       "craton:sandstone_uranium"
     ],
     "placement": {
-      "cell_size": 192,
-      "frequency": 0.34,
-      "max_candidates": 2,
+      "cell_size": 320,
+      "frequency": 0.6,
+      "max_candidates": 1,
       "reach": 190.0
     },
     "rock": "minecraft:lime_terracotta",
@@ -16,12 +16,22 @@
       "detail_noise": 0.07,
       "height_max": 0.0,
       "height_min": 0.0,
-      "radius_x_max": 135.0,
-      "radius_x_min": 80.0,
-      "radius_y_max": 5.0,
-      "radius_y_min": 2.8,
-      "radius_z_max": 74.0,
-      "radius_z_min": 36.0
+      "radius_x_max": 114.75,
+      "radius_x_min": 68.0,
+      "radius_y_max": 4.25,
+      "radius_y_min": 2.38,
+      "radius_z_max": 62.9,
+      "radius_z_min": 30.6
+    },
+    "abundance": {
+      "poor_chance": 0.35,
+      "rich_chance": 0.1,
+      "poor_scale": 0.6,
+      "normal_scale": 0.82,
+      "rich_scale": 1,
+      "cell_x": 32,
+      "cell_y": 0,
+      "cell_z": 24
     }
   }
 }

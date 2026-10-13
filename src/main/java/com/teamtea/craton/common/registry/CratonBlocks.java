@@ -5,7 +5,7 @@ import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
 import com.teamtea.craton.common.block.OreBlock;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;

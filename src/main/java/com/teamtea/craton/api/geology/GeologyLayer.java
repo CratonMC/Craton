@@ -1,6 +1,7 @@
 package com.teamtea.craton.api.geology;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
@@ -14,7 +15,7 @@ public record GeologyLayer(
         double freqZ,
         int seed
 ) {
-    public static final Codec<GeologyLayer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<GeologyLayer> CODEC = RecordCodecBuilder.<GeologyLayer>create(instance -> instance.group(
             BuiltInRegistries.BLOCK.byNameCodec()
                     .fieldOf("block")
                     .xmap(Block::defaultBlockState, BlockState::getBlock)
@@ -34,5 +35,14 @@ public record GeologyLayer(
 
             Codec.INT.optionalFieldOf("seed", 0)
                     .forGetter(GeologyLayer::seed)
-    ).apply(instance, GeologyLayer::new));
+    ).apply(instance, GeologyLayer::new)).validate(layer -> layer.hasValidParameters()
+            ? DataResult.success(layer)
+            : DataResult.error(() -> "Geology layer requires finite positive thickness/frequencies and finite amplitude"));
+
+    public boolean hasValidParameters() {
+        return Double.isFinite(thickness) && thickness > 0
+                && Double.isFinite(amplitude)
+                && Double.isFinite(freqX) && freqX > 0
+                && Double.isFinite(freqZ) && freqZ > 0;
+    }
 }

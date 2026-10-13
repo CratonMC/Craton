@@ -1,26 +1,31 @@
 package com.teamtea.craton.data.lang;
 
-
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.registry.CratonItems;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Map;
 
-
 public class Lang_ZH extends LangHelper {
     public Lang_ZH(PackOutput gen) {
         super(gen, Craton.MODID, "zh_cn");
     }
 
-
     @Override
     protected void addTranslations() {
+        add("command.craton.excavate.start", "正在清空 %s×%s 个区块：X %s 至 %s，Z %s 至 %s。保留基岩。");
+        add("command.craton.excavate.fast", "快速模式已启用，将使用更大的清空批次。");
+        add("command.craton.excavate.busy", "已有清空任务正在执行。使用 /craton excavate status 查看，或 cancel 取消。");
+        add("command.craton.excavate.idle", "当前没有清空任务。");
+        add("command.craton.excavate.status", "清空进度：%s/%s 根柱已完成，已清除 %s 个方块。");
+        add("command.craton.excavate.cancel", "已取消清空，已清除 %s 个方块。");
+        add("command.craton.excavate.done", "清空完成：已清除 %s 个方块，基岩已保留。");
+        add("command.craton.excavate.failed", "清空任务已停止：%s");
 
         add("itemGroup." + modid + ".core", "克拉通");
         add("itemGroup." + modid + ".ores", "克拉通矿产");
@@ -41,8 +46,7 @@ public class Lang_ZH extends LangHelper {
         addStoneCollection(CratonBlocks.JADEITITE, "玉岩");
 
         add(CratonBlocks.banded_iron_gneiss_ore.value().getDescriptionId(), "条带铁矿石");
-//        add(CratonBlocks.banded_iron_marble_ore.value().getDescriptionId(), "大理岩条带铁矿石");
-//        add(CratonBlocks.banded_iron_stone_ore.value().getDescriptionId(), "石头条带铁矿石");
+
         add(CratonBlocks.limestone_coal_ore.value().getDescriptionId(), "石灰岩煤矿石");
         add(CratonBlocks.sedimentary_copper_ore.value().getDescriptionId(), "沉积铜矿石");
         add(CratonBlocks.metasomatic_lapis_ore.value().getDescriptionId(), "青金石矿石");

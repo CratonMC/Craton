@@ -3,12 +3,16 @@ package com.teamtea.craton.common.registry;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.geology.GeologyLayer;
 import com.teamtea.craton.api.geology.GeologyProfile;
+import com.teamtea.craton.api.geology.GeologyRegion;
 import com.teamtea.craton.api.geology.deposit.Deposit;
 import com.teamtea.craton.api.geology.ore.OreType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
-public final class CratonRegistries {
+public class CratonRegistries {
+    public static final ResourceKey<Registry<GeologyRegion>> GEOLOGY_REGION =
+            ResourceKey.createRegistryKey(Craton.rl("geology_region"));
+
     public static final ResourceKey<Registry<GeologyLayer>> GEOLOGY_LAYER =
             ResourceKey.createRegistryKey(Craton.rl("geology_layer"));
 

@@ -1,12 +1,10 @@
 {
-  "biomes": "#c:is_mountain",
   "layers": [
+    "craton:schist",
     "craton:gneiss",
     "craton:granite",
-    "craton:pegmatite",
     "craton:gabbro",
-    "craton:rhyolite",
-    "craton:schist",
     "craton:eclogite"
-  ]
+  ],
+  "region": "craton:mountains"
 }

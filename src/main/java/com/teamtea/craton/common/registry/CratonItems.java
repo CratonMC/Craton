@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 /** Registered mineral products. Item icons are placeholder models until textures are drawn. */
-public final class CratonItems {
+public class CratonItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Craton.MODID);
+    public static final Holder<Item> SURVEY_CHART = ITEMS.registerItem("survey_chart",com.teamtea.craton.common.item.SurveyChartItem::new);
     public static final Holder<Item> BANDED_IRON_RAW = ITEMS.registerSimpleItem("banded_iron_raw");
     public static final Holder<Item> LIMESTONE_COAL = ITEMS.registerSimpleItem("limestone_coal");
     public static final Holder<Item> SEDIMENTARY_RAW_COPPER = ITEMS.registerSimpleItem("sedimentary_raw_copper");
@@ -62,6 +63,25 @@ public final class CratonItems {
             SKARN_RAW_LEAD, SKARN_RAW_ZINC, SKARN_RAW_SILVER, SKARN_RAW_GOLD,
             METEORIC_IRON, GREEN_JADE, WHITE_JADE, LAVENDER_JADE);
     public static void addChinese(BiConsumer<String,String> add) {
+        add.accept("item.craton.survey_chart", "空白矿产调查图");
+        add.accept("item.craton.mineral_survey_map", "矿产调查图");
+        add.accept("survey.craton.blank_hint", "使用后保持调查图在手中，直至调查完成。");
+        add.accept("survey.craton.unsupported", "矿产调查仅支持噪声生成的主世界。");
+        add.accept("survey.craton.no_data", "地质数据尚未就绪。");
+        add.accept("survey.craton.busy", "你的矿产调查正在进行中。");
+        add.accept("survey.craton.queue_full", "调查队列已满，请稍后重试。");
+        add.accept("survey.craton.started", "开始调查，请保持空白图在当前手中。");
+        add.accept("survey.craton.finished", "矿产调查图已完成。");
+        add.accept("survey.craton.cancelled", "调查已取消，未消耗空白图。");
+        add.accept("survey.craton.failed", "调查失败，未消耗空白图。");
+        add.accept("survey.craton.approximate", "表示预计矿化区域，范围与颜色仅供初步找矿。");
+        add.accept("survey.craton.shading", "色斑深浅用于显示范围，不代表品位或储量。");
+        add.accept("survey.craton.coverage", "覆盖范围：%s × %s格；上方为北。");
+        add.accept("survey.craton.legend.metals", "灰：铁；黑：煤；橙：铜；紫：铅锌");
+        add.accept("survey.craton.legend.other", "黄绿：铀；浅蓝：锡钨；金黄：金；青：镍／铂族");
+        add.accept("survey.craton.legend.contacts", "绿：宝石；棕：铝土；红：红石；粉：伟晶岩；品红：接触交代");
+
+        
         add.accept("item.craton.banded_iron_raw", "条带状铁原矿");
         add.accept("item.craton.limestone_coal", "石灰煤");
         add.accept("item.craton.sedimentary_raw_copper", "沉积型铜原矿");
@@ -104,6 +124,25 @@ public final class CratonItems {
         add.accept("item.craton.lavender_jade", "紫色翡翠");
     }
     public static void addEnglish(BiConsumer<String,String> add) {
+        add.accept("item.craton.survey_chart", "Blank Mineral Survey Chart");
+        add.accept("item.craton.mineral_survey_map", "Mineral Survey Map");
+        add.accept("survey.craton.blank_hint", "Use and keep this chart in hand until the survey is complete.");
+        add.accept("survey.craton.unsupported", "Mineral surveys require a noise-generated Overworld.");
+        add.accept("survey.craton.no_data", "Geology data is not ready.");
+        add.accept("survey.craton.busy", "Your survey is already in progress.");
+        add.accept("survey.craton.queue_full", "Survey queue is full. Try again shortly.");
+        add.accept("survey.craton.started", "Survey started. Keep the blank chart in this hand.");
+        add.accept("survey.craton.finished", "Mineral survey map completed.");
+        add.accept("survey.craton.cancelled", "Survey cancelled. The blank chart was not consumed.");
+        add.accept("survey.craton.failed", "Survey failed. The blank chart was not consumed.");
+        add.accept("survey.craton.approximate", "Prospective mineralization; footprints and colors are approximate.");
+        add.accept("survey.craton.shading", "Shading illustrates footprints, not grade or reserves.");
+        add.accept("survey.craton.coverage", "Coverage: %s × %s blocks; north is up.");
+        add.accept("survey.craton.legend.metals", "Gray: iron · Black: coal · Orange: copper · Purple: lead/zinc");
+        add.accept("survey.craton.legend.other", "Lime: uranium · Light blue: tin/tungsten · Gold: gold · Cyan: nickel/PGE");
+        add.accept("survey.craton.legend.contacts", "Green: gems · Brown: bauxite · Red: redstone · Pink: pegmatite · Magenta: contact ores");
+
+        
         add.accept("item.craton.banded_iron_raw", "Banded Raw Iron");
         add.accept("item.craton.limestone_coal", "Limestone Coal");
         add.accept("item.craton.sedimentary_raw_copper", "Sedimentary Raw Copper");

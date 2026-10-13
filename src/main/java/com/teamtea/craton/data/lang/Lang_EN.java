@@ -4,22 +4,29 @@ import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.registry.CratonItems;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Map;
 
-
 public class Lang_EN extends LangHelper {
     public Lang_EN(PackOutput gen) {
         super(gen, Craton.MODID, "en_us");
     }
 
-
     @Override
     protected void addTranslations() {
+        add("command.craton.excavate.start", "Excavating %s x %s chunks: X %s..%s, Z %s..%s. Bedrock is preserved.");
+        add("command.craton.excavate.fast", "Fast mode enabled; clearing larger batches.");
+        add("command.craton.excavate.busy", "An excavation is already running. Use /craton excavate status or cancel.");
+        add("command.craton.excavate.idle", "No excavation is running.");
+        add("command.craton.excavate.status", "Excavation: %s/%s columns complete, %s blocks removed.");
+        add("command.craton.excavate.cancel", "Excavation cancelled after removing %s blocks.");
+        add("command.craton.excavate.done", "Excavation complete: %s blocks removed; bedrock preserved.");
+        add("command.craton.excavate.failed", "Excavation stopped: %s");
+
         add("itemGroup." + modid + ".core", "Craton");
         add("itemGroup." + modid + ".ores", "Craton Ores");
 

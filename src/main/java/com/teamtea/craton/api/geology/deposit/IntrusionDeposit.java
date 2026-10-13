@@ -1,11 +1,13 @@
 package com.teamtea.craton.api.geology.deposit;
 
-import com.teamtea.craton.common.core.DepositCandidateSampler;
-import com.teamtea.craton.common.core.DepositFieldEngine.ColumnContext;
-import com.teamtea.craton.common.core.DepositRandomSequences;
-import com.teamtea.craton.common.core.DepositFieldSupport;
-import com.teamtea.craton.common.core.GeologicalNoise;
-import com.teamtea.craton.common.core.IntrusiveDepositField.IntrusionResult;
+import com.teamtea.craton.common.worldgen.deposit.DepositCandidateSampler;
+import com.teamtea.craton.common.worldgen.deposit.DepositGenerationContext;
+import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
+import com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport;
+import com.teamtea.craton.common.worldgen.noise.GeologicalNoise;
+import com.teamtea.craton.common.worldgen.deposit.PlutonGeometry;
+import com.teamtea.craton.common.worldgen.deposit.PreparedPorphyry;
+import com.teamtea.craton.common.worldgen.deposit.IntrusiveDepositField.IntrusionResult;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -26,26 +28,30 @@ public abstract class IntrusionDeposit extends FieldDeposit {
         // Granite and diorite displace both horizontal coordinates independently.
         double warp=type.equals(DepositTypes.GRANITE)?8*Math.sqrt(2)
                 :type.equals(DepositTypes.DIORITE)?7*Math.sqrt(2):0;
-        double body=maxRadius*(1+shape.broadNoise()+shape.detailNoise()+contactReach/minRadius)+warp;
-        double pods=shape.satelliteCount()>0&&shape.satelliteScale()>0
-                ?Math.hypot(shape.radiusXMax()*1.27+24*shape.satelliteScale(),
-                        shape.radiusZMax()*1.27+20*shape.satelliteScale()):0;
-        return Math.max(body,pods)+1;
+        double halo=Math.max(.08,contactReach/minRadius);
+        // Includes attached sheets, composite lobes, domain warp and contact halos.
+        double bodyReach=type.equals(DepositTypes.DIORITE)
+                ?2.1+.25*shape.satelliteScale()+1.5*(shape.broadNoise()+shape.detailNoise()+halo)
+                :1.75+1.3*(shape.broadNoise()+shape.detailNoise()+halo);
+        return maxRadius*bodyReach+warp+12*shape.satelliteScale()+1;
     }
 
     /** One cached instance per candidate, owned by a single buildSurface context. */
-    public static final class Prepared {
+    public static class Prepared {
         public final IntrusionDeposit deposit;
         public final DepositCandidateSampler.Candidate candidate;
         public final int originMinY;
         public final double rx,rz,ry,cy,angle,rotCos,rotSin,minRadius,noiseAmplitude;
-        public double along,across,radialLower,radial,bowl,minimumY,maximumY,scoreCutoff;
+        public double along,across,radial,minimumY,maximumY,scoreCutoff;
         private final double warpFrequency,broadFrequency,detailFrequency;
         private final long warpZSalt,shapeNoiseSalt;
-        private final Pod[] pods;
-        private final double podAlongLimit,podAcrossLimit,podVerticalLimit;
-        private int activePods;
+        public final PlutonGeometry geometry;
         private Noise noise;
+        private PreparedPorphyry porphyry;
+        public PreparedPorphyry porphyry(DioriteIntrusionDeposit.Mineralization config){
+            if(porphyry==null)porphyry=new PreparedPorphyry(this,config);
+            return porphyry;
+        }
 
         private Prepared(IntrusionDeposit deposit,DepositCandidateSampler.Candidate candidate,int minY,
                          long zSalt,long ySalt,double warpFrequency,long warpZSalt,long shapeNoiseSalt,
@@ -68,13 +74,7 @@ public abstract class IntrusionDeposit extends FieldDeposit {
             this.shapeNoiseSalt=shapeNoiseSalt;
             this.broadFrequency=broadFrequency;
             this.detailFrequency=detailFrequency;
-            double scale=shape.satelliteScale();
-            int count=scale>0?Math.min(24,shape.satelliteCount()):0;
-            pods=new Pod[count];
-            for(int i=0;i<count;i++) pods[i]=new Pod(candidate,rx,ry,rz,scale,i);
-            podAlongLimit=rx*1.27+24*scale;
-            podAcrossLimit=rz*1.27+20*scale;
-            podVerticalLimit=ry*.72+7*scale;
+            geometry=new PlutonGeometry(this,shape);
         }
 
         /** Initialized only if the conservative bounds admit a real sample. */
@@ -92,82 +92,10 @@ public abstract class IntrusionDeposit extends FieldDeposit {
             return noise().oreOccupancy(x,y,z)<p*density;
         }
 
-        public void prepareSatellites(){
-            activePods=0;
-            if(Math.abs(along)>podAlongLimit||Math.abs(across)>podAcrossLimit) return;
-            for(int i=0;i<pods.length;i++){
-                Pod pod=pods[i];
-                pod.ax=(along-pod.px)/pod.sx;
-                pod.az=(across-pod.pz)/pod.sz;
-                if(Math.abs(pod.ax)>1.4||Math.abs(pod.az)>1.4) continue;
-                pod.horizontal=1-pod.ax*pod.ax-pod.az*pod.az;
-                activePods|=1<<i;
-            }
-        }
-
-        public double satelliteScore(int x,int y,int z){
-            if(activePods==0||Math.abs(y+.5-cy)>podVerticalLimit) return -9;
-            double best=-9;
-            for(int remaining=activePods;remaining!=0;remaining&=remaining-1){
-                Pod pod=pods[Integer.numberOfTrailingZeros(remaining)];
-                double ay=(y+.5-cy-pod.py)/pod.sy;
-                if(Math.abs(ay)>1.4) continue;
-                if(pod.broad==null){
-                    pod.broad=new GeologicalNoise.CachedFbm(pod.seed,.040,3);
-                    pod.detail=new GeologicalNoise.CachedFbm(pod.seed^0xE95L,.115,2);
-                }
-                double broad=pod.broad.sample(x,y,z)*.22;
-                double detail=pod.detail.sample(x,y,z)*.07;
-                best=Math.max(best,pod.horizontal-ay*ay+broad+detail);
-            }
-            return best;
-        }
-
-        private static final class Pod {
-            private final long seed;
-            private final double px,py,pz,sx,sy,sz;
-            private double ax,az,horizontal;
-            private GeologicalNoise.CachedFbm broad,detail;
-
-            private Pod(DepositCandidateSampler.Candidate c,double rx,double ry,double rz,double scale,int i){
-                seed=DepositCandidateSampler.mix(c.shapeSeed()^0x1A7L^(0x9E3779B97F4A7C15L*(i+1)));
-                double theta=DepositFieldSupport.rand01(seed)*Math.PI*2;
-                double latitude=(DepositFieldSupport.rand01(seed^0xA71L)-.5)*1.12;
-                double shell=1.04+DepositFieldSupport.rand01(seed^0xB52L)*.22;
-                double horizontal=Math.sqrt(1-latitude*latitude)*shell;
-                px=rx*horizontal*Math.cos(theta);
-                pz=rz*horizontal*Math.sin(theta);
-                py=ry*latitude*shell;
-                sx=(7+DepositFieldSupport.rand01(seed^0xC63L)*10)*scale;
-                sz=(5+DepositFieldSupport.rand01(seed^0xD84L)*9)*scale;
-                sy=Math.max(1.5,Math.min(5,ry*.38))*scale;
-            }
-        }
-
         public void rotateColumn(int x,int z){
             double dx=x+.5-candidate.x(),dz=z+.5-candidate.z();
             along=dx*rotCos+dz*rotSin;
             across=-dx*rotSin+dz*rotCos;
-        }
-
-        /** Lower bound after both independently bounded horizontal warp components. */
-        public void prepareEllipsoidColumn(int x,int z,double cutoff,double warp,boolean cupola){
-            rotateColumn(x,z);
-            scoreCutoff=cutoff;
-            // Keep the bound conservative even near the world coordinate limits.
-            double roundoff=4*Math.ulp(Math.max(Math.abs((double)x),Math.abs((double)z))+.5);
-            double rotatedWarp=(warp+roundoff)*(Math.abs(rotCos)+Math.abs(rotSin));
-            double a=Math.max(0,Math.abs(along)-rotatedWarp)/rx;
-            double b=Math.max(0,Math.abs(across)-rotatedWarp)/rz;
-            radialLower=Math.sqrt(a*a+b*b);
-            double extent=1+noiseAmplitude-cutoff;
-            minimumY=cy-ry*extent;
-            maximumY=cy+ry*extent;
-            if(cupola){
-                minimumY=Math.min(minimumY,cy+ry*.62-ry*.42*extent);
-                maximumY=Math.max(maximumY,cy+ry*.62+ry*.42*extent);
-            }
-            if(radialLower>extent+margin()) maximumY=Double.NEGATIVE_INFINITY;
         }
 
         public boolean outside(int y){
@@ -182,12 +110,12 @@ public abstract class IntrusionDeposit extends FieldDeposit {
     }
 
     /** Candidate-specific noise samplers; no global or cross-thread mutable cache. */
-    public static final class Noise {
+    public static class Noise {
         public final GeologicalNoise.CachedFbm warpX,warpZ;
         private final GeologicalNoise.CachedFbm broad,detail;
         private final DepositCandidateSampler.Candidate candidate;
         private final double broadAmplitude,detailAmplitude;
-        private GeologicalNoise.CachedFbm grade,floor,satelliteGrade;
+        private GeologicalNoise.CachedFbm grade,floor;
         private GeologicalNoise.CachedOccupancy mix,rockOccupancy,oreOccupancy;
 
         private Noise(DepositCandidateSampler.Candidate c,Shape shape,double warpFrequency,long warpZSalt,
@@ -206,10 +134,6 @@ public abstract class IntrusionDeposit extends FieldDeposit {
         public double grade(int x,int y,int z){
             if(grade==null) grade=new GeologicalNoise.CachedFbm(candidate.gradeSeed(),.050,3);
             return .5+.5*grade.sample(x,y,z);
-        }
-        public double satelliteGrade(int x,int y,int z){
-            if(satelliteGrade==null) satelliteGrade=new GeologicalNoise.CachedFbm(candidate.gradeSeed(),.057,3);
-            return .5+.5*satelliteGrade.sample(x,y,z);
         }
         public double floor(int x,int y,int z){
             if(floor==null) floor=new GeologicalNoise.CachedFbm(candidate.alterationSeed(),.033,3);
@@ -237,9 +161,9 @@ public abstract class IntrusionDeposit extends FieldDeposit {
 
     public abstract Prepared prepare(DepositCandidateSampler.Candidate candidate,int minY);
 
-    public abstract void prepareColumn(ColumnContext ctx,Prepared prepared,double scoreCutoff);
+    public abstract void prepareColumn(DepositGenerationContext ctx,Prepared prepared,double scoreCutoff);
 
-    public abstract void sample(ColumnContext ctx,Prepared prepared,int y,IntrusionResult best);
+    public abstract void sample(DepositGenerationContext ctx,Prepared prepared,int y,IntrusionResult best);
 
-    public abstract BlockState placeOre(ColumnContext ctx,BlockState host,int y,IntrusionResult intrusion);
+    public abstract BlockState placeOre(DepositGenerationContext ctx,BlockState host,int y,IntrusionResult intrusion);
 }

@@ -1,12 +1,11 @@
 {
-  "biomes": "#c:is_plains",
   "layers": [
     "craton:limestone",
     "craton:shale",
-    "craton:tuff",
-    "craton:andesite",
+    "craton:sandstone",
     "craton:schist",
     "craton:gneiss",
     "craton:eclogite"
-  ]
+  ],
+  "region": "craton:plains"
 }

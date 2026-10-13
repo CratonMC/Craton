@@ -1,6 +1,5 @@
 package com.teamtea.craton;
 
-
 import com.teamtea.craton.common.registry.CratonBlocks;
 import com.teamtea.craton.common.registry.CratonItems;
 import com.teamtea.craton.common.registry.CratonDataMaps;
@@ -37,6 +36,8 @@ public class Craton {
         modEventBus.addListener(this::FMLCommonSetup);
         modEventBus.addListener(this::gatherData);
         modEventBus.addListener(this::gatherData2);
+        if(Boolean.getBoolean("eclipticseasons.runs.runServerData"))
+            modEventBus.addListener(DataInit::gatherRegistryEntries);
 
         CratonBlocks.BLOCKS.register(modEventBus);
         CratonBlocks.ITEMS.register(modEventBus);
@@ -51,7 +52,6 @@ public class Craton {
 
     }
 
-
     public static Identifier rl(String id) {
         return Identifier.fromNamespaceAndPath(MODID, id);
     }
@@ -60,22 +60,18 @@ public class Craton {
         return Identifier.parse(id);
     }
 
-
     public void FMLCommonSetup(final FMLCommonSetupEvent event) {
         // SimpleNetworkHandler.init();
         // CompatModule.init();
     }
 
-
     public void gatherData(final GatherDataEvent.Client event) {
         DataInit.dataGen(event);
     }
 
-
     public void gatherData2(final GatherDataEvent.Server event) {
         DataInit.dataGenServer(event);
     }
-
 
     public static void logger(String x) {
         LOGGER.info(x);
@@ -126,10 +122,9 @@ public class Craton {
                 } else
                     output.append(", ").append(i);
             }
-            LOGGER.info(output.substring(1));
+            LOGGER.info(output.length() >= 2 ? output.substring(2) : "");
         }
 
     }
-
 
 }

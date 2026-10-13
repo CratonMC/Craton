@@ -1,0 +1,11 @@
+{
+  "layers": [
+    "craton:basalt",
+    "craton:tuff",
+    "craton:rhyolite",
+    "craton:andesite",
+    "craton:gabbro",
+    "craton:eclogite"
+  ],
+  "region": "craton:warm_semiarid"
+}

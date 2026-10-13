@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:map",
+    "minecraft:amethyst_shard",
+    "minecraft:raw_copper"
+  ],
+  "result": {
+    "id": "craton:survey_chart",
+    "count": 1
+  }
+}

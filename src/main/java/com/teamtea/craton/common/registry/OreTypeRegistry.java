@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** An OreType is one mineralization; its variants select the block from the host rock. */
-public final class OreTypeRegistry {
+public class OreTypeRegistry {
     public static final ResourceKey<OreType> BIF_IRON = key("bif_iron");
     public static final ResourceKey<OreType> LIMESTONE_COAL = key("limestone_coal");
     public static final ResourceKey<OreType> SEDIMENTARY_COPPER = key("sedimentary_copper");
@@ -98,13 +98,14 @@ public final class OreTypeRegistry {
         register(context,VMS_SPHALERITE,CratonBlocks.vms_zinc_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
         register(context,VMS_GALENA,CratonBlocks.vms_pb_ag_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
         register(context,BASALT_BAUXITE,CratonBlocks.bauxite_ore,Blocks.BASALT);
-        register(context,PEAT,CratonBlocks.peat,Blocks.MUD);
+        register(context,PEAT,CratonBlocks.peat,Blocks.MUD,Blocks.DIRT,Blocks.GRASS_BLOCK);
         register(context,PLACER_GOLD,List.of(
                 variant(Blocks.GRAVEL,CratonBlocks.auriferous_gravel),
                 variant(Blocks.SAND,CratonBlocks.auriferous_sand)));
         register(context,PLACER_IRON,List.of(
                 variant(Blocks.GRAVEL,CratonBlocks.ferriferous_gravel),
-                variant(Blocks.RED_SAND,CratonBlocks.ferriferous_sand)));
+                variant(Blocks.RED_SAND,CratonBlocks.ferriferous_sand),
+                variant(Blocks.SAND,CratonBlocks.ferriferous_sand)));
         register(context,KIMBERLITE_DIAMOND,CratonBlocks.diamond_bearing_kimberlite,kimberlite);
         register(context,KIMBERLITE_DIAMOND_RICH,CratonBlocks.diamond_rich_kimberlite,
                 kimberlite);

@@ -1,7 +1,7 @@
 package com.teamtea.craton.common.registry;
 
 import com.teamtea.craton.Craton;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.network.chat.Component;
@@ -40,6 +40,7 @@ public class CratonTab {
                     .displayItems((parameters, output) -> {
                         CratonBlocks.ORE_BLOCKS.forEach(holder -> output.accept(holder.value()));
                         CratonItems.ALL.forEach(holder -> output.accept(holder.value()));
+                        output.accept(CratonItems.SURVEY_CHART.value());
                     })
                     .build()
     );

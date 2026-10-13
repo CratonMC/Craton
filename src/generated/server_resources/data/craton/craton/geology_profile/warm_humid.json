@@ -1,0 +1,11 @@
+{
+  "layers": [
+    "craton:limestone",
+    "craton:shale",
+    "craton:tuff",
+    "craton:schist",
+    "craton:gneiss",
+    "craton:eclogite"
+  ],
+  "region": "craton:warm_humid"
+}

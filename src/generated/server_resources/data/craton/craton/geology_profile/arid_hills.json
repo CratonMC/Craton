@@ -1,0 +1,11 @@
+{
+  "layers": [
+    "craton:arkose_sandstone",
+    "craton:sandstone",
+    "craton:shale",
+    "craton:schist",
+    "craton:gneiss",
+    "craton:eclogite"
+  ],
+  "region": "craton:arid_hills"
+}

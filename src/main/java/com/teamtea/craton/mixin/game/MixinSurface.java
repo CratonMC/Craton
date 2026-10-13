@@ -1,9 +1,8 @@
 package com.teamtea.craton.mixin.game;
 
-
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import com.teamtea.craton.common.core.WorldSetter;
+import com.teamtea.craton.common.worldgen.surface.WorldSetter;
 import com.teamtea.craton.common.misc.WorldTester;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -51,6 +50,5 @@ public abstract class MixinSurface {
     //     WorldSetter.extracted(blockState, val$protoChunk, val$columnPos);
     //
     // }
-
 
 }

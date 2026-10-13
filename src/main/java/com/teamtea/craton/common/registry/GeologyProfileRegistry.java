@@ -3,191 +3,69 @@ package com.teamtea.craton.common.registry;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.geology.GeologyLayer;
 import com.teamtea.craton.api.geology.GeologyProfile;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.Registries;
+import com.teamtea.craton.api.geology.GeologyRegion;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
 import java.util.List;
-
-
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.biome.Biomes;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
-
 import java.util.stream.Stream;
 
-public final class GeologyProfileRegistry {
+/** Climate geology regions; layer order is top-to-bottom, independent of biome tags. */
+public class GeologyProfileRegistry {
+    public static final ResourceKey<GeologyProfile> OCEAN = createKey("ocean");
+    public static final ResourceKey<GeologyProfile> COASTAL = createKey("coastal");
     public static final ResourceKey<GeologyProfile> PLAINS = createKey("plains");
-    public static final ResourceKey<GeologyProfile> SNOWY_PLAINS = createKey("snowy_plains");
-    public static final ResourceKey<GeologyProfile> SWAMP = createKey("swamp");
-    public static final ResourceKey<GeologyProfile> RIVER = createKey("river");
-    public static final ResourceKey<GeologyProfile> BEACH = createKey("beach");
-
-    public static final ResourceKey<GeologyProfile> JUNGLE = createKey("jungle");
-    public static final ResourceKey<GeologyProfile> FOREST = createKey("forest");
-    public static final ResourceKey<GeologyProfile> TAIGA = createKey("taiga");
-
     public static final ResourceKey<GeologyProfile> HILLS = createKey("hills");
     public static final ResourceKey<GeologyProfile> MOUNTAINS = createKey("mountains");
+    public static final ResourceKey<GeologyProfile> COLD_PLAINS = createKey("cold_plains");
+    public static final ResourceKey<GeologyProfile> ARID_PLAINS = createKey("arid_plains");
+    public static final ResourceKey<GeologyProfile> ARID_HILLS = createKey("arid_hills");
+    public static final ResourceKey<GeologyProfile> WARM_HUMID = createKey("warm_humid");
+    public static final ResourceKey<GeologyProfile> WARM_SEMIARID = createKey("warm_semiarid");
 
-    public static final ResourceKey<GeologyProfile> DESERT = createKey("desert");
-    public static final ResourceKey<GeologyProfile> BADLANDS = createKey("badlands");
-    public static final ResourceKey<GeologyProfile> STONY_SHORES = createKey("stony_shores");
-
-
-    public static final ResourceKey<GeologyProfile> SAVANNA = createKey("savanna");
-
-    public static final ResourceKey<GeologyProfile> OCEAN = createKey("ocean");
-
-    private GeologyProfileRegistry() {
-    }
+    private GeologyProfileRegistry() {}
 
     private static ResourceKey<GeologyProfile> createKey(String name) {
         return ResourceKey.create(CratonRegistries.GEOLOGY_PROFILE, Craton.rl(name));
     }
 
     public static void bootstrap(BootstrapContext<GeologyProfile> context) {
-        var biomeGetter = context.lookup(Registries.BIOME);
-        var layerGetter = context.lookup(CratonRegistries.GEOLOGY_LAYER);
-
-        List<Holder<GeologyLayer>> common = layers(layerGetter,
-                GeologyLayerRegistry.LIMESTONE,
-                GeologyLayerRegistry.SHALE,
-                GeologyLayerRegistry.TUFF,
-                GeologyLayerRegistry.ANDESITE,
-                GeologyLayerRegistry.SCHIST,
-                GeologyLayerRegistry.GNEISS,
-                GeologyLayerRegistry.ECLOGITE
-        );
-
-        context.register(PLAINS, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_PLAINS),
-                common
-        ));
-
-        context.register(RIVER, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_RIVER),
-                common
-        ));
-
-        context.register(SWAMP, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_SWAMP),
-                common
-        ));
-
-        context.register(BEACH, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_BEACH),
-                common
-        ));
-
-        context.register(SNOWY_PLAINS, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_SNOWY_PLAINS),
-                common
-        ));
-
-        List<Holder<GeologyLayer>> foresetGroup = layers(layerGetter,
-                GeologyLayerRegistry.LIMESTONE,
-                GeologyLayerRegistry.SHALE,
-                GeologyLayerRegistry.SCHIST,
-                GeologyLayerRegistry.GNEISS,
-                GeologyLayerRegistry.GRANITE,
-                GeologyLayerRegistry.ECLOGITE
-        );
-
-        context.register(FOREST, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_FOREST),
-                foresetGroup
-        ));
-        context.register(TAIGA, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_TAIGA),
-                foresetGroup
-        ));
-        context.register(JUNGLE, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_JUNGLE),
-                foresetGroup
-        ));
-
-        context.register(HILLS, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_HILL),
-                layers(layerGetter,
-                        GeologyLayerRegistry.ANDESITE,
-                        GeologyLayerRegistry.GRANITE,
-                        GeologyLayerRegistry.SCHIST,
-                        GeologyLayerRegistry.GNEISS,
-                        GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.ECLOGITE
-                )
-        ));
-
-        context.register(MOUNTAINS, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_MOUNTAIN),
-                layers(layerGetter,
-                        GeologyLayerRegistry.GNEISS,
-                        GeologyLayerRegistry.GRANITE,
-                        GeologyLayerRegistry.PEGMATITE,
-                        GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.RHYOLITE,
-                        GeologyLayerRegistry.SCHIST,
-                        GeologyLayerRegistry.ECLOGITE
-                )
-        ));
-
-        List<Holder<GeologyLayer>> deserts = layers(layerGetter,
-                GeologyLayerRegistry.LIMESTONE,
-                GeologyLayerRegistry.GRANITE,
-                GeologyLayerRegistry.ARKOSE_SANDSTONE,
-                GeologyLayerRegistry.GABBRO,
-                GeologyLayerRegistry.GNEISS,
-                GeologyLayerRegistry.ECLOGITE
-        );
-        context.register(DESERT, new GeologyProfile(
-                new OrHolderSet<>(biomeGetter.getOrThrow(Tags.Biomes.IS_DESERT),
-                        HolderSet.direct(biomeGetter.getOrThrow(Biomes.DESERT))),
-                deserts
-        ));
-        context.register(BADLANDS, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_BADLANDS),
-                deserts
-        ));
-        context.register(STONY_SHORES, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_STONY_SHORES),
-                deserts
-        ));
-
-        context.register(SAVANNA, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_SAVANNA),
-                layers(layerGetter,
-                        GeologyLayerRegistry.BASALT,
-                        GeologyLayerRegistry.GRANITE,
-                        GeologyLayerRegistry.RHYOLITE,
-                        GeologyLayerRegistry.ANDESITE,
-                        GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.BASALT,
-                        GeologyLayerRegistry.ECLOGITE
-                )
-        ));
-
-        context.register(OCEAN, new GeologyProfile(
-                biomeGetter.getOrThrow(Tags.Biomes.IS_OCEAN),
-                layers(layerGetter,
-                        GeologyLayerRegistry.BASALT,
-                        GeologyLayerRegistry.TUFF,
-                        GeologyLayerRegistry.GABBRO,
-                        GeologyLayerRegistry.ECLOGITE
-                )
-        ));
+        var layers = context.lookup(CratonRegistries.GEOLOGY_LAYER);
+        var regions = context.lookup(CratonRegistries.GEOLOGY_REGION);
+        register(context, layers, regions, OCEAN, GeologyRegionRegistry.OCEAN,
+                GeologyLayerRegistry.BASALT, GeologyLayerRegistry.TUFF, GeologyLayerRegistry.GABBRO, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, COASTAL, GeologyRegionRegistry.COASTAL,
+                GeologyLayerRegistry.LIMESTONE, GeologyLayerRegistry.SHALE, GeologyLayerRegistry.SANDSTONE, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, PLAINS, GeologyRegionRegistry.PLAINS,
+                GeologyLayerRegistry.LIMESTONE, GeologyLayerRegistry.SHALE, GeologyLayerRegistry.SANDSTONE, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, HILLS, GeologyRegionRegistry.HILLS,
+                GeologyLayerRegistry.ANDESITE, GeologyLayerRegistry.TUFF, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.GABBRO, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, MOUNTAINS, GeologyRegionRegistry.MOUNTAINS,
+                GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.GRANITE, GeologyLayerRegistry.GABBRO, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, COLD_PLAINS, GeologyRegionRegistry.COLD_PLAINS,
+                GeologyLayerRegistry.SHALE, GeologyLayerRegistry.SANDSTONE, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, ARID_PLAINS, GeologyRegionRegistry.ARID_PLAINS,
+                GeologyLayerRegistry.SANDSTONE, GeologyLayerRegistry.ARKOSE_SANDSTONE, GeologyLayerRegistry.SHALE, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, ARID_HILLS, GeologyRegionRegistry.ARID_HILLS,
+                GeologyLayerRegistry.ARKOSE_SANDSTONE, GeologyLayerRegistry.SHALE, GeologyLayerRegistry.SANDSTONE, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, WARM_HUMID, GeologyRegionRegistry.WARM_HUMID,
+                GeologyLayerRegistry.LIMESTONE, GeologyLayerRegistry.SHALE, GeologyLayerRegistry.TUFF, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
+        register(context, layers, regions, WARM_SEMIARID, GeologyRegionRegistry.WARM_SEMIARID,
+                GeologyLayerRegistry.BASALT, GeologyLayerRegistry.TUFF, GeologyLayerRegistry.RHYOLITE, GeologyLayerRegistry.ANDESITE, GeologyLayerRegistry.GABBRO, GeologyLayerRegistry.ECLOGITE);
     }
 
     @SafeVarargs
-    private static List<Holder<GeologyLayer>> layers(
-            net.minecraft.core.HolderGetter<GeologyLayer> getter,
-            ResourceKey<GeologyLayer>... keys
-    ) {
-        return List.copyOf(Stream.of(keys)
-                .map(getter::getOrThrow)
-                .toList());
-    }
+    private static void register(BootstrapContext<GeologyProfile> context,
+                                 HolderGetter<GeologyLayer> layers,
+                                 HolderGetter<GeologyRegion> regions,
+                                 ResourceKey<GeologyProfile> key, ResourceKey<GeologyRegion> region,
+                                 ResourceKey<GeologyLayer>... keys) {
+        List<Holder<GeologyLayer>> entries = Stream.of(keys)
+                .<Holder<GeologyLayer>>map(layers::getOrThrow)
+                .toList();
 
+        context.register(key, new GeologyProfile(regions.getOrThrow(region), entries));
+    }
 }

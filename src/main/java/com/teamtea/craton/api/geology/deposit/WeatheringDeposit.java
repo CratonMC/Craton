@@ -1,18 +1,21 @@
 package com.teamtea.craton.api.geology.deposit;
 
+import com.teamtea.craton.common.worldgen.deposit.DepositCandidateSampler;
+import com.teamtea.craton.common.worldgen.deposit.PreparedPods;
+import com.teamtea.craton.common.worldgen.noise.GeologicalNoise;
+
 import com.mojang.serialization.MapCodec;
-import com.teamtea.craton.common.core.DepositRandomSequences;
+import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import java.util.List;
-import com.teamtea.craton.common.core.DepositFieldEngine.ColumnContext;
-import com.teamtea.craton.common.core.*;
-import static com.teamtea.craton.common.core.DepositFieldSupport.*;
+import com.teamtea.craton.common.worldgen.deposit.DepositGenerationContext;
 
+import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
 
-public final class WeatheringDeposit extends OrdinaryDeposit {
+public class WeatheringDeposit extends OrdinaryDeposit {
     public static final MapCodec<WeatheringDeposit> CODEC =
             codecFor(1, false, WeatheringDeposit::new);
 
@@ -22,36 +25,48 @@ public final class WeatheringDeposit extends OrdinaryDeposit {
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
-
+    @Override
+    public boolean canPlace(DepositGenerationContext ctx,BlockState originalHost,BlockState state,int y){
+        return state.equals(originalHost)&&originalHost.is(Blocks.BASALT)&&!ctx.biome().is(Tags.Biomes.IS_OCEAN)&&ctx.topY()-y>=1;
+    }
 
     @Override
-    public BlockState place(ColumnContext ctx,DepositCandidateSampler.Candidate c,
+    public BlockState place(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c,
                             BlockState originalHost,BlockState state,int y){
+        if(!state.equals(originalHost)) return null;
         if(!originalHost.is(Blocks.BASALT)||ctx.biome().is(Tags.Biomes.IS_OCEAN)) return null;
         int depth=ctx.topY()-y;
         if(depth<1) return null;
 
-        Shape config=settings().shape();
-        if(depth>config.y(c.shapeSeed())) return null;
-        double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
-        double r=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);
-        double footprint=1-sq(dx/r)-sq(dz/rz)
-                +shapeNoise2(ctx.x(),ctx.z(),c.shapeSeed(),.010,.052,config.broadNoise(),config.detailNoise());
-        double satellite=satellitePods(c,ctx.x(),y,ctx.z(),c.x(),ctx.topY()-config.y(c.shapeSeed())*.5,c.z(),r,config.y(c.shapeSeed())*.38,rz,0,0xBA6817L,config);
+        Column column=(Column)ctx.columnGeometry(c);
+        if(column==null){column=prepareColumn(ctx,c);ctx.columnGeometry(c,column);}
+        if(depth>column.thickness()) return null;
+        double footprint=column.footprint();
+        double satellite=column.pods().score(ctx.x(),y,ctx.z());
         footprint=Math.max(footprint,satellite*.65-.04);
         if(footprint<-.10) return null;
         double edgeP=GeologicalNoise.smoothstep(-.10,.38,footprint);
         if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.15)>edgeP) return null;
 
-        List<BlockState> alteration=field(ctx,c).settings().alterationRocks();
-        double thickness=config.y(c.shapeSeed());
+        List<BlockState> alteration=settings().alterationRocks();
+        double thickness=column.thickness();
         if(depth<=thickness*3/13) return alteration.size()>0?alteration.get(0):settings().rock();
         if(depth<=thickness*9/13){
             double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.075,3);
-            if(grade>.42) return ore(this,0,state);
+            if(grade>.42) return abundantOre(this,ctx,c,y,0,state,alteration.size()>1?alteration.get(1):settings().rock());
             return alteration.size()>1?alteration.get(1):settings().rock();
         }
         return alteration.size()>2?alteration.get(2):settings().rock();
+    }
+    private record Column(double thickness,double footprint,PreparedPods pods){}
+    private Column prepareColumn(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c){
+        Shape config=settings().shape();
+        double thickness=config.y(c.shapeSeed());
+        double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
+        double r=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);
+        double footprint=1-sq(dx/r)-sq(dz/rz)
+                +shapeNoise2(ctx.x(),ctx.z(),c.shapeSeed(),.010,.052,config.broadNoise(),config.detailNoise());
+        return new Column(thickness,footprint,ctx.ordinaryPods(c,ctx.topY()-thickness*.5,r,thickness*.38,rz,0,0xBA6817L,config));
     }
 
 }

@@ -1,0 +1,10 @@
+{
+  "layers": [
+    "craton:shale",
+    "craton:sandstone",
+    "craton:schist",
+    "craton:gneiss",
+    "craton:eclogite"
+  ],
+  "region": "craton:cold_plains"
+}

@@ -1,9 +1,8 @@
 package com.teamtea.craton.data.tag;
 
-
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.registry.CratonBlocks;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import com.teamtea.craton.common.registry.CratonTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,8 +18,7 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 import java.util.concurrent.CompletableFuture;
 
-
-public final class CBlockTagProvider extends BlockTagsProvider {
+public class CBlockTagProvider extends BlockTagsProvider {
     public CBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId) {
         super(output, lookupProvider, modId);
     }
@@ -121,7 +119,7 @@ public final class CBlockTagProvider extends BlockTagsProvider {
 
         public Appender add(Block... blocks) {
             for (Block block : blocks) {
-                add(BuiltInRegistries.BLOCK.wrapAsHolder(block).getKey());
+                add(BuiltInRegistries.BLOCK.wrapAsHolder(block).keyOrNull());
             }
             return this;
         }

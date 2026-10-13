@@ -1,9 +1,8 @@
 package com.teamtea.craton.data.recipe;
 
-
 import com.google.common.collect.ImmutableMap;
 import com.teamtea.craton.Craton;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import com.teamtea.craton.common.registry.CratonBlocks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderGetter;
@@ -38,6 +37,13 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
 
     @Override
     protected void buildRecipes() {
+        ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC,
+                        com.teamtea.craton.common.registry.CratonItems.SURVEY_CHART.value())
+                .requires(net.minecraft.world.item.Items.MAP)
+                .requires(net.minecraft.world.item.Items.AMETHYST_SHARD)
+                .requires(net.minecraft.world.item.Items.RAW_COPPER)
+                .unlockedBy("has_map", has(net.minecraft.world.item.Items.MAP))
+                .save(output);
         for (StoneCollection stoneCollection : CratonBlocks.STONE_COLLECTIONS) {
             for (BlockFamily blockFamily : stoneCollection.getAll()) {
                 generateRecipes(blockFamily, FeatureFlagSet.of(FeatureFlags.VANILLA));

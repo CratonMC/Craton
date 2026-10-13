@@ -5,7 +5,7 @@ import com.teamtea.craton.Craton;
 import com.teamtea.craton.api.block.ExtendedBlockFamily;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
 import com.teamtea.craton.common.registry.CratonBlocks;
-import com.teamtea.craton.common.core.StoneCollection;
+import com.teamtea.craton.common.block.StoneCollection;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
@@ -22,10 +22,8 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.Optional;
 
-
 public class CBlockModelGenerators {
     private final BlockModelGenerators models;
-
 
     public static final TextureSlot TS_1 = TextureSlot.create("1");
     public static final ModelTemplate VERTICAL_SLAB = new ModelTemplate(

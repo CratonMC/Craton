@@ -1,9 +1,9 @@
 {
-  "biomes": "#c:is_ocean",
   "layers": [
     "craton:basalt",
     "craton:tuff",
     "craton:gabbro",
     "craton:eclogite"
-  ]
+  ],
+  "region": "craton:ocean"
 }

@@ -4,11 +4,21 @@
   "dip_max": 30.0,
   "dip_min": 0.0,
   "enrichment_scale": 60.0,
-  "frequency": 0.12,
+  "frequency": 0.08,
   "length": 160.0,
   "ore": "craton:bif_iron",
   "ore_density": 0.8,
   "satellite_count": 3,
-  "thickness": 3.5,
-  "width": 45.0
+  "thickness": 2.8,
+  "width": 45.0,
+  "abundance": {
+    "poor_chance": 0.3,
+    "rich_chance": 0.12,
+    "poor_scale": 0.64,
+    "normal_scale": 0.84,
+    "rich_scale": 1,
+    "cell_x": 48,
+    "cell_y": 0,
+    "cell_z": 32
+  }
 }

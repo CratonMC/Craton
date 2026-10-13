@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-
 public class CLootTableProvider extends LootTableProvider {
-
 
     public CLootTableProvider() {
         super(BuiltInLootTables.all(), List.of(new SubProviderEntry(

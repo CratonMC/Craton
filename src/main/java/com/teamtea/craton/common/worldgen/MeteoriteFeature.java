@@ -3,7 +3,7 @@ package com.teamtea.craton.common.worldgen;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamtea.craton.api.geology.ore.OreType;
-import com.teamtea.craton.common.core.GeologicalNoise;
+import com.teamtea.craton.common.worldgen.noise.GeologicalNoise;
 import com.teamtea.craton.common.registry.CratonRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

@@ -3,7 +3,6 @@ package com.teamtea.craton.data.model;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
 
-
 public class CItemModelGenerators {
     private final ItemModelGenerators models;
 
@@ -13,6 +12,5 @@ public class CItemModelGenerators {
 
     public void run() {
     }
-
 
 }

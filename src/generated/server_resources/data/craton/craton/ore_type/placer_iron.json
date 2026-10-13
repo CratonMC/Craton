@@ -7,6 +7,10 @@
     {
       "hosts": "minecraft:red_sand",
       "result": "craton:ferriferous_sand"
+    },
+    {
+      "hosts": "minecraft:sand",
+      "result": "craton:ferriferous_sand"
     }
   ]
 }

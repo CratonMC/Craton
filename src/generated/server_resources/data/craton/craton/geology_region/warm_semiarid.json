@@ -1,0 +1,9 @@
+{
+  "humidity": {
+    "max": 0.1
+  },
+  "priority": 300,
+  "temperature": {
+    "min": 0.55
+  }
+}

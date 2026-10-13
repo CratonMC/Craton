@@ -1,11 +1,10 @@
 package com.teamtea.craton.api.geology.deposit;
 
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.teamtea.craton.Craton;
 import net.minecraft.resources.Identifier;
-import com.teamtea.craton.common.core.DepositRandomSequences;
+import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 
 public interface Deposit {
     Codec<Deposit> CODEC = Codec.lazyInitialized(() ->

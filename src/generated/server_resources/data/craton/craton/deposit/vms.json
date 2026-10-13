@@ -7,9 +7,9 @@
       "craton:vms_galena"
     ],
     "placement": {
-      "cell_size": 192,
-      "frequency": 0.55,
-      "max_candidates": 2,
+      "cell_size": 256,
+      "frequency": 0.7,
+      "max_candidates": 1,
       "reach": 130.0
     },
     "rock": "minecraft:tuff",
@@ -18,12 +18,22 @@
       "detail_noise": 0.09,
       "height_max": 0.0,
       "height_min": 0.0,
-      "radius_x_max": 88.0,
-      "radius_x_min": 42.0,
-      "radius_y_max": 14.0,
-      "radius_y_min": 6.0,
-      "radius_z_max": 61.0,
-      "radius_z_min": 26.0
+      "radius_x_max": 74.8,
+      "radius_x_min": 35.7,
+      "radius_y_max": 11.9,
+      "radius_y_min": 5.1,
+      "radius_z_max": 51.85,
+      "radius_z_min": 22.1
+    },
+    "abundance": {
+      "poor_chance": 0.25,
+      "rich_chance": 0.15,
+      "poor_scale": 0.65,
+      "normal_scale": 0.86,
+      "rich_scale": 1,
+      "cell_x": 32,
+      "cell_y": 24,
+      "cell_z": 28
     }
   }
 }

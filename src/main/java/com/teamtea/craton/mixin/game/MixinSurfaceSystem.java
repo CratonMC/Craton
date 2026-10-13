@@ -1,20 +1,27 @@
 package com.teamtea.craton.mixin.game;
 
-
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import com.teamtea.craton.common.core.WorldSetter;
+import com.teamtea.craton.common.worldgen.surface.WorldSetter;
+import com.teamtea.craton.common.worldgen.geology.GeologyClimateSampler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.chunk.BlockColumn;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.NoiseChunk;
+import net.minecraft.world.level.levelgen.PositionalRandomFactory;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.WorldGenerationContext;
+import net.minecraft.world.level.levelgen.densityfunction.DensityBufferPool;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
+import net.minecraft.world.level.levelgen.material.MaterialSystem;
 import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
-import net.neoforged.neoforge.common.Tags;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Set;
 
-@Mixin(net.minecraft.world.level.levelgen.material.MaterialSystem.class)
+@Mixin(MaterialSystem.class)
 public abstract class MixinSurfaceSystem {
     @Shadow
     @Final
@@ -34,20 +41,56 @@ public abstract class MixinSurfaceSystem {
     @Shadow
     public abstract int getSeaLevel();
 
-    @Inject(method = "buildSurface", at = @At("HEAD"))
-    private void craton$beginChunk(CallbackInfo ci,
-            @Share("cratonChunk") LocalRef<WorldSetter.ChunkContext> chunkContext){
-        chunkContext.set(new WorldSetter.ChunkContext(noiseRandom));
+    @WrapMethod(method = "buildSurface")
+    private void craton$withGenerationContext(
+            RandomState randomState,
+            BiomeManager biomeManager,
+            WorldGenerationContext generationContext,
+            ChunkAccess protoChunk,
+            NoiseChunk noiseChunk,
+            MaterialRule ruleSource,
+            @Nullable Set<Holder<Biome>> possibleBiomes,
+            Operation<Void> original,
+            @Share(value = "chunkContext", namespace = "craton")
+            LocalRef<WorldSetter.ChunkContext> chunkContext,
+            @Share(value = "sampler", namespace = "craton")
+            LocalRef<GeologyClimateSampler> sampler
+    ) {
+        DensityBufferPool pool = randomState.acquireDensityBufferPool();
+        try {
+            try {
+                SamplerContext context = SamplerContext.builder()
+                        .enableCaches().useBufferArena(pool).build();
+                sampler.set(new GeologyClimateSampler(randomState.createClimateSampler(context), getSeaLevel()));
+            } catch (RuntimeException exception) {
+                // Do not return this pool twice if fallback creation also fails.
+                DensityBufferPool failedPool = pool;
+                pool = null;
+                randomState.releaseDensityBufferPool(failedPool);
+                sampler.set(new GeologyClimateSampler(
+                        randomState.createClimateSampler(SamplerContext.EMPTY_UNCACHED), getSeaLevel()));
+            }
+            chunkContext.set(new WorldSetter.ChunkContext(noiseRandom, sampler.get()));
+            original.call(randomState, biomeManager, generationContext, protoChunk, noiseChunk,
+                    ruleSource, possibleBiomes);
+            chunkContext.get().finishSurface(protoChunk,getSeaLevel());
+        } finally {
+            // Covers vanilla failures, geology failures and another mixin cancelling the method.
+            sampler.set(null);
+            chunkContext.set(null);
+            if (pool != null) randomState.releaseDensityBufferPool(pool);
+        }
     }
 
-    @Inject(method = "buildSurface", at = @At("RETURN"))
-    private void craton$endChunk(CallbackInfo ci,
-            @Share("cratonChunk") LocalRef<WorldSetter.ChunkContext> chunkContext){
-        chunkContext.set(null);
-    }
-
-    @Inject(at = {@At(value = "INVOKE", target = "Lnet/minecraft/core/Holder;is(Lnet/minecraft/resources/ResourceKey;)Z", ordinal = 1)}, method = {"buildSurface"})
-    public void ssdsd$canUse(
+    @Inject(
+            method = "buildSurface",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/core/Holder;is(Lnet/minecraft/resources/ResourceKey;)Z",
+                    ordinal = 1
+            )
+    )
+    private void craton$applyGeology(
             RandomState randomState,
             BiomeManager biomeManager,
             WorldGenerationContext generationContext,
@@ -57,22 +100,13 @@ public abstract class MixinSurfaceSystem {
             @Nullable Set<Holder<Biome>> possibleBiomes,
             CallbackInfo ci,
             @Local(name = "surfaceBiome") Holder<Biome> surfaceBiome,
-            @Local(name = "column") BlockColumn column,
             @Local(name = "blockX") int blockX,
             @Local(name = "blockZ") int blockZ,
-            @Local(name = "startingHeight") int startingHeight,
-            @Local(name = "maxY") int maxY,
-            @Local(name = "blockPos") BlockPos.MutableBlockPos blockPos,
-            @Share("cratonChunk") LocalRef<WorldSetter.ChunkContext> chunkContext) {
-
-        if(surfaceBiome.is(Tags.Biomes.IS_CAVE)){
-            surfaceBiome=biomeManager.getBiome(
-                    blockPos.setY(Math.clamp(startingHeight + 20, getSeaLevel(), maxY-1))
-            );
-        }
-        WorldSetter.rebuildCloumnExtension(column, blockPos, blockX, blockZ, startingHeight, protoChunk,
-                surfaceBiome, chunkContext.get());
+            @Share(value = "chunkContext", namespace = "craton")
+            LocalRef<WorldSetter.ChunkContext> chunkContext
+    ) {
+        // Capture coordinates/biome only. Geology waits until vanilla finishes its surface rules.
+        chunkContext.get().captureColumn(blockX,blockZ,surfaceBiome);
     }
-
 
 }

@@ -15,7 +15,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.concurrent.CompletableFuture;
@@ -38,20 +40,37 @@ public class DataInit {
         var esb = new CBlockTagProvider(packOutput, lookupProvider, MODID);
         generator.addProvider(true, esb);
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
-        event.createReloadableRegistryObjects(
-                new RegistrySetBuilder()
-                        .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
-                        .add(Registries.LOOT_TABLE, new CLootTableProvider())
-        );
-        event.createWorldRegistryObjects(
-                new RegistrySetBuilder()
-                        .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
-                        .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
-                        .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)
-                        .add(CratonRegistries.DEPOSIT, DepositRegistry::bootstrap)
-                        .add(Registries.FEATURE, MeteoriteFeatures::bootstrap)
-                        .add(Registries.PLACED_FEATURE, MeteoriteFeatures::bootstrapPlaced)
-                        .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
-        );
+//        event.createReloadableRegistryObjects(
+//                new RegistrySetBuilder()
+//                        .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
+//                        .add(Registries.LOOT_TABLE, new CLootTableProvider())
+//        );
+//        event.createWorldRegistryObjects(
+//                new RegistrySetBuilder()
+//                        .add(CratonRegistries.GEOLOGY_REGION, GeologyRegionRegistry::bootstrap)
+//                        .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
+//                        .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
+//                        .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)
+//                        .add(CratonRegistries.DEPOSIT, DepositRegistry::bootstrap)
+//                        .add(Registries.FEATURE, MeteoriteFeatures::bootstrap)
+//                        .add(Registries.PLACED_FEATURE, MeteoriteFeatures::bootstrapPlaced)
+//                        .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
+//        );
+    }
+
+    public static void gatherRegistryEntries(GatherDataRegistryEntriesEvent event) {
+        event
+                .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
+                .add(Registries.LOOT_TABLE, new CLootTableProvider())
+
+                .add(CratonRegistries.GEOLOGY_REGION, GeologyRegionRegistry::bootstrap)
+                .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
+                .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
+                .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)
+                .add(CratonRegistries.DEPOSIT, DepositRegistry::bootstrap)
+
+                .add(Registries.FEATURE, MeteoriteFeatures::bootstrap)
+                .add(Registries.PLACED_FEATURE, MeteoriteFeatures::bootstrapPlaced)
+                .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap);
     }
 }

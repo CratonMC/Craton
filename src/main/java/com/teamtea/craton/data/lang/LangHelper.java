@@ -6,7 +6,6 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 public abstract class LangHelper extends LanguageProvider {
     private final PackOutput output;
 
-
     public LangHelper(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
         this.output = output;
@@ -22,7 +21,6 @@ public abstract class LangHelper extends LanguageProvider {
     // public <T> void add(ResourceKey<T> key, String name) {
     //     add(ESRegistries.createLangKey(key), name);
     // }
-
 
     // There is a lot of code here that is redundant, but indispensable. In order to make corrections
     protected abstract void addTranslations();

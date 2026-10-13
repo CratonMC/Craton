@@ -6,8 +6,8 @@
       "craton:shale_coal"
     ],
     "placement": {
-      "cell_size": 192,
-      "frequency": 0.4,
+      "cell_size": 256,
+      "frequency": 0.45,
       "max_candidates": 2,
       "reach": 190.0
     },
@@ -17,12 +17,22 @@
       "detail_noise": 0.07,
       "height_max": 0.0,
       "height_min": 0.0,
-      "radius_x_max": 130.0,
-      "radius_x_min": 72.0,
-      "radius_y_max": 6.5,
-      "radius_y_min": 2.3,
-      "radius_z_max": 74.0,
-      "radius_z_min": 32.0
+      "radius_x_max": 110.5,
+      "radius_x_min": 61.2,
+      "radius_y_max": 5.525,
+      "radius_y_min": 1.955,
+      "radius_z_max": 62.9,
+      "radius_z_min": 27.2
+    },
+    "abundance": {
+      "poor_chance": 0.25,
+      "rich_chance": 0.15,
+      "poor_scale": 0.67,
+      "normal_scale": 0.86,
+      "rich_scale": 1,
+      "cell_x": 32,
+      "cell_y": 0,
+      "cell_z": 24
     }
   }
 }

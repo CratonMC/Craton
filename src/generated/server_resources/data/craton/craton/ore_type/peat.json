@@ -3,6 +3,14 @@
     {
       "hosts": "minecraft:mud",
       "result": "craton:peat"
+    },
+    {
+      "hosts": "minecraft:dirt",
+      "result": "craton:peat"
+    },
+    {
+      "hosts": "minecraft:grass_block",
+      "result": "craton:peat"
     }
   ]
 }

@@ -1,5 +1,11 @@
 package com.teamtea.craton.api.geology.deposit;
 
+import com.teamtea.craton.common.worldgen.deposit.DepositCandidateSampler;
+import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
+import com.teamtea.craton.common.worldgen.deposit.MineralizationField;
+import com.teamtea.craton.common.worldgen.geology.GeologyFieldSampler;
+import com.teamtea.craton.common.worldgen.noise.GeologicalNoise;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.teamtea.craton.common.registry.CratonBlocks;
@@ -7,8 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.teamtea.craton.common.core.*;
-import static com.teamtea.craton.common.core.DepositFieldSupport.*;
+
+import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -22,11 +28,18 @@ public class BandedIronFormation extends AbstractDeposit {
     private final Holder<OreType> ore;
     private final double length,width,thickness,dipMin,dipMax,bandScale,enrichmentScale,oreDensity,frequency,broadNoise,detailNoise;
     private final int satelliteCount;
+    private final Abundance abundance;
 
     public BandedIronFormation(Holder<OreType> ore,double length,double width,double thickness,
                                double dipMin,double dipMax,double bandScale,double enrichmentScale,double oreDensity,
                                double frequency,int satelliteCount,double broadNoise,double detailNoise) {
+        this(ore,length,width,thickness,dipMin,dipMax,bandScale,enrichmentScale,oreDensity,frequency,satelliteCount,broadNoise,detailNoise,Abundance.BANDED);
+    }
+    public BandedIronFormation(Holder<OreType> ore,double length,double width,double thickness,
+                               double dipMin,double dipMax,double bandScale,double enrichmentScale,double oreDensity,
+                               double frequency,int satelliteCount,double broadNoise,double detailNoise,Abundance abundance) {
         super(resolvePlacement(length,width,frequency,broadNoise,detailNoise));
+        this.abundance=abundance;
         this.ore=ore;
         this.length=length;
         this.width=width;
@@ -42,6 +55,7 @@ public class BandedIronFormation extends AbstractDeposit {
         this.detailNoise=detailNoise;
     }
 
+    public Abundance abundance(){return abundance;}
     public Holder<OreType> ore() { return ore; }
     public double length() { return length; }
     public double width() { return width; }
@@ -79,7 +93,8 @@ public class BandedIronFormation extends AbstractDeposit {
                     Codec.doubleRange(0,1).optionalFieldOf("frequency",.25).forGetter(BandedIronFormation::frequency),
                     Codec.intRange(0,24).optionalFieldOf("satellite_count",8).forGetter(BandedIronFormation::satelliteCount),
                     Codec.doubleRange(0,2).optionalFieldOf("broad_noise",.32).forGetter(BandedIronFormation::broadNoise),
-                    Codec.doubleRange(0,2).optionalFieldOf("detail_noise",.075).forGetter(BandedIronFormation::detailNoise)
+                    Codec.doubleRange(0,2).optionalFieldOf("detail_noise",.075).forGetter(BandedIronFormation::detailNoise),
+                    Abundance.CODEC.optionalFieldOf("abundance",Abundance.BANDED).forGetter(BandedIronFormation::abundance)
             ).apply(instance, BandedIronFormation::new)).flatXmap(BandedIronFormation::validate,BandedIronFormation::validate);
 
     private static DataResult<BandedIronFormation> validate(BandedIronFormation b) {
@@ -111,59 +126,130 @@ public class BandedIronFormation extends AbstractDeposit {
         return CODEC;
     }
 
-
-
     public record BifColumnHit(BandedIronFormation deposit,double centerY,double horizontalScore,
-                                double satelliteScore,long gradeSeed,long occupancySeed){}
+                                double satelliteScore,long gradeSeed,long occupancySeed,double halfThickness,GradeCache noise){
+        public BifColumnHit(BandedIronFormation deposit,double centerY,double horizontalScore,double satelliteScore,
+                            long gradeSeed,long occupancySeed,double halfThickness){
+            this(deposit,centerY,horizontalScore,satelliteScore,gradeSeed,occupancySeed,halfThickness,
+                    new GradeCache(gradeSeed,occupancySeed));
+        }
+    }
+
+    /** Exact 3-D caches plus lazy 2-D grade; no grade work until a voxel reaches the body. */
+    public static class GradeCache {
+        private final long seed;
+        private final GeologicalNoise.CachedFbm banding;
+        private final GeologicalNoise.CachedOccupancy occupancy;
+        private boolean initialized;
+        private int columnX,columnZ;
+        private double enrichment;
+        private BandedIronFormation definition;
+        private MineralizationField abundanceField;
+        private Abundance abundanceConfig;
+        private boolean enriched(BandedIronFormation deposit,int x,int y,int z){
+            if(abundanceField==null||abundanceConfig!=deposit.abundance()){
+                abundanceConfig=deposit.abundance();
+                abundanceField=new MineralizationField(abundanceConfig,seed,seed^0xB1F23L);
+            }
+            return abundanceField.contains(x,y,z);
+        }
+        private GradeCache(long gradeSeed,long occupancySeed){
+            seed=gradeSeed;
+            banding=new GeologicalNoise.CachedFbm(gradeSeed,.075,2);
+            occupancy=new GeologicalNoise.CachedOccupancy(occupancySeed,.16);
+        }
+        private double enrichment(BandedIronFormation deposit,int x,int z){
+            if(!initialized||columnX!=x||columnZ!=z||definition!=deposit){
+                enrichment=.5+.5*GeologicalNoise.fbm2(x,z,seed^0xB1F0L,1/Math.max(16,deposit.enrichmentScale()),3);
+                initialized=true;columnX=x;columnZ=z;definition=deposit;
+            }
+            return enrichment;
+        }
+    }
 
     public record BifData(List<DepositCandidateSampler.Candidate> candidates,List<BifColumnHit> hits){}
 
     private static final BifData EMPTY_COLUMN=new BifData(List.of(),List.of());
 
+    /** One bounded cache per generation context; invalid anchors are cached as well. */
+    public static class AnchorCache {
+        private final Map<DepositCandidateSampler.Candidate,Anchor> anchors=new java.util.LinkedHashMap<>(128,.75f,true){
+            @Override protected boolean removeEldestEntry(Map.Entry<DepositCandidateSampler.Candidate,Anchor> e){return size()>1024;}
+        };
+        private GeologyFieldSampler geology;
+        private Anchor get(BandedIronFormation bif,GeologyFieldSampler sampler,DepositCandidateSampler.Candidate c){
+            if(geology!=sampler){anchors.clear();geology=sampler;}
+            return anchors.computeIfAbsent(c,key -> bif.prepareAnchor(sampler,key));
+        }
+    }
+    private record Pod(long seed,double along,double across,double radiusAlong,double radiusAcross){}
+    private record Anchor(int layer,double strikeX,double strikeZ,Pod[] pods,GradeCache noise){}
+    private static final Anchor INVALID_ANCHOR=new Anchor(-1,1,0,new Pod[0],null);
+
+    private Anchor prepareAnchor(GeologyFieldSampler geology,DepositCandidateSampler.Candidate candidate){
+        List<Integer> eligible=geology.matchingLayersAt(
+                CratonBlocks.GNEISS.getOrigin().getBaseBlock().defaultBlockState(),candidate.x(),candidate.z());
+        if(eligible.isEmpty()) return INVALID_ANCHOR;
+        int layer=eligible.get((int)Math.floor(rand01(candidate.verticalSeed())*eligible.size())%eligible.size());
+        double rawGx=geology.boundaryY(layer,candidate.x()+4,candidate.z())-geology.boundaryY(layer,candidate.x()-4,candidate.z());
+        double rawGz=geology.boundaryY(layer,candidate.x(),candidate.z()+4)-geology.boundaryY(layer,candidate.x(),candidate.z()-4);
+        double dip=Math.toDegrees(Math.atan(Math.hypot(rawGx/8.0,rawGz/8.0)));
+        if(dip<dipMin()||dip>dipMax()) return INVALID_ANCHOR;
+        double sx=-rawGz,sz=rawGx,len=Math.sqrt(sx*sx+sz*sz);
+        if(len<1E-6){sx=1;sz=0;}else{sx/=len;sz/=len;}
+        Pod[] pods=new Pod[Math.min(24,satelliteCount())];
+        double a=Math.max(1,length()*.5),b=Math.max(1,width()*.5);
+        for(int i=0;i<pods.length;i++){
+            long seed=DepositCandidateSampler.mix(candidate.shapeSeed()^(0x9E3779B97F4A7C15L*(i+1)));
+            double theta=rand01(seed)*Math.PI*2,radial=1.04+rand01(seed^0xA17L)*.20;
+            pods[i]=new Pod(seed,a*radial*Math.cos(theta),b*radial*Math.sin(theta),
+                    8+rand01(seed^0xB31L)*13,5+rand01(seed^0xC49L)*9);
+        }
+        return new Anchor(layer,sx,sz,pods,new GradeCache(candidate.gradeSeed(),candidate.occupancySeed()));
+    }
+
     public static BifData prepareBif(List<DepositCandidateSampler.Candidate> candidates,
             Map<DepositCandidateSampler.Candidate,Deposit> owners,GeologyFieldSampler geology,int x,int z){
+        return prepareBif(candidates,owners,geology,x,z,new AnchorCache());
+    }
+
+    public static BifData prepareBif(List<DepositCandidateSampler.Candidate> candidates,
+            Map<DepositCandidateSampler.Candidate,Deposit> owners,GeologyFieldSampler geology,int x,int z,AnchorCache cache){
         if(candidates.isEmpty()) return EMPTY_COLUMN;
-        return new BifData(candidates,prepareBandedIronFormations(candidates,owners,geology,x,z));
+        return new BifData(candidates,prepareBandedIronFormations(candidates,owners,geology,x,z,cache));
     }
 
     private static List<BifColumnHit> prepareBandedIronFormations(List<DepositCandidateSampler.Candidate> candidates,
-            Map<DepositCandidateSampler.Candidate,Deposit> owners,GeologyFieldSampler geology,int x,int z){
-        List<Integer> gneissLayers=new ArrayList<>();
-        for(int i=0;i<geology.layers().size();i++)
-            if(geology.layers().get(i).value().blockState().is(CratonBlocks.GNEISS.getOrigin().getBaseBlock())) gneissLayers.add(i);
-        if(gneissLayers.isEmpty()) return List.of();
-
+            Map<DepositCandidateSampler.Candidate,Deposit> owners,GeologyFieldSampler geology,int x,int z,AnchorCache cache){
         List<BifColumnHit> hits=new ArrayList<>();
         for(DepositCandidateSampler.Candidate candidate:candidates){
             BandedIronFormation bif=(BandedIronFormation)owners.get(candidate);
-                // A BIF instance binds to exactly one eligible gneiss horizon, not every gneiss band in the profile.
-                int targetLayer=gneissLayers.get((int)Math.floor(rand01(candidate.verticalSeed())*gneissLayers.size())%gneissLayers.size());
-                double gx=(geology.boundaryY(targetLayer,candidate.x()+4,candidate.z())
-                        -geology.boundaryY(targetLayer,candidate.x()-4,candidate.z()))/8.0;
-                double gz=(geology.boundaryY(targetLayer,candidate.x(),candidate.z()+4)
-                        -geology.boundaryY(targetLayer,candidate.x(),candidate.z()-4))/8.0;
-                double hostDip=Math.toDegrees(Math.atan(Math.hypot(gx,gz)));
-                if(hostDip<bif.dipMin()||hostDip>bif.dipMax()) continue;
-                double horizontalScore=horizontalScore(bif,geology,targetLayer,x,z,candidate);
-                double satelliteScore=satelliteScore(bif,geology,targetLayer,x,z,candidate);
+            Anchor anchor=cache.get(bif,geology,candidate);
+            if(anchor.layer()<0) continue;
+            int targetLayer=anchor.layer();
+            double horizontalScore=horizontalScore(bif,anchor,x,z,candidate);
+            double satelliteScore=satelliteScore(bif,anchor,x,z,candidate);
                 if(horizontalScore<-.24&&satelliteScore<-.20) continue;
-                double halfThickness=bif.thickness()*.5;
-                double verticalOffset=GeologicalNoise.fbm2(x,z,candidate.shapeSeed(),.035,2)*Math.min(halfThickness*.22,1.5);
                 double topBoundary=geology.boundaryY(targetLayer,x,z);
                 double bottomBoundary=targetLayer+1<geology.layers().size()
                         ?geology.boundaryY(targetLayer+1,x,z):geology.minY();
-                double available=Math.max(1,topBoundary-bottomBoundary);
+                double available=topBoundary-bottomBoundary;
+                if(available<=1E-9) continue;
+                double halfThickness=Math.min(bif.thickness()*.5,available*.45);
+                double verticalOffset=GeologicalNoise.fbm2(x,z,candidate.shapeSeed(),.035,2)
+                        *Math.min(Math.min(halfThickness*.22,1.5),available*.05);
                 // Keep the ore-bearing core below the mixed contact with the overlying rock.
                 double inset=Math.min(available*.5,Math.max(4.0,bif.thickness()*.5+2.0));
                 double centerY=topBoundary-inset+verticalOffset;
                 hits.add(new BifColumnHit(bif,centerY,horizontalScore,satelliteScore,
-                        candidate.gradeSeed(),candidate.occupancySeed()));
+                        candidate.gradeSeed(),candidate.occupancySeed(),halfThickness,anchor.noise()));
         }
         return hits;
     }
 
     public BlockState placeHit(BifColumnHit hit,BlockState host,int x,int y,int z){
-            double halfThickness=Math.max(.75,thickness()*.5);
+            if(!hit.noise().enriched(this,x,y,z))return null;
+            double halfThickness=hit.halfThickness();
             double dy=y+.5-hit.centerY();
             // Ellipsoidal section: the iron lens thins out at both ends.
             double body=hit.horizontalScore()-sq(dy/halfThickness);
@@ -173,23 +259,22 @@ public class BandedIronFormation extends AbstractDeposit {
             double envelope=GeologicalNoise.smoothstep(-.18,.48,body);
             double phase=(y+.5-hit.centerY())/Math.max(2,bandScale());
             double banding=GeologicalNoise.clamp(.5+.35*Math.sin(phase*Math.PI*2)
-                    +.15*GeologicalNoise.fbm(x,y,z,hit.gradeSeed(),.075,2),0,1);
-            double enrichment=.5+.5*GeologicalNoise.fbm2(x,z,hit.gradeSeed()^0xB1F0L,
-                    1/Math.max(16,enrichmentScale()),3);
+                    +.15*hit.noise().banding.sample(x,y,z),0,1);
+            double enrichment=hit.noise().enrichment(this,x,z);
             double probability=oreDensity()*(.08+.74*envelope)*(.35+.35*banding+.30*enrichment);
-            double occupancy=GeologicalNoise.occupancy(x,y,z,hit.occupancySeed(),.16);
+            double occupancy=hit.noise().occupancy.sample(x,y,z);
             if(body>-.20&&occupancy<probability) return ore().value().getOreState(host);
             double satelliteChance=oreDensity()*GeologicalNoise.smoothstep(-.16,.42,satellite)*(.24+.35*banding);
             if(satellite>-.16&&occupancy<satelliteChance) return ore().value().getOreState(host);
         return null;
     }
 
-    private static double horizontalScore(BandedIronFormation bif,GeologyFieldSampler geology,int layerIndex,
+    private static double horizontalScore(BandedIronFormation bif,Anchor anchor,
                                           int x,int z,DepositCandidateSampler.Candidate candidate){
         int anchorX=candidate.x(),anchorZ=candidate.z();
-        double[] strike=geology.strike(layerIndex,anchorX,anchorZ);
-        double dx=x+.5-anchorX,dz=z+.5-anchorZ,along=dx*strike[0]+dz*strike[1];
-        double across=-dx*strike[1]+dz*strike[0];
+        
+        double dx=x+.5-anchorX,dz=z+.5-anchorZ,along=dx*anchor.strikeX()+dz*anchor.strikeZ();
+        double across=-dx*anchor.strikeZ()+dz*anchor.strikeX();
         double a=Math.max(1,bif.length()*.5),b=Math.max(1,bif.width()*.5);
         double normalized=sq(along/a)+sq(across/b);
         double warp=GeologicalNoise.fbm2(x,z,candidate.shapeSeed(),.006,3)*bif.broadNoise()
@@ -197,25 +282,20 @@ public class BandedIronFormation extends AbstractDeposit {
         return 1-normalized+warp;
     }
 
-    private static double satelliteScore(BandedIronFormation bif,GeologyFieldSampler geology,int layerIndex,
+    private static double satelliteScore(BandedIronFormation bif,Anchor anchor,
                                          int x,int z,DepositCandidateSampler.Candidate candidate){
-        double[] strike=geology.strike(layerIndex,candidate.x(),candidate.z());
+        
         double dx=x+.5-candidate.x(),dz=z+.5-candidate.z();
-        double along=dx*strike[0]+dz*strike[1];
-        double across=-dx*strike[1]+dz*strike[0];
+        double along=dx*anchor.strikeX()+dz*anchor.strikeZ();
+        double across=-dx*anchor.strikeZ()+dz*anchor.strikeX();
         double a=Math.max(1,bif.length()*.5),b=Math.max(1,bif.width()*.5);
         if(Math.abs(along)>a*1.25+25||Math.abs(across)>b*1.25+25) return -9;
         double best=-9;
-        for(int i=0;i<Math.min(24,bif.satelliteCount());i++){
-            long seed=DepositCandidateSampler.mix(candidate.shapeSeed()^(0x9E3779B97F4A7C15L*(i+1)));
-            double theta=rand01(seed)*Math.PI*2;
-            double radial=1.04+rand01(seed^0xA17L)*.20;
-            double ca=Math.cos(theta),sa=Math.sin(theta);
-            double podAlong=a*radial*ca,podAcross=b*radial*sa;
-            double localAlong=along-podAlong,localAcross=across-podAcross;
+        for(Pod pod:anchor.pods()){
+            long seed=pod.seed();
+            double localAlong=along-pod.along(),localAcross=across-pod.across();
             if(Math.abs(localAlong)>25||Math.abs(localAcross)>19) continue;
-            double radiusAlong=8+rand01(seed^0xB31L)*13;
-            double radiusAcross=5+rand01(seed^0xC49L)*9;
+            double radiusAlong=pod.radiusAlong(),radiusAcross=pod.radiusAcross();
             double broad=GeologicalNoise.fbm2(x,z,seed,.026,3)*.23;
             double detail=GeologicalNoise.fbm2(x,z,seed^0xD52L,.085,2)*.09;
             best=Math.max(best,1-sq(localAlong/radiusAlong)-sq(localAcross/radiusAcross)+broad+detail);

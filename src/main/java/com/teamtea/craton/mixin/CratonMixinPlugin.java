@@ -9,12 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-
 public class CratonMixinPlugin implements IMixinConfigPlugin {
 
     public static final String MIXIN_COMPAT_PACKAGE = "mixin.compat.";
-
-
 
     @Override
     public void onLoad(String mixinPackage) {

@@ -36,13 +36,13 @@ public class WorldTester {
                 + Math.cos(blockpos.getZ() * 0.1) * 0.33
                 + Math.sin(blockpos.getZ() * 0.2) * 0.33;
 
-        // **保持 noise 允许负值，平滑调整**
+        // Preserve negative noise values.
         noise = Mth.clamp(noise, -0.5, 0.5);
 
-        // **动态调整高度**
-        int heightRange = y + (int) (noise * 10);  // 让 noise 只影响 `-2 ~ 2`，减少剧烈波动
+        // Adjust the height using noise.
+        int heightRange = y + (int) (noise * 10);  // Apply noise to the base height.
 
-        // **按照整数区间进行分层**
+        // Select strata using integer ranges.
         // if (y == yMax) return Blocks.GRASS_BLOCK.defaultBlockState();
         // if (y >= yMax - 2) return Blocks.DIRT.defaultBlockState();
         // if (y >= yMax+ (int) (noise * 10) - 2) return null;

@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-public final class GeologyLayerRegistry {
+public class GeologyLayerRegistry {
     public static final ResourceKey<GeologyLayer> GRANITE = createKey("granite");
     public static final ResourceKey<GeologyLayer> DIORITE = createKey("diorite");
     public static final ResourceKey<GeologyLayer> ANDESITE = createKey("andesite");
@@ -38,7 +38,7 @@ public final class GeologyLayerRegistry {
         context.register(TUFF, layer(Blocks.TUFF, 20.0, 16.0, 0.011, 0.008, 55));
         context.register(BASALT, layer(Blocks.BASALT, 30.0, 9.0, 0.006, 0.007, 66));
         context.register(GRAVEL, layer(Blocks.GRAVEL, 5, 4, 0.006, 0.007, 18));
-        context.register(SANDSTONE, layer(Blocks.SANDSTONE, 24.0, 7.0, 0.008, 0.011, 89));
+        context.register(SANDSTONE, layer(Blocks.SANDSTONE, 14.0, 5.0, 0.008, 0.011, 89));
 
         context.register(GABBRO, layer(CratonBlocks.GABBRO.getOrigin().getBaseBlock(), 30.0, 8.0, 0.006, 0.010, 101));
         context.register(GNEISS, layer(CratonBlocks.GNEISS.getOrigin().getBaseBlock(), 24.0, 18.0, 0.008, 0.012, 202));

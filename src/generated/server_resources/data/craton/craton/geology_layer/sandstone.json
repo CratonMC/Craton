@@ -1,7 +1,8 @@
 {
-  "amplitude": 7.0,
+  "amplitude": 5.0,
   "block": "minecraft:sandstone",
   "freq_x": 0.008,
   "freq_z": 0.011,
-  "seed": 89
+  "seed": 89,
+  "thickness": 14.0
 }

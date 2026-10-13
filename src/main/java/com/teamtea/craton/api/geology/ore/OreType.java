@@ -14,6 +14,7 @@ import java.util.List;
 public record OreType(
         List<Variant> variants
 ) {
+    public OreType { variants = List.copyOf(variants); }
 
     public static final Codec<OreType> CODEC =
             RecordCodecBuilder.create(instance -> instance.group(

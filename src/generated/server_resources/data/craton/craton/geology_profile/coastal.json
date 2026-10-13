@@ -1,0 +1,11 @@
+{
+  "layers": [
+    "craton:limestone",
+    "craton:sandstone",
+    "craton:shale",
+    "craton:schist",
+    "craton:gneiss",
+    "craton:eclogite"
+  ],
+  "region": "craton:coastal"
+}
