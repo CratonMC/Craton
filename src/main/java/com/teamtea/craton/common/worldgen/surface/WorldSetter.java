@@ -46,6 +46,27 @@ public class WorldSetter {
         private GeologyFieldSampler continuousGeology;
         private final Map<Holder<GeologyProfile>,GeologyFieldSampler> geology=new IdentityHashMap<>();
         private DepositGenerationContext deposits;
+        private final Map<BlockState,Integer> materialFlags=new IdentityHashMap<>();
+        private BlockState lastMaterial;
+        private int lastMaterialFlags;
+
+        /** Tags are stable during this chunk's generation; the cache expires with the context. */
+        private int materialFlags(BlockState state){
+            if(state==lastMaterial)return lastMaterialFlags;
+            Integer cached=materialFlags.get(state);
+            int flags;
+            if(cached!=null)flags=cached;
+            else{
+                boolean base=state.is(BlockTags.BASE_STONE_OVERWORLD);
+                boolean replace=base||state.is(BlockTags.DIRT)||state.is(Blocks.GRASS_BLOCK)
+                        ||state.is(BlockTags.SAND)||state.is(Blocks.GRAVEL)||state.is(Blocks.BEDROCK)
+                        ||state.is(Blocks.SANDSTONE)||state.is(Blocks.RED_SANDSTONE);
+                flags=(replace?1:0)|(base?2:0);
+                materialFlags.put(state,flags);
+            }
+            lastMaterial=state;lastMaterialFlags=flags;
+            return flags;
+        }
         private final BlockPos.MutableBlockPos surfacePosition=new BlockPos.MutableBlockPos(0,0,0);
 
         public ChunkContext(PositionalRandomFactory random){this(random,null);}
@@ -189,12 +210,13 @@ public class WorldSetter {
                 continue;
             }
             boolean peatSoil=wetland&&PeatDeposit.soil(current)&&startingHeight-y<=peatDepth;
-            if(!shouldReplace(current)&&!peatSoil) {
+            int material=context.materialFlags(current);
+            if((material&1)==0&&!peatSoil) {
                 if(debugmode) column.setBlock(y,Blocks.AIR.defaultBlockState());
                 continue;
             }
             // Surface depth protects loose cover, not the vanilla natural stone beneath it.
-            boolean rebuildRock=y<=topY||current.is(BlockTags.BASE_STONE_OVERWORLD)||current.is(Blocks.BEDROCK)
+            boolean rebuildRock=y<=topY||(material&2)!=0||current.is(Blocks.BEDROCK)
                     ||current.is(Blocks.SANDSTONE)||current.is(Blocks.RED_SANDSTONE)||cover!=null;
             boolean riverMaterial=river&&(current.is(Blocks.SAND)||current.is(Blocks.RED_SAND)||current.is(Blocks.GRAVEL));
             if(depositContext==null&&(rebuildRock||riverMaterial||peatSoil)){
@@ -232,12 +254,6 @@ public class WorldSetter {
         if(state.is(BlockTags.DIRT)) return random.at(pos).nextInt(1,2);
         if(state.is(BlockTags.SAND)) return random.at(pos).nextInt(3,5);
         return random.at(pos).nextInt(0,1);
-    }
-
-    private static boolean shouldReplace(BlockState state){
-        return state.is(BlockTags.BASE_STONE_OVERWORLD)||state.is(BlockTags.DIRT)
-                ||state.is(Blocks.GRASS_BLOCK)||state.is(BlockTags.SAND)||state.is(Blocks.GRAVEL)
-                ||state.is(Blocks.BEDROCK)||state.is(Blocks.SANDSTONE)||state.is(Blocks.RED_SANDSTONE);
     }
 
 }

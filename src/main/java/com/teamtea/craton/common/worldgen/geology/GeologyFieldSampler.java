@@ -15,7 +15,8 @@ import net.minecraft.world.level.biome.Climate;
 
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 /** Stratigraphy sampler with a bounded column cache, owned by one chunk generation context. */
 public class GeologyFieldSampler {
@@ -34,14 +35,29 @@ public class GeologyFieldSampler {
     private final GeologyRegionSampler regions;
     private final GeologicalNoise.CachedFbm capBlendNoise;
     private final GeologicalNoise.CachedFbm capRockNoise;
-    private final Map<Long,GeologicalNoise.CachedOccupancy> contactNoise=new HashMap<>();
-    private Column lastColumn;
-    private final Map<Long,Column> columns=new LinkedHashMap<>(256,.75f,true){
-        @Override protected boolean removeEldestEntry(Map.Entry<Long,Column> eldest){return size()>1024;}
-    };
+    private Long2ObjectOpenHashMap<GeologicalNoise.CachedOccupancy> contactNoise;
+    private Column lastColumn,lastCapColumn;
+    private BlockState lastCapRock;
+    private Long2ObjectLinkedOpenHashMap<Column> columns;
 
-    private record Column(int x,int z,double[] interfaces,double[] weights,double capWidth,
-                          int[] activeLayers,double[] contactWidths,GeologicalNoise.CachedOccupancy[] contactOccupancies,Map<Block,List<Integer>> eligibleLayers){}
+    private static class Column {
+        private final int x,z;
+        private final double[] interfaces,weights,contactWidths;
+        private final double capWidth;
+        private final int[] activeLayers;
+        private final GeologicalNoise.CachedOccupancy[] contactOccupancies;
+        private Map<Block,List<Integer>> eligibleLayers;
+        Column(int x,int z,double[] interfaces,double[] weights,double capWidth,int[] activeLayers,
+               double[] contactWidths,GeologicalNoise.CachedOccupancy[] contactOccupancies){
+            this.x=x;this.z=z;this.interfaces=interfaces;this.weights=weights;this.capWidth=capWidth;
+            this.activeLayers=activeLayers;this.contactWidths=contactWidths;this.contactOccupancies=contactOccupancies;
+        }
+        int x(){return x;} int z(){return z;}
+        double[] interfaces(){return interfaces;} double[] weights(){return weights;}
+        double capWidth(){return capWidth;} int[] activeLayers(){return activeLayers;}
+        double[] contactWidths(){return contactWidths;}
+        GeologicalNoise.CachedOccupancy[] contactOccupancies(){return contactOccupancies;}
+    }
 
     public GeologyFieldSampler(List<Holder<GeologyLayer>> layers,int minY,PositionalRandomFactory random){
         this(layers,minY,random,false,null);
@@ -104,7 +120,8 @@ public class GeologyFieldSampler {
     private Column column(int x,int z){
         if(lastColumn!=null&&lastColumn.x()==x&&lastColumn.z()==z) return lastColumn;
         long key=((long)x<<32)^(z&0xffffffffL);
-        Column column=columns.get(key);
+        if(columns==null)columns=new Long2ObjectLinkedOpenHashMap<>(128);
+        Column column=columns.getAndMoveToLast(key);
         if(column==null){
             Climate.TargetPoint point=climate==null?null:climate.sample(x,z);
             double upperScale=point!=null&&minY==-64?climate.upperSectionScale(point):1;
@@ -137,7 +154,8 @@ public class GeologyFieldSampler {
                 }
                 column=prepareColumn(x,z,interfaces,null,2);
             }
-            columns.put(key,column);
+            columns.putAndMoveToLast(key,column);
+            if(columns.size()>1024)columns.removeFirst();
         }
         lastColumn=column;
         return column;
@@ -198,7 +216,7 @@ public class GeologyFieldSampler {
     }
 
     private Column prepareColumn(int x,int z,double[] interfaces,double[] weights,double capWidth){
-        if(boundaryOnly) return new Column(x,z,interfaces,weights,capWidth,EMPTY_ACTIVE,EMPTY_WIDTHS,EMPTY_NOISES,Map.of());
+        if(boundaryOnly) return new Column(x,z,interfaces,weights,capWidth,EMPTY_ACTIVE,EMPTY_WIDTHS,EMPTY_NOISES);
         int count=0;
         for(int i=0;i<interfaces.length;i++)
             if(interfaces[i]-(i+1<interfaces.length?interfaces[i+1]:minY)>1E-9) count++;
@@ -214,11 +232,18 @@ public class GeologyFieldSampler {
                 double upperThickness=interfaces[upper]-(upper+1<interfaces.length?interfaces[upper+1]:minY);
                 GeologyLayer lowerLayer=layers.get(i).value(),upperLayer=layers.get(upper).value();
                 widths[cursor-1]=Math.min(contactWidth(lowerLayer,upperLayer),.45*Math.min(thickness,upperThickness));
-                occupancies[cursor-1]=contactNoise.computeIfAbsent(boundarySeed(i,lowerLayer,upperLayer),seed -> new GeologicalNoise.CachedOccupancy(seed,.19));
+                occupancies[cursor-1]=contactNoise(boundarySeed(i,lowerLayer,upperLayer));
             }
             active[cursor++]=i;
         }
-        return new Column(x,z,interfaces,weights,capWidth,active,widths,occupancies,new HashMap<>());
+        return new Column(x,z,interfaces,weights,capWidth,active,widths,occupancies);
+    }
+
+    private GeologicalNoise.CachedOccupancy contactNoise(long seed){
+        if(contactNoise==null)contactNoise=new Long2ObjectOpenHashMap<>();
+        GeologicalNoise.CachedOccupancy noise=contactNoise.get(seed);
+        if(noise==null){noise=new GeologicalNoise.CachedOccupancy(seed,.19);contactNoise.put(seed,noise);}
+        return noise;
     }
 
     /** Top boundary of the requested layer index. Layers are stored top-to-bottom. */
@@ -244,15 +269,32 @@ public class GeologyFieldSampler {
     /** Anchor each deposit once at its own center, rather than reselecting its horizon per column. */
     public List<Integer> matchingLayersAt(BlockState host,int x,int z){
         Column column=column(x,z);
-        return column.eligibleLayers().computeIfAbsent(host.getBlock(),block -> {
-            List<Integer> result=new ArrayList<>();
+        if(column.eligibleLayers==null)column.eligibleLayers=new HashMap<>();
+        Block block=host.getBlock();
+        List<Integer> result=column.eligibleLayers.get(block);
+        if(result==null){
+            int count=0,first=-1,second=-1;
             for(int i=0;i<layers.size();i++){
                 double bottom=i+1<layers.size()?column.interfaces()[i+1]:minY;
-                if(layers.get(i).value().blockState().getBlock().equals(block)&&column.interfaces()[i]-bottom>=1)
-                    result.add(i);
+                if(layers.get(i).value().blockState().getBlock().equals(block)&&column.interfaces()[i]-bottom>=1){
+                    if(count==0)first=i;else if(count==1)second=i;
+                    count++;
+                }
             }
-            return List.copyOf(result);
-        });
+            if(count==0)result=List.of();
+            else if(count==1)result=List.of(first);
+            else if(count==2)result=List.of(first,second);
+            else{
+                Integer[] indices=new Integer[count];int cursor=0;
+                for(int i=0;i<layers.size();i++){
+                    double bottom=i+1<layers.size()?column.interfaces()[i+1]:minY;
+                    if(layers.get(i).value().blockState().getBlock().equals(block)&&column.interfaces()[i]-bottom>=1)indices[cursor++]=i;
+                }
+                result=List.of(indices);
+            }
+            column.eligibleLayers.put(block,result);
+        }
+        return result;
     }
 
     private boolean useCap(Column column,int x,int y,int z){
@@ -265,38 +307,27 @@ public class GeologyFieldSampler {
     }
 
     private BlockState cap(Column column,int x,int y,int z){
-        double distance=y+.5-column.interfaces()[0];
-        if(transition==null) return upperRock(this,distance,x,y,z);
+        if(lastCapColumn==column)return lastCapRock;
+        lastCapColumn=column;
+        return lastCapRock=capRock(column,x,z);
+    }
+
+    /** Above the finite profile, continue one shallow rock rather than repeating beds. */
+    private BlockState capRock(Column column,int x,int z){
+        if(transition==null)return layers.get(0).value().blockState();
         for(int source=0;source<sources.length;source++)
-            if(column.weights()[source]==1) return upperRock(sources[source],distance,x,y,z);
-        double pick=GeologicalNoise.clamp(.5+2.0*capRockNoise.sample(x,y,z),0,1);
+            if(column.weights()[source]==1)return sources[source].layers.get(0).value().blockState();
+        // One horizontal choice per column also prevents vertical cycling in transition regions.
+        double pick=GeologicalNoise.clamp(.5+2.0*capRockNoise.sample(x,0,z),0,1);
         double sum=0;
         BlockState fallback=Blocks.STONE.defaultBlockState();
         for(int source=0;source<sources.length;source++){
-            if(column.weights()[source]<=0) continue;
-            fallback=upperRock(sources[source],distance,x,y,z);
+            if(column.weights()[source]<=0)continue;
+            fallback=sources[source].layers.get(0).value().blockState();
             sum+=column.weights()[source];
-            if(pick<sum) return fallback;
+            if(pick<sum)return fallback;
         }
         return fallback;
-    }
-
-    /** Continue the shallow succession with finite beds above the reference section. */
-    private BlockState upperRock(GeologyFieldSampler source,double distance,int x,int y,int z){
-        int count=Math.min(3,source.layers.size());
-        if(count<2||distance<0) return source.layers.get(0).value().blockState();
-        double depth=distance+2*capBlendNoise.sample(x,y,z);
-        if(depth<0) return source.layers.get(0).value().blockState();
-        long seed=source.boundaryRootSeed^source.layers.get(0).value().seed();
-        int band=(int)Math.floor(depth/20);
-        if(depth<upperBoundary(band,seed)) band--;
-        else if(depth>=upperBoundary(band+1,seed)) band++;
-        int index=(band&1)==1?0:1+(int)(GeologicalNoise.mix(seed^band)&0x7fffffffL)%(count-1);
-        return source.layers.get(index).value().blockState();
-    }
-
-    private static double upperBoundary(int band,long seed){
-        return band==0?0:band*20.0+6*(GeologicalNoise.hashUnit(band,0,0,seed)-.5);
     }
 
     public double[] strike(int layerIndex,int x,int z){

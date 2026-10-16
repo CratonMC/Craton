@@ -49,7 +49,12 @@ public class PlutonGeometry {
         double weight=1-GeologicalNoise.smoothstep(amplitude,3*amplitude,Math.abs(raw));
         return raw+weight*(broad.sample(columnX,y,columnZ)*broadAmplitude+detail.sample(columnX,y,columnZ)*detailAmplitude);
     }
-    public double sampleBase(IntrusionDeposit.Prepared p,int y){return active?column.sample((y+.5-p.cy)/p.ry):Double.NEGATIVE_INFINITY;}
+    public double sampleBase(IntrusionDeposit.Prepared p,int y){
+        if(!active)return Double.NEGATIVE_INFINITY;
+        double normalized=(y+.5-p.cy)/p.ry;
+        column.prepareHeight(y,normalized);
+        return column.sample(normalized);
+    }
     public double maximumDisplacement(){return amplitude;}
     public double sampleStock(IntrusionDeposit.Prepared p,int y){return active?column.sampleStock((y+.5-p.cy)/p.ry):Double.NEGATIVE_INFINITY;}
     public IntrusionShapeModel model(){return model;}

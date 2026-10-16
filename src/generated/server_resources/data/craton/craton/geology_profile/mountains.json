@@ -1,9 +1,12 @@
 {
   "layers": [
+    "craton:andesite",
+    "craton:tuff",
+    "craton:limestone",
+    "craton:shale",
+    "craton:marble",
     "craton:schist",
     "craton:gneiss",
-    "craton:granite",
-    "craton:gabbro",
     "craton:eclogite"
   ],
   "region": "craton:mountains"

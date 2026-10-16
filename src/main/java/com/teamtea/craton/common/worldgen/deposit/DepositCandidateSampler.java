@@ -189,7 +189,8 @@ public class DepositCandidateSampler {
             return candidates;
         }
         private static void addNearby(List<Candidate> candidates,int x,int z,double reach,List<Candidate> result){
-            for(Candidate candidate:candidates){
+            for(int i=0,size=candidates.size();i<size;i++){
+                Candidate candidate=candidates.get(i);
                 double dx=x+.5-candidate.x(),dz=z+.5-candidate.z();
                 if(Math.abs(dx)<=reach&&Math.abs(dz)<=reach&&Math.hypot(dx,dz)<=reach) result.add(candidate);
             }

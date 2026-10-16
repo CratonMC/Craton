@@ -1,7 +1,6 @@
 package com.teamtea.craton.common.worldgen.geology;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 
 /** World-aligned spatial blending of regional weights; owned by one chunk context. */
 public class GeologyRegionSampler {
@@ -11,9 +10,7 @@ public class GeologyRegionSampler {
     private int cellX,cellZ;
     private boolean initialized;
     private double[] a,b,c,d;
-    private final Map<Long,double[]> lattice=new LinkedHashMap<>(64,.75f,true){
-        @Override protected boolean removeEldestEntry(Map.Entry<Long,double[]> eldest){return size()>512;}
-    };
+    private final Long2ObjectLinkedOpenHashMap<double[]> lattice=new Long2ObjectLinkedOpenHashMap<>(16);
 
     public GeologyRegionSampler(GeologyTransition transition,GeologyClimateSampler climate){
         this.transition=transition;this.climate=climate;
@@ -45,7 +42,13 @@ public class GeologyRegionSampler {
 
     private double[] corner(int x,int z){
         long key=((long)x<<32)^(z&0xffffffffL);
-        return lattice.computeIfAbsent(key,ignored -> transition.weights(climate.sample(x*SPACING,z*SPACING)));
+        double[] weights=lattice.getAndMoveToLast(key);
+        if(weights==null){
+            weights=transition.weights(climate.sample(x*SPACING,z*SPACING));
+            lattice.putAndMoveToLast(key,weights);
+            if(lattice.size()>512)lattice.removeFirst();
+        }
+        return weights;
     }
 
     private static double smooth(double t){return t*t*(3-2*t);}

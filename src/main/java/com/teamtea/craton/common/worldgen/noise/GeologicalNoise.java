@@ -87,15 +87,23 @@ public class GeologicalNoise {
         private int cellX,cellY,cellZ;
         private boolean initialized;
         private int h000,h100,h010,h110,h001,h101,h011,h111;
+        private long hx0,hx1,hy0,hy1,hz0,hz1;
 
         private Lattice(long seed){this.seed=seed;}
 
         private double sample(double x,double y,double z){
             int x0=floor(x),y0=floor(y),z0=floor(z);
             if(!initialized||x0!=cellX||y0!=cellY||z0!=cellZ){
-                long hx0=mixCoord(x0,0x632BE59BD9B4E019L),hx1=mixCoord(x0+1,0x632BE59BD9B4E019L);
-                long hy0=mixCoord(y0,0x9E3779B97F4A7C15L),hy1=mixCoord(y0+1,0x9E3779B97F4A7C15L);
-                long hz0=mixCoord(z0,0xC6BC279692B5C323L),hz1=mixCoord(z0+1,0xC6BC279692B5C323L);
+                // Column traversal changes Y most often; retain unchanged axis hashes.
+                if(!initialized||x0!=cellX){
+                    hx0=mixCoord(x0,0x632BE59BD9B4E019L);hx1=mixCoord(x0+1,0x632BE59BD9B4E019L);
+                }
+                if(!initialized||y0!=cellY){
+                    hy0=mixCoord(y0,0x9E3779B97F4A7C15L);hy1=mixCoord(y0+1,0x9E3779B97F4A7C15L);
+                }
+                if(!initialized||z0!=cellZ){
+                    hz0=mixCoord(z0,0xC6BC279692B5C323L);hz1=mixCoord(z0+1,0xC6BC279692B5C323L);
+                }
                 h000=(int)(mix(seed^hx0^hy0^hz0)&15);
                 h100=(int)(mix(seed^hx1^hy0^hz0)&15);
                 h010=(int)(mix(seed^hx0^hy1^hz0)&15);

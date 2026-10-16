@@ -43,7 +43,9 @@ public class GeologyProfileRegistry {
         register(context, layers, regions, HILLS, GeologyRegionRegistry.HILLS,
                 GeologyLayerRegistry.ANDESITE, GeologyLayerRegistry.TUFF, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.GABBRO, GeologyLayerRegistry.ECLOGITE);
         register(context, layers, regions, MOUNTAINS, GeologyRegionRegistry.MOUNTAINS,
-                GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.GRANITE, GeologyLayerRegistry.GABBRO, GeologyLayerRegistry.ECLOGITE);
+                GeologyLayerRegistry.ANDESITE, GeologyLayerRegistry.TUFF, GeologyLayerRegistry.LIMESTONE,
+                GeologyLayerRegistry.SHALE, GeologyLayerRegistry.MARBLE, GeologyLayerRegistry.SCHIST,
+                GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
         register(context, layers, regions, COLD_PLAINS, GeologyRegionRegistry.COLD_PLAINS,
                 GeologyLayerRegistry.SHALE, GeologyLayerRegistry.SANDSTONE, GeologyLayerRegistry.SCHIST, GeologyLayerRegistry.GNEISS, GeologyLayerRegistry.ECLOGITE);
         register(context, layers, regions, ARID_PLAINS, GeologyRegionRegistry.ARID_PLAINS,

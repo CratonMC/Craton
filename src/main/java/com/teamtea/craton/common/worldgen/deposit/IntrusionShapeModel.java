@@ -2,7 +2,7 @@ package com.teamtea.craton.common.worldgen.deposit;
 
 /** Approved normalized primary shapes with candidate-specific diorite dikes.
  * Geometry only: no world-height extension, detached satellites or extra contact noise.
- * Candidate parameters are immutable; a Column is reused by one generation context.
+ * Candidate parameters are fixed; height caches and Columns belong to one generation context.
  */
 public class IntrusionShapeModel {
     public static final int GRANITE=0,GABBRO=1,DIORITE=2,PEGMATITE=3;
@@ -11,6 +11,9 @@ public class IntrusionShapeModel {
     private final double angle,cos,sin,thick,skew,pegThickness;
     private final boolean branch;
     private final Dike[] dikes;
+    // Candidate-local direct-mapped height cache; collisions only cause recomputation.
+    private double[] heightProfile;
+    private static final int HEIGHT_SLOTS=256,HEIGHT_STRIDE=5;
     public record Dike(double x,double y,double z,double angle,double cos,double sin,
                        double length,double embed,double halfWidth,double halfThickness,double slope){}
 
@@ -84,11 +87,13 @@ public class IntrusionShapeModel {
     public class Column {
         private double x,z,footprint,roof,floor,reference,half,rootAcross;
         private double w,middle,branchHorizontal;
+        private double rimY=Double.NaN,rim;
         private final double[] dikeHorizontal=new double[dikes.length];
         private final double[] dikeCenter=new double[dikes.length];
         private final double[] dikeHalf=new double[dikes.length];
         public void prepare(double inputX,double inputZ){
             x=cos*inputX+sin*inputZ;z=-sin*inputX+cos*inputZ;
+            rimY=Double.NaN;
             if(kind==GRANITE){
                 double xx=x+.07*wave(x,z,1),zz=z+.05*wave(x,z,3);
                 footprint=1-fourth(Math.abs(xx)/1.14)-fourth(Math.abs(zz)/.72);
@@ -122,12 +127,35 @@ public class IntrusionShapeModel {
                 branchHorizontal=Math.min(.39-Math.abs(w),Math.min(x-.22,.91-x));
             }
         }
+        /** Reuses height-only stock parameters across columns without approximating the field. */
+        public void prepareHeight(int worldY,double y){
+            if(kind!=DIORITE||y==rimY)return;
+            if(heightProfile==null){
+                heightProfile=new double[HEIGHT_SLOTS*HEIGHT_STRIDE];
+                for(int i=0;i<heightProfile.length;i+=HEIGHT_STRIDE)heightProfile[i]=Double.NaN;
+            }
+            int offset=(worldY&(HEIGHT_SLOTS-1))*HEIGHT_STRIDE;
+            if(heightProfile[offset]!=y){
+                double expansion=.42*clamp((-y-.30)/.65,0,1);
+                heightProfile[offset]=y;
+                heightProfile[offset+1]=stockCenterX(y);
+                heightProfile[offset+2]=stockCenterZ(y);
+                heightProfile[offset+3]=.29+expansion+.04*Math.sin(4*y+phase[2]);
+                heightProfile[offset+4]=.25+.62*expansion;
+            }
+            rim=1-fourth(Math.abs((x-heightProfile[offset+1])/heightProfile[offset+3]))
+                    -fourth(Math.abs((z-heightProfile[offset+2])/heightProfile[offset+4]));
+            rimY=y;
+        }
         private double stockRim(double y){
+            if(y==rimY)return rim;
             double cx=stockCenterX(y);
             double cz=stockCenterZ(y);
             double expansion=.42*clamp((-y-.30)/.65,0,1);
             double rx=.29+expansion+.04*Math.sin(4*y+phase[2]),rz=.25+.62*expansion;
-            return 1-fourth(Math.abs((x-cx)/rx))-fourth(Math.abs((z-cz)/rz));
+            rim=1-fourth(Math.abs((x-cx)/rx))-fourth(Math.abs((z-cz)/rz));
+            rimY=y;
+            return rim;
         }
         public double sample(double y){
             if(kind==GRANITE){

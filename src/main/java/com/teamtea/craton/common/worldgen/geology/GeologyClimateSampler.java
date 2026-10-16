@@ -3,19 +3,14 @@ package com.teamtea.craton.common.worldgen.geology;
 import net.minecraft.core.QuartPos;
 import net.minecraft.world.level.biome.Climate;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 
 /** Block-column climate reconstructed from the quart lattice, at a fixed reference height. */
 public class GeologyClimateSampler {
     private final Climate.Sampler sampler;
     private final int quartY;
     // One buildSurface invocation; the chunk itself uses 25 points, deposit anchors may query farther away.
-    private final Map<Long, Climate.TargetPoint> lattice = new LinkedHashMap<>(128,.75f,true) {
-        @Override protected boolean removeEldestEntry(Map.Entry<Long,Climate.TargetPoint> eldest) {
-            return size()>2048;
-        }
-    };
+    private final Long2ObjectLinkedOpenHashMap<Climate.TargetPoint> lattice=new Long2ObjectLinkedOpenHashMap<>(32);
 
     public GeologyClimateSampler(Climate.Sampler sampler, int referenceY) {
         this.sampler = sampler;
@@ -58,7 +53,12 @@ public class GeologyClimateSampler {
 
     private Climate.TargetPoint corner(int qx, int qz) {
         long key = ((long) qx << 32) ^ (qz & 0xffffffffL);
-        return lattice.computeIfAbsent(key, ignored -> sampler.sample(qx, quartY, qz));
+        Climate.TargetPoint point=lattice.getAndMoveToLast(key);
+        if(point==null){
+            point=sampler.sample(qx,quartY,qz);lattice.putAndMoveToLast(key,point);
+            if(lattice.size()>2048)lattice.removeFirst();
+        }
+        return point;
     }
 
     private static long blend(long a, long b, long c, long d, double tx, double tz) {

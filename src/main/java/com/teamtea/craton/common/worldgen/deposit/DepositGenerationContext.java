@@ -74,7 +74,17 @@ public class DepositGenerationContext {
     private final List<IntrusionDeposit.Prepared> graniteColumns=new ArrayList<>();
     private final List<IntrusionDeposit.Prepared> dioriteColumns=new ArrayList<>();
     private final List<IntrusionDeposit.Prepared> gabbroColumns=new ArrayList<>();
-    private record PegmatiteKey(IntrusionDeposit.Prepared parent,HydrothermalVeinDeposit deposit,long salt){}
+    private static class PegmatiteKey {
+        private IntrusionDeposit.Prepared parent;
+        private HydrothermalVeinDeposit deposit;
+        private long salt;
+        PegmatiteKey(IntrusionDeposit.Prepared parent,HydrothermalVeinDeposit deposit,long salt){set(parent,deposit,salt);}
+        void set(IntrusionDeposit.Prepared parent,HydrothermalVeinDeposit deposit,long salt){this.parent=parent;this.deposit=deposit;this.salt=salt;}
+        @Override public int hashCode(){return (java.util.Objects.hashCode(parent)*31+java.util.Objects.hashCode(deposit))*31+Long.hashCode(salt);}
+        @Override public boolean equals(Object other){return other instanceof PegmatiteKey key&&java.util.Objects.equals(parent,key.parent)&&java.util.Objects.equals(deposit,key.deposit)&&salt==key.salt;}
+    }
+    // This probe is never inserted: stored keys remain immutable throughout their lifetime.
+    private final PegmatiteKey attachmentLookup=new PegmatiteKey(null,null,0);
     private final Map<PegmatiteKey,List<PreparedPegmatite.Attachment>> attachedPegmatites=new java.util.LinkedHashMap<>(64,.75f,true){
         @Override protected boolean removeEldestEntry(Map.Entry<PegmatiteKey,List<PreparedPegmatite.Attachment>> entry){return size()>256;}
     };
@@ -189,16 +199,19 @@ public class DepositGenerationContext {
     }
 
     private void preparePegmatites(){
-        for(PreparedDefinition entry:preparedDefinitions){
+        for(int definition=0;definition<preparedDefinitions.size();definition++){
+            PreparedDefinition entry=preparedDefinitions.get(definition);
             if(!(entry.deposit() instanceof HydrothermalVeinDeposit vein))continue;
-            for(IntrusionDeposit.Prepared parent:graniteColumns){
-                var key=new PegmatiteKey(parent,vein,entry.salt());
-                List<PreparedPegmatite.Attachment> attachments=attachedPegmatites.get(key);
+            for(int i=0;i<graniteColumns.size();i++){
+                IntrusionDeposit.Prepared parent=graniteColumns.get(i);
+                attachmentLookup.set(parent,vein,entry.salt());
+                List<PreparedPegmatite.Attachment> attachments=attachedPegmatites.get(attachmentLookup);
                 if(attachments==null){
                     attachments=vein.attachedTo(parent,entry.salt());
-                    attachedPegmatites.put(key,attachments);
+                    attachedPegmatites.put(new PegmatiteKey(parent,vein,entry.salt()),attachments);
                 }
-                for(PreparedPegmatite.Attachment attachment:attachments){
+                for(int a=0;a<attachments.size();a++){
+                    PreparedPegmatite.Attachment attachment=attachments.get(a);
                     if(!attachment.geometry().affectsColumn(x,z))continue;
                     var candidate=attachment.candidate();
                     owners.put(candidate,vein);
@@ -338,7 +351,8 @@ public class DepositGenerationContext {
 
     public BlockState applyCandidates(List<DepositCandidateSampler.Candidate> candidates,
                                       BlockState originalHost,BlockState state,int y){
-        for(DepositCandidateSampler.Candidate candidate:candidates){
+        for(int i=0,size=candidates.size();i<size;i++){
+            DepositCandidateSampler.Candidate candidate=candidates.get(i);
             OrdinaryDeposit definition=(OrdinaryDeposit)owners.get(candidate);
             BlockState placed=definition.place(this,candidate,originalHost,state,y);
             if(placed!=null && !placed.equals(state)) return placed;
@@ -364,14 +378,18 @@ public class DepositGenerationContext {
 
     public BlockState applySkarn(BlockState host,BlockState state,int y,IntrusiveDepositField.IntrusionResult intrusion){
         if(!isCarbonate(host)) return state;
-        for(DepositPlan.SkarnRule rule:skarns)
+        for(int i=0,size=skarns.size();i<size;i++){
+            DepositPlan.SkarnRule rule=skarns.get(i);
             state=rule.deposit().placeContact(this,host,state,y,intrusion,rule.salt());
+        }
         return state;
     }
 
     public BlockState applyBif(BlockState host,int y){
         if(!host.is(CratonBlocks.GNEISS.getOrigin().getBaseBlock())) return host;
-        for(BandedIronFormation.BifColumnHit hit:bif.hits()){
+        List<BandedIronFormation.BifColumnHit> hits=bif.hits();
+        for(int i=0,size=hits.size();i<size;i++){
+            BandedIronFormation.BifColumnHit hit=hits.get(i);
             BlockState placed=hit.deposit().placeHit(hit,host,x,y,z);
             if(placed!=null && !placed.equals(host)) return placed;
         }

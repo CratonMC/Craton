@@ -54,8 +54,10 @@ public class IntrusiveDepositField {
     private static IntrusionResult sampleFamily(DepositGenerationContext ctx,List<IntrusionDeposit.Prepared> candidates,
                                                  int y,IntrusionResult result,int kind){
         result.reset(kind);
-        for(IntrusionDeposit.Prepared prepared:candidates)
-            prepared.deposit.sample(ctx,prepared,y,result);
+        for(int i=0,size=candidates.size();i<size;i++){
+            IntrusionDeposit.Prepared prepared=candidates.get(i);
+            if(!prepared.outside(y))prepared.deposit.sample(ctx,prepared,y,result);
+        }
         return result;
     }
 

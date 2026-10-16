@@ -58,7 +58,13 @@ public class WeatheringDeposit extends OrdinaryDeposit {
         }
         return alteration.size()>2?alteration.get(2):settings().rock();
     }
-    private record Column(double thickness,double footprint,PreparedPods pods){}
+    private static class Column {
+        private double thickness,footprint;
+        private PreparedPods pods;
+        double thickness(){return thickness;}
+        double footprint(){return footprint;}
+        PreparedPods pods(){return pods;}
+    }
     private Column prepareColumn(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c){
         Shape config=settings().shape();
         double thickness=config.y(c.shapeSeed());
@@ -66,7 +72,12 @@ public class WeatheringDeposit extends OrdinaryDeposit {
         double r=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);
         double footprint=1-sq(dx/r)-sq(dz/rz)
                 +shapeNoise2(ctx.x(),ctx.z(),c.shapeSeed(),.010,.052,config.broadNoise(),config.detailNoise());
-        return new Column(thickness,footprint,ctx.ordinaryPods(c,ctx.topY()-thickness*.5,r,thickness*.38,rz,0,0xBA6817L,config));
+        Object cached=ctx.reusableGeometry(c);
+        Column column=cached instanceof Column previous?previous:new Column();
+        column.thickness=thickness;column.footprint=footprint;
+        column.pods=ctx.ordinaryPods(c,ctx.topY()-thickness*.5,r,thickness*.38,rz,0,0xBA6817L,config);
+        if(column!=cached)ctx.reusableGeometry(c,column);
+        return column;
     }
 
 }

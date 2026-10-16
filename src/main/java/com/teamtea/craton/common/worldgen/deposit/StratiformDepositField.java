@@ -75,7 +75,8 @@ public class StratiformDepositField {
         best.reset();
         Family family=ctx.stratiformCache().family(targetHost,variant);
         Anchor winner=null;
-        for(DepositCandidateSampler.Candidate c:candidates){
+        for(int i=0,size=candidates.size();i<size;i++){
+            DepositCandidateSampler.Candidate c=candidates.get(i);
             Lens column=family.columns.get(c);
             if(column==null){
                 Anchor anchor=family.anchors.get(c);
@@ -197,7 +198,9 @@ public class StratiformDepositField {
     private static DepositSample sandstoneRollFront(DepositGenerationContext ctx,int y){
         DepositSample best=ctx.stratiformSample();
         best.reset();
-        for(DepositCandidateSampler.Candidate candidate:ctx.sandstoneUranium()){
+        List<DepositCandidateSampler.Candidate> candidates=ctx.sandstoneUranium();
+        for(int i=0,size=candidates.size();i<size;i++){
+            DepositCandidateSampler.Candidate candidate=candidates.get(i);
             List<Integer> sandstoneLayers=matchingLayers(ctx,
                     CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock().defaultBlockState(),candidate.x(),candidate.z());
             if(sandstoneLayers.isEmpty()) continue;

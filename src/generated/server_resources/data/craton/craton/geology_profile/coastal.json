@@ -1,8 +1,8 @@
 {
   "layers": [
     "craton:limestone",
-    "craton:sandstone",
     "craton:shale",
+    "craton:sandstone",
     "craton:schist",
     "craton:gneiss",
     "craton:eclogite"
