@@ -202,7 +202,7 @@ dependencies {
 //    onlyMainRuntimeOnly "maven.modrinth:iris:1.11.7+26.3-neoforge"
 //    onlyMainRuntimeOnly "curse.maven:dynamictrees-252818:8228621"
     onlyMainRuntimeOnly "curse.maven:jade-324717:8892782"
-//    onlyMainRuntimeOnly "curse.maven:ecliptic-seasons-1118306:8936973"
+    onlyMainRuntimeOnly "curse.maven:ecliptic-seasons-1118306:9205545"
 //    onlyMainRuntimeOnly "curse.maven:onekeyminer-nf-1078620:8921943"
     onlyMainRuntimeOnly "curse.maven:spark-361579:8918574"
     onlyMainRuntimeOnly "maven.modrinth:tectonic:yWpa8ww5"
