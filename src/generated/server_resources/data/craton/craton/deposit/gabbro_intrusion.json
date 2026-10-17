@@ -1,6 +1,16 @@
 {
   "type": "gabbro_intrusion",
   "settings": {
+    "abundance": {
+      "cell_x": 24,
+      "cell_y": 24,
+      "cell_z": 24,
+      "normal_scale": 0.82,
+      "poor_chance": 0.35,
+      "poor_scale": 0.6,
+      "rich_chance": 0.1,
+      "rich_scale": 1.0
+    },
     "ores": [
       "craton:gabbro_ni_cu",
       "craton:gabbro_pge"
@@ -24,16 +34,6 @@
       "radius_z_max": 115.0,
       "radius_z_min": 55.0,
       "satellite_count": 2
-    },
-    "abundance": {
-      "poor_chance": 0.35,
-      "rich_chance": 0.1,
-      "poor_scale": 0.6,
-      "normal_scale": 0.82,
-      "rich_scale": 1,
-      "cell_x": 24,
-      "cell_y": 24,
-      "cell_z": 24
     }
   }
 }

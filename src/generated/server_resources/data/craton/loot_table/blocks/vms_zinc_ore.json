@@ -12,16 +12,10 @@
               "name": "craton:vms_zinc_ore"
             },
             {
-              "type": "minecraft:item",
-              "modifier": [
-                {
-                  "type": "craton:ore_product"
-                },
-                {
-                  "type": "minecraft:explosion_decay"
-                }
-              ],
-              "name": "craton:vms_zinc_ore"
+              "type": "craton:ore_products",
+              "modifier": {
+                "type": "minecraft:explosion_decay"
+              }
             }
           ]
         }

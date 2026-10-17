@@ -3,40 +3,482 @@
     "craton:banded_iron_gneiss_ore": {
       "drops": [
         {
-          "item": "craton:banded_iron_raw",
-          "weight": 4,
+          "item": "craton:raw_hematite",
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
         }
-      ]
+      ],
+      "bonus_drops": []
     },
-    "craton:limestone_coal_ore": {
+    "craton:skarn_iron_ore": {
       "drops": [
         {
-          "item": "craton:limestone_coal",
-          "weight": 4,
+          "item": "craton:raw_magnetite",
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
         }
-      ]
+      ],
+      "bonus_drops": []
     },
     "craton:sedimentary_copper_ore": {
       "drops": [
         {
-          "item": "craton:sedimentary_raw_copper",
-          "weight": 4,
+          "item": "craton:raw_copper_oxide",
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
         }
-      ]
+      ],
+      "bonus_drops": []
+    },
+    "craton:limestone_coal_ore": {
+      "drops": [
+        {
+          "item": "minecraft:coal",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:shale_coal_ore": {
+      "drops": [
+        {
+          "item": "minecraft:coal",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
     },
     "craton:metasomatic_lapis_ore": {
       "drops": [
         {
           "item": "minecraft:lapis_lazuli",
-          "weight": 4,
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:pegmatite_quartz_ore": {
+      "drops": [
+        {
+          "item": "minecraft:quartz",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:pegmatite_emerald_ore": {
+      "drops": [
+        {
+          "item": "minecraft:emerald",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:fluorite_vein_ore": {
+      "drops": [
+        {
+          "item": "craton:fluorite",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:deep_hydrothermal_redstone_ore": {
+      "drops": [
+        {
+          "item": "minecraft:redstone",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:bauxite_ore": {
+      "drops": [
+        {
+          "item": "craton:bauxite",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:peat": {
+      "drops": [
+        {
+          "item": "craton:peat",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:sedimentary_uranium_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_uranium",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:granite_cassiterite_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_tin",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:granite_wolframite_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_tungsten",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:auriferous_gravel": {
+      "drops": [
+        {
+          "item": "minecraft:gold_nugget",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:auriferous_sand": {
+      "drops": [
+        {
+          "item": "minecraft:gold_nugget",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:ferriferous_gravel": {
+      "drops": [
+        {
+          "item": "minecraft:iron_nugget",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:ferriferous_sand": {
+      "drops": [
+        {
+          "item": "minecraft:iron_nugget",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:diamond_bearing_kimberlite": {
+      "drops": [
+        {
+          "item": "craton:diamond_fragment",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:diamond_rich_kimberlite": {
+      "drops": [
+        {
+          "item": "minecraft:diamond",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:meteoric_iron_ore": {
+      "drops": [
+        {
+          "item": "craton:meteoric_iron",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:quartz_vein_gold_ore": {
+      "drops": [
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "minecraft:quartz",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.2
+        }
+      ]
+    },
+    "craton:quartz_vein_pyrite_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_iron_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.05
+        },
+        {
+          "item": "minecraft:quartz",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.2
+        }
+      ]
+    },
+    "craton:porphyry_sulfide_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_iron_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "craton:raw_copper_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.05
+        },
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.01
+        }
+      ]
+    },
+    "craton:porphyry_copper_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_copper_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.03
+        },
+        {
+          "item": "craton:raw_molybdenum",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.05,
+          "enabled": false
+        }
+      ]
+    },
+    "craton:vms_copper_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_copper_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "craton:raw_zinc",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.05
+        }
+      ]
+    },
+    "craton:skarn_copper_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_copper_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.03
+        }
+      ]
+    },
+    "craton:magmatic_ni_cu_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_nickel",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "craton:raw_copper_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.25
+        }
+      ]
+    },
+    "craton:porphyry_gold_ore": {
+      "drops": [
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "craton:raw_copper_sulfide",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.1
+        }
+      ]
+    },
+    "craton:skarn_gold_ore": {
+      "drops": [
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:epithermal_au_ag_ore": {
+      "drops": [
+        {
+          "item": "minecraft:raw_gold",
+          "weight": 40,
+          "min_count": 1,
+          "max_count": 1
+        },
+        {
+          "item": "craton:raw_silver",
+          "weight": 60,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": []
+    },
+    "craton:vms_pb_ag_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_lead",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "craton:raw_silver",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.1
+        }
+      ]
+    },
+    "craton:vms_zinc_ore": {
+      "drops": [
+        {
+          "item": "craton:raw_zinc",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1
+        }
+      ],
+      "bonus_drops": [
+        {
+          "item": "craton:raw_lead",
+          "weight": 1,
+          "min_count": 1,
+          "max_count": 1,
+          "chance": 0.05
         }
       ]
     },
@@ -44,411 +486,102 @@
       "drops": [
         {
           "item": "craton:raw_osmium",
-          "weight": 4,
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
         }
-      ]
-    },
-    "craton:magmatic_ni_cu_ore": {
-      "drops": [
+      ],
+      "bonus_drops": [
         {
-          "item": "craton:magmatic_raw_nickel",
-          "weight": 4,
+          "item": "craton:raw_nickel",
+          "weight": 1,
           "min_count": 1,
-          "max_count": 1
-        },
-        {
-          "item": "craton:magmatic_raw_copper",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:pegmatite_quartz_ore": {
-      "drops": [
-        {
-          "item": "minecraft:quartz",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:pegmatite_emerald_ore": {
-      "drops": [
-        {
-          "item": "minecraft:emerald",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:quartz_vein_gold_ore": {
-      "drops": [
-        {
-          "item": "craton:quartz_vein_raw_gold",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:quartz_vein_pyrite_ore": {
-      "drops": [
-        {
-          "item": "craton:quartz_vein_raw_gold",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        },
-        {
-          "item": "craton:quartz_vein_pyrite",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:fluorite_vein_ore": {
-      "drops": [
-        {
-          "item": "craton:fluorite",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:sedimentary_uranium_ore": {
-      "drops": [
-        {
-          "item": "craton:raw_uranium",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
+          "max_count": 1,
+          "chance": 0.05
         }
       ]
     },
     "craton:sedimentary_pb_zn_ore": {
       "drops": [
         {
-          "item": "craton:sedimentary_raw_lead",
-          "weight": 4,
+          "item": "craton:raw_lead",
+          "weight": 40,
           "min_count": 1,
           "max_count": 1
         },
         {
-          "item": "craton:sedimentary_raw_zinc",
-          "weight": 4,
+          "item": "craton:raw_zinc",
+          "weight": 60,
           "min_count": 1,
           "max_count": 1
         }
-      ]
+      ],
+      "bonus_drops": []
     },
-    "craton:shale_coal_ore": {
+    "craton:skarn_pb_zn_ore": {
       "drops": [
         {
-          "item": "craton:shale_coal",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:deep_hydrothermal_redstone_ore": {
-      "drops": [
-        {
-          "item": "minecraft:redstone",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:granite_cassiterite_ore": {
-      "drops": [
-        {
-          "item": "craton:raw_tin",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:granite_wolframite_ore": {
-      "drops": [
-        {
-          "item": "craton:raw_tungsten",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:porphyry_gold_ore": {
-      "drops": [
-        {
-          "item": "craton:porphyry_raw_gold",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:porphyry_copper_ore": {
-      "drops": [
-        {
-          "item": "craton:porphyry_raw_copper",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:porphyry_sulfide_ore": {
-      "drops": [
-        {
-          "item": "craton:porphyry_pyrite",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:epithermal_au_ag_ore": {
-      "drops": [
-        {
-          "item": "craton:epithermal_raw_gold",
-          "weight": 4,
+          "item": "craton:raw_lead",
+          "weight": 40,
           "min_count": 1,
           "max_count": 1
         },
         {
-          "item": "craton:epithermal_raw_silver",
-          "weight": 4,
+          "item": "craton:raw_zinc",
+          "weight": 60,
           "min_count": 1,
           "max_count": 1
         }
-      ]
-    },
-    "craton:vms_copper_ore": {
-      "drops": [
+      ],
+      "bonus_drops": [
         {
-          "item": "craton:vms_raw_copper",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:vms_zinc_ore": {
-      "drops": [
-        {
-          "item": "craton:vms_raw_zinc",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:vms_pb_ag_ore": {
-      "drops": [
-        {
-          "item": "craton:vms_raw_lead",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        },
-        {
-          "item": "craton:vms_raw_silver",
+          "item": "craton:raw_silver",
           "weight": 1,
           "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:bauxite_ore": {
-      "drops": [
-        {
-          "item": "craton:bauxite",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:peat": {
-      "drops": [
-        {
-          "item": "craton:peat",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:auriferous_gravel": {
-      "drops": [
-        {
-          "item": "craton:gold_grain",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:ferriferous_gravel": {
-      "drops": [
-        {
-          "item": "craton:iron_grain",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:auriferous_sand": {
-      "drops": [
-        {
-          "item": "craton:gold_grain",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:ferriferous_sand": {
-      "drops": [
-        {
-          "item": "craton:iron_grain",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:diamond_bearing_kimberlite": {
-      "drops": [
-        {
-          "item": "craton:diamond_fragment",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:diamond_rich_kimberlite": {
-      "drops": [
-        {
-          "item": "minecraft:diamond",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:skarn_iron_ore": {
-      "drops": [
-        {
-          "item": "craton:skarn_raw_iron",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:skarn_copper_ore": {
-      "drops": [
-        {
-          "item": "craton:skarn_raw_copper",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
+          "max_count": 1,
+          "chance": 0.05
         }
       ]
     },
     "craton:skarn_w_sn_ore": {
       "drops": [
         {
-          "item": "craton:skarn_raw_tungsten",
-          "weight": 4,
+          "item": "craton:raw_tin",
+          "weight": 50,
           "min_count": 1,
           "max_count": 1
         },
         {
-          "item": "craton:skarn_raw_tin",
-          "weight": 4,
+          "item": "craton:raw_tungsten",
+          "weight": 50,
           "min_count": 1,
           "max_count": 1
         }
-      ]
-    },
-    "craton:skarn_pb_zn_ore": {
-      "drops": [
-        {
-          "item": "craton:skarn_raw_lead",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        },
-        {
-          "item": "craton:skarn_raw_zinc",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        },
-        {
-          "item": "craton:skarn_raw_silver",
-          "weight": 2,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:skarn_gold_ore": {
-      "drops": [
-        {
-          "item": "craton:skarn_raw_gold",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
-    },
-    "craton:meteoric_iron_ore": {
-      "drops": [
-        {
-          "item": "craton:meteoric_iron",
-          "weight": 4,
-          "min_count": 1,
-          "max_count": 1
-        }
-      ]
+      ],
+      "bonus_drops": []
     },
     "craton:suspicious_jadeitite": {
       "drops": [
         {
           "item": "craton:green_jade",
-          "weight": 4,
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
         },
         {
           "item": "craton:white_jade",
-          "weight": 4,
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
         },
         {
           "item": "craton:lavender_jade",
-          "weight": 2,
+          "weight": 1,
           "min_count": 1,
           "max_count": 1
         }
-      ]
+      ],
+      "bonus_drops": []
     }
   }
 }

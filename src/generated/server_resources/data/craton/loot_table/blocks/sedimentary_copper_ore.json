@@ -12,16 +12,10 @@
               "name": "craton:sedimentary_copper_ore"
             },
             {
-              "type": "minecraft:item",
-              "modifier": [
-                {
-                  "type": "craton:ore_product"
-                },
-                {
-                  "type": "minecraft:explosion_decay"
-                }
-              ],
-              "name": "craton:sedimentary_copper_ore"
+              "type": "craton:ore_products",
+              "modifier": {
+                "type": "minecraft:explosion_decay"
+              }
             }
           ]
         }

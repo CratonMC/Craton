@@ -3,7 +3,8 @@ package com.teamtea.craton.data.loot;
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.block.VerticalSlabBlock;
 import com.teamtea.craton.common.block.OreBlock;
-import com.teamtea.craton.common.registry.CratonLootFunctions;
+import com.teamtea.craton.common.loot.OreProductsEntry;
+import com.teamtea.craton.common.registry.CratonBlocks;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -77,10 +78,11 @@ public class CBlockLootTables extends BlockLootSubProvider {
                 .collect(Collectors.toSet());
 
         for (Block block : blocks) {
-            if (block instanceof OreBlock) {
+            if (block == CratonBlocks.suspicious_jadeitite.value()) {
+                add(block, LootTable.lootTable());
+            } else if (block instanceof OreBlock) {
                 add(block, createSilkTouchDispatchTable(block,
-                        applyExplosionDecay(block, LootItem.lootTableItem(block)
-                                .apply((LootItemFunction.Builder) () -> CratonLootFunctions.PRODUCT))));
+                        applyExplosionDecay(block, OreProductsEntry.products())));
             } else {
                 dropSelfWithContents(Set.of(block));
             }

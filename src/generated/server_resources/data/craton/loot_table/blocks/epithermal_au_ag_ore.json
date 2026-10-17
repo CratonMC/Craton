@@ -12,16 +12,10 @@
               "name": "craton:epithermal_au_ag_ore"
             },
             {
-              "type": "minecraft:item",
-              "modifier": [
-                {
-                  "type": "craton:ore_product"
-                },
-                {
-                  "type": "minecraft:explosion_decay"
-                }
-              ],
-              "name": "craton:epithermal_au_ag_ore"
+              "type": "craton:ore_products",
+              "modifier": {
+                "type": "minecraft:explosion_decay"
+              }
             }
           ]
         }

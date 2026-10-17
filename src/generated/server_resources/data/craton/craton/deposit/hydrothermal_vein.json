@@ -1,6 +1,16 @@
 {
   "type": "hydrothermal_vein",
   "settings": {
+    "abundance": {
+      "cell_x": 32,
+      "cell_y": 32,
+      "cell_z": 0,
+      "normal_scale": 0.84,
+      "poor_chance": 0.35,
+      "poor_scale": 0.62,
+      "rich_chance": 0.1,
+      "rich_scale": 1.0
+    },
     "ores": [
       "craton:quartz_vein_gold",
       "craton:quartz_vein_pyrite",
@@ -20,23 +30,13 @@
       "detail_noise": 0.09,
       "height_max": 125.0,
       "height_min": 45.0,
-      "radius_x_max": 72,
-      "radius_x_min": 36,
-      "radius_y_max": 28,
-      "radius_y_min": 12,
+      "radius_x_max": 72.0,
+      "radius_x_min": 36.0,
+      "radius_y_max": 28.0,
+      "radius_y_min": 12.0,
       "radius_z_max": 2.0,
       "radius_z_min": 1.1,
       "satellite_count": 2
-    },
-    "abundance": {
-      "poor_chance": 0.35,
-      "rich_chance": 0.1,
-      "poor_scale": 0.62,
-      "normal_scale": 0.84,
-      "rich_scale": 1,
-      "cell_x": 32,
-      "cell_y": 32,
-      "cell_z": 0
     }
   }
 }

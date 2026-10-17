@@ -12,16 +12,10 @@
               "name": "craton:auriferous_sand"
             },
             {
-              "type": "minecraft:item",
-              "modifier": [
-                {
-                  "type": "craton:ore_product"
-                },
-                {
-                  "type": "minecraft:explosion_decay"
-                }
-              ],
-              "name": "craton:auriferous_sand"
+              "type": "craton:ore_products",
+              "modifier": {
+                "type": "minecraft:explosion_decay"
+              }
             }
           ]
         }

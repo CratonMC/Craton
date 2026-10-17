@@ -12,16 +12,10 @@
               "name": "craton:ferriferous_gravel"
             },
             {
-              "type": "minecraft:item",
-              "modifier": [
-                {
-                  "type": "craton:ore_product"
-                },
-                {
-                  "type": "minecraft:explosion_decay"
-                }
-              ],
-              "name": "craton:ferriferous_gravel"
+              "type": "craton:ore_products",
+              "modifier": {
+                "type": "minecraft:explosion_decay"
+              }
             }
           ]
         }

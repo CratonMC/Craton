@@ -1,6 +1,16 @@
 {
   "type": "deep_hydrothermal_redstone",
   "settings": {
+    "abundance": {
+      "cell_x": 32,
+      "cell_y": 32,
+      "cell_z": 0,
+      "normal_scale": 0.84,
+      "poor_chance": 0.35,
+      "poor_scale": 0.62,
+      "rich_chance": 0.1,
+      "rich_scale": 1.0
+    },
     "ores": [
       "craton:deep_hydrothermal_redstone"
     ],
@@ -22,16 +32,6 @@
       "radius_y_min": 2.55,
       "radius_z_max": 5.95,
       "radius_z_min": 2.55
-    },
-    "abundance": {
-      "poor_chance": 0.35,
-      "rich_chance": 0.1,
-      "poor_scale": 0.62,
-      "normal_scale": 0.84,
-      "rich_scale": 1,
-      "cell_x": 32,
-      "cell_y": 32,
-      "cell_z": 0
     }
   }
 }

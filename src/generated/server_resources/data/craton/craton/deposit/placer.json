@@ -1,6 +1,16 @@
 {
   "type": "placer",
   "settings": {
+    "abundance": {
+      "cell_x": 32,
+      "cell_y": 0,
+      "cell_z": 32,
+      "normal_scale": 0.85,
+      "poor_chance": 0.3,
+      "poor_scale": 0.65,
+      "rich_chance": 0.12,
+      "rich_scale": 1.0
+    },
     "ores": [
       "craton:placer_gold",
       "craton:placer_iron"
@@ -23,16 +33,6 @@
       "radius_y_min": 4.0,
       "radius_z_max": 64.0,
       "radius_z_min": 28.0
-    },
-    "abundance": {
-      "poor_chance": 0.3,
-      "rich_chance": 0.12,
-      "poor_scale": 0.65,
-      "normal_scale": 0.85,
-      "rich_scale": 1,
-      "cell_x": 32,
-      "cell_y": 0,
-      "cell_z": 32
     }
   }
 }

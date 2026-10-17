@@ -1,33 +1,4 @@
 {
   "type": "minecraft:block",
-  "pools": [
-    {
-      "entries": [
-        {
-          "type": "minecraft:alternatives",
-          "children": [
-            {
-              "type": "minecraft:item",
-              "condition": "minecraft:tool/can_silk_touch",
-              "name": "craton:suspicious_jadeitite"
-            },
-            {
-              "type": "minecraft:item",
-              "modifier": [
-                {
-                  "type": "craton:ore_product"
-                },
-                {
-                  "type": "minecraft:explosion_decay"
-                }
-              ],
-              "name": "craton:suspicious_jadeitite"
-            }
-          ]
-        }
-      ],
-      "rolls": 1
-    }
-  ],
   "random_sequence": "craton:blocks/suspicious_jadeitite"
 }

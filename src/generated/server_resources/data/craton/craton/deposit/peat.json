@@ -1,6 +1,16 @@
 {
   "type": "peat",
   "settings": {
+    "abundance": {
+      "cell_x": 32,
+      "cell_y": 0,
+      "cell_z": 32,
+      "normal_scale": 0.85,
+      "poor_chance": 0.3,
+      "poor_scale": 0.65,
+      "rich_chance": 0.12,
+      "rich_scale": 1.0
+    },
     "ores": [
       "craton:peat"
     ],
@@ -8,31 +18,21 @@
       "cell_size": 160,
       "frequency": 0.6,
       "max_candidates": 2,
-      "reach": 70
+      "reach": 70.0
     },
     "rock": "craton:peat",
     "shape": {
       "broad_noise": 0.16,
       "detail_noise": 0.04,
-      "height_max": 0,
-      "height_min": 0,
-      "radius_x_max": 28,
-      "radius_x_min": 12,
-      "radius_y_max": 5,
-      "radius_y_min": 2,
-      "radius_z_max": 24,
-      "radius_z_min": 10,
+      "height_max": 0.0,
+      "height_min": 0.0,
+      "radius_x_max": 28.0,
+      "radius_x_min": 12.0,
+      "radius_y_max": 5.0,
+      "radius_y_min": 2.0,
+      "radius_z_max": 24.0,
+      "radius_z_min": 10.0,
       "satellite_count": 0
-    },
-    "abundance": {
-      "poor_chance": 0.3,
-      "rich_chance": 0.12,
-      "poor_scale": 0.65,
-      "normal_scale": 0.85,
-      "rich_scale": 1,
-      "cell_x": 32,
-      "cell_y": 0,
-      "cell_z": 32
     }
   }
 }

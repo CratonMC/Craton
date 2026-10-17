@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "craton:item/skarn_raw_copper"
+    "model": "craton:item/raw_iron_sulfide"
   }
 }

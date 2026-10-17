@@ -1,6 +1,16 @@
 {
   "type": "granite_intrusion",
   "settings": {
+    "abundance": {
+      "cell_x": 24,
+      "cell_y": 24,
+      "cell_z": 24,
+      "normal_scale": 0.82,
+      "poor_chance": 0.35,
+      "poor_scale": 0.6,
+      "rich_chance": 0.1,
+      "rich_scale": 1.0
+    },
     "ores": [
       "craton:granite_cassiterite",
       "craton:granite_wolframite"
@@ -24,16 +34,6 @@
       "radius_z_max": 110.0,
       "radius_z_min": 58.0,
       "satellite_count": 3
-    },
-    "abundance": {
-      "poor_chance": 0.35,
-      "rich_chance": 0.1,
-      "poor_scale": 0.6,
-      "normal_scale": 0.82,
-      "rich_scale": 1,
-      "cell_x": 24,
-      "cell_y": 24,
-      "cell_z": 24
     }
   }
 }
