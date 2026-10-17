@@ -30,6 +30,15 @@ public class GeologyDebugCommands {
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event){
         event.getDispatcher().register(Commands.literal("craton")
+                .then(Commands.literal("placer")
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .then(Commands.literal("check").executes(context -> {
+                            var source=context.getSource();
+                            String report=com.teamtea.craton.common.worldgen.PlacerFeature.inspect(source.getLevel(),
+                                    source.getLevel().getChunkSource().getGenerator(),BlockPos.containing(source.getPosition()));
+                            source.sendSuccess(()->Component.literal(report),false);
+                            return 1;
+                        })))
                 .then(Commands.literal("excavate")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .executes(context -> start(context.getSource(),1))

@@ -27,6 +27,27 @@ public class PlacerDeposit extends OrdinaryDeposit {
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
     public record SourceStrength(double gold,double iron){}
+    public static final int RIVER_SEARCH_RADIUS=96;
+    public record Anchor(int x,int z,boolean found){}
+
+    /** Project a retained world-aligned candidate onto a nearby river without world/chunk reads. */
+    public static Anchor riverAnchor(DepositCandidateSampler.Candidate candidate,java.util.function.LongPredicate river){
+        int x=candidate.x(),z=candidate.z();
+        if(river==null||river.test(((long)x<<32)^(z&0xffffffffL)))return new Anchor(x,z,true);
+        int best=Integer.MAX_VALUE,bx=x,bz=z;
+        for(int radius=8;radius<=RIVER_SEARCH_RADIUS;radius+=8){
+            for(int dz=-radius;dz<=radius;dz+=8)for(int dx=-radius;dx<=radius;dx+=8){
+                if(Math.abs(dx)!=radius&&Math.abs(dz)!=radius)continue;
+                int distance=dx*dx+dz*dz;
+                if(distance>=best||distance>RIVER_SEARCH_RADIUS*RIVER_SEARCH_RADIUS)continue;
+                int px=x+dx,pz=z+dz;
+                if(river.test(((long)px<<32)^(pz&0xffffffffL))){best=distance;bx=px;bz=pz;}
+            }
+            if(best<Integer.MAX_VALUE&&(radius+8)*(radius+8)>best)break;
+        }
+        return new Anchor(bx,bz,best<Integer.MAX_VALUE);
+    }
+
 
     @Override
     public BlockState place(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c,
@@ -34,13 +55,18 @@ public class PlacerDeposit extends OrdinaryDeposit {
         if(ctx.surfaceY()-y<0||!ctx.biome().is(Tags.Biomes.IS_RIVER)) return null;
         boolean sediment=originalHost.is(Blocks.SAND)||originalHost.is(Blocks.RED_SAND)||originalHost.is(Blocks.GRAVEL);
         if(!sediment) return null;
+        // A candidate cannot reach this column even after its maximum river displacement.
+        double reach=placement().reach()+RIVER_SEARCH_RADIUS;
+        if(Math.abs(ctx.x()+.5-c.x())>reach||Math.abs(ctx.z()+.5-c.z())>reach)return null;
         SourceStrength source=ctx.sourceStrength(this);
         if(source.gold()<=0&&source.iron()<=0) return null;
         // Nearby sources fade continuously; multiplying two moderate signals into a hard gate erased most placers.
         double sourceWeight=GeologicalNoise.smoothstep(.10,.65,Math.max(source.gold(),source.iron()));
         if(sourceWeight<=0)return null;
 
-        double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
+        Anchor anchor=ctx.placerAnchor(c);
+        if(!anchor.found())return null;
+        double dx=ctx.x()+.5-anchor.x(),dz=ctx.z()+.5-anchor.z();
         Shape config=settings().shape();
         if(ctx.surfaceY()-y>config.y(c.shapeSeed())) return null;
         double r=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);

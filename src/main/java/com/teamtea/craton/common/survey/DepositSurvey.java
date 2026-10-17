@@ -24,12 +24,13 @@ public class DepositSurvey {
         double surfaceY(int x,int z);
     }
     private record Source(int x,int z,double radius){}
-    private record PendingPlacer(PlacerDeposit deposit,DepositCandidateSampler.Candidate candidate){}
+    private record PendingPlacer(PlacerDeposit deposit,DepositCandidateSampler.Candidate candidate,PlacerDeposit.Anchor anchor){}
     private final DepositPlan plan;
     private final GeologyFieldSampler geology;
     private final DepositCandidateSampler.CellCache cache;
     private final SurveyMapCanvas canvas;
     private final Environment environment;
+    private final java.util.function.LongPredicate placerRiver;
     private final int minY;
     private final List<Source> placerSources=new ArrayList<>();
     private final List<PendingPlacer> placers=new ArrayList<>();
@@ -43,6 +44,7 @@ public class DepositSurvey {
                          int minY,SurveyMapCanvas canvas,Environment environment){
         this.plan=plan;this.geology=geology;this.cache=new DepositCandidateSampler.CellCache(random);
         this.minY=minY;this.canvas=canvas;this.environment=environment;
+        this.placerRiver=key->environment.river((int)(key>>32),(int)key);
         long cells=0;
         for(var entry:plan.definitions()){
             Deposit d=entry.deposit();if(!independent(d))continue;
@@ -88,8 +90,10 @@ public class DepositSurvey {
         }
         if(placerIndex<placers.size()){
             var pending=placers.get(placerIndex++);var c=pending.candidate();
-            for(Source source:placerSources)if(Math.hypot(c.x()-source.x(),c.z()-source.z())<source.radius()){
-                add(pending.deposit(),c,GOLD);break;
+            for(Source source:placerSources)if(Math.hypot(pending.anchor().x()-source.x(),pending.anchor().z()-source.z())<source.radius()){
+                var shape=pending.deposit().settings().shape();
+                canvas.add(new SurveyMapCanvas.Mark(pending.anchor().x(),pending.anchor().z(),shape.x(c.shapeSeed()),
+                        shape.z(c.shapeSeed()^91),angle(c.rotationSeed()),GOLD,c.shapeSeed()));break;
             }
             return false;
         }
@@ -170,9 +174,11 @@ public class DepositSurvey {
         }else if(deposit instanceof KimberliteDeposit){add(field,c,GEM);
         }else if(deposit instanceof WeatheringDeposit){
             if(!environment.ocean(c.x(),c.z())&&geology.sampleRaw(c.x(),(int)Math.floor(environment.surfaceY(c.x(),c.z()))-4,c.z()).is(Blocks.BASALT))add(field,c,BAUXITE);
-        }else if(deposit instanceof PlacerDeposit placer&&environment.river(c.x(),c.z())){
+        }else if(deposit instanceof PlacerDeposit placer){
+            var anchor=PlacerDeposit.riverAnchor(c,placerRiver);
+            if(!anchor.found())return;
             if(placers.size()>=2048)throw new IllegalStateException("Too many placer candidates");
-            placers.add(new PendingPlacer(placer,c));
+            placers.add(new PendingPlacer(placer,c,anchor));
         }
     }
     private void add(FieldDeposit deposit,DepositCandidateSampler.Candidate c,SurveyMapCanvas.Group group){

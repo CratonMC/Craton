@@ -95,6 +95,21 @@ public class DepositGenerationContext {
     private final List<OrdinaryBatch> ordinaryBatches;
     // Derived column results and reusable output containers.
     private PlacerDeposit.SourceStrength sourceStrength;
+    private java.util.function.LongPredicate placerRiver;
+    private Map<DepositCandidateSampler.Candidate,PlacerDeposit.Anchor> placerAnchors;
+    public void placerRiver(java.util.function.LongPredicate river){
+        placerRiver=river;
+        if(placerAnchors!=null)placerAnchors.clear();
+    }
+    public PlacerDeposit.Anchor placerAnchor(DepositCandidateSampler.Candidate candidate){
+        if(placerAnchors==null)placerAnchors=new java.util.LinkedHashMap<>(32,.75f,true){
+            @Override protected boolean removeEldestEntry(Map.Entry<DepositCandidateSampler.Candidate,PlacerDeposit.Anchor> entry){return size()>256;}
+        };
+        PlacerDeposit.Anchor anchor=placerAnchors.get(candidate);
+        if(anchor==null){anchor=PlacerDeposit.riverAnchor(candidate,placerRiver);placerAnchors.put(candidate,anchor);}
+        return anchor;
+    }
+
     private Boolean vmsProvince;
     private final IntrusiveDepositField.IntrusionResult graniteResult=new IntrusiveDepositField.IntrusionResult(0);
     private final IntrusiveDepositField.IntrusionResult dioriteResult=new IntrusiveDepositField.IntrusionResult(1);
