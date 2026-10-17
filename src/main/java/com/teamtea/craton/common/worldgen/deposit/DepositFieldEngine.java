@@ -21,6 +21,13 @@ public class DepositFieldEngine {
         return context;
     }
 
+    /** Prepare underground generation without querying surface placer candidates. */
+    public static DepositGenerationContext prepareUnderground(DepositGenerationContext context,GeologyFieldSampler geology,int x,int z,
+                                                               int minY,int topY,int surfaceY,BlockState surfaceState,Holder<Biome> biome){
+        context.prepareUndergroundColumn(geology,x,z,minY,topY,surfaceY,surfaceState,biome);
+        return context;
+    }
+
     /** Use the actual riverbed sediment as the placer host. */
     public static BlockState applyPlacer(DepositGenerationContext ctx,BlockState sediment,int y){
         return ctx.applyCandidates(ctx.placer(),sediment,sediment,y);

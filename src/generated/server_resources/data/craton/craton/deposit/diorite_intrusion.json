@@ -1,24 +1,15 @@
 {
   "type": "diorite_intrusion",
   "settings": {
-    "abundance": {
-      "cell_x": 24,
-      "cell_y": 24,
-      "cell_z": 24,
-      "normal_scale": 0.82,
-      "poor_chance": 0.35,
-      "poor_scale": 0.6,
-      "rich_chance": 0.1,
-      "rich_scale": 1.0
-    },
     "mineralization": {
-      "cluster_max": 4,
-      "cluster_min": 2,
-      "coherent_ore": true,
       "fertile_chance": 0.42,
       "height_fraction": 0.75,
       "ore_density": 0.55,
-      "radius_fraction": 0.68
+      "radius_fraction": 0.68,
+      "coherent_ore": true,
+      "cluster_min": 2,
+      "cluster_max": 4,
+      "cluster_gap": 3.0
     },
     "ores": [
       "craton:porphyry_copper",
@@ -44,6 +35,16 @@
       "radius_z_max": 82.0,
       "radius_z_min": 40.0,
       "satellite_count": 2
+    },
+    "abundance": {
+      "poor_chance": 0.35,
+      "rich_chance": 0.1,
+      "poor_scale": 0.6,
+      "normal_scale": 0.82,
+      "rich_scale": 1,
+      "cell_x": 24,
+      "cell_y": 24,
+      "cell_z": 24
     }
   }
 }

@@ -21,6 +21,7 @@ public class ModBiomeModifiers {
 
     public static final ResourceKey<BiomeModifier> REMOVE_STONE = createKey("remove_stone");
     public static final ResourceKey<BiomeModifier> REMOVE_ORES = createKey("remove_ores");
+    public static final ResourceKey<BiomeModifier> ADD_PLACER = createKey("add_placer");
     public static final ResourceKey<BiomeModifier> ADD_METEORITE = createKey("add_meteorite");
 
     private static ResourceKey<BiomeModifier> createKey(String name) {
@@ -30,9 +31,13 @@ public class ModBiomeModifiers {
     public static void bootstrap(BootstrapContext<BiomeModifier> context) {
         HolderGetter<Biome> holderGetter = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureHolderGetter = context.lookup(Registries.PLACED_FEATURE);
+        context.register(ADD_PLACER,new BiomeModifiers.AddFeaturesBiomeModifier(
+                holderGetter.getOrThrow(Tags.Biomes.IS_OVERWORLD),
+                HolderSet.direct(placedFeatureHolderGetter.getOrThrow(CratonWorldgenFeatures.PLACED_PLACER)),
+                GenerationStep.Decoration.UNDERGROUND_DECORATION));
         context.register(ADD_METEORITE, new BiomeModifiers.AddFeaturesBiomeModifier(
                 holderGetter.getOrThrow(Tags.Biomes.IS_OVERWORLD),
-                HolderSet.direct(placedFeatureHolderGetter.getOrThrow(MeteoriteFeatures.PLACED_METEORITE)),
+                HolderSet.direct(placedFeatureHolderGetter.getOrThrow(CratonWorldgenFeatures.PLACED_METEORITE)),
                 GenerationStep.Decoration.SURFACE_STRUCTURES));
         // Craton owns Overworld deposits; remove only explicitly listed vanilla ore features.
         // Handle Nether ores, other mods and existing stone-blob removal rules separately.

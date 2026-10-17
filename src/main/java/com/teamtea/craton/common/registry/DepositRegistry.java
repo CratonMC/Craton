@@ -73,7 +73,7 @@ public class DepositRegistry {
         field(ctx,ores,"kimberlite",DepositTypes.KIMBERLITE,p(384,1,95,0.2),s(6,26,6,26,48,62,48,92,.18,.06),CratonBlocks.KIMBERLITE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.KIMBERLITE_DIAMOND,OreTypeRegistry.KIMBERLITE_DIAMOND_RICH);
         field(ctx,ores,"jadeitite",DepositTypes.JADEITITE,p(320,1,120,0.25),s(40.8,40.8,16.15,16.15,9.35,9.35,18,68,.22,.07),CratonBlocks.JADEITITE.getOrigin().getBaseBlock().defaultBlockState(),OreTypeRegistry.JADEITITE_JADE);
         field(ctx,ores,"peat",DepositTypes.PEAT,p(160,2,70,.60),branches(s(12,28,10,24,2,5,0,0,.16,.04),0),CratonBlocks.peat.value().defaultBlockState(),OreTypeRegistry.PEAT);
-        field(ctx,ores,"placer",DepositTypes.PLACER,p(160,2,95,0.4),s(28,64,28,64,4,4,0,0,.25,.08),Blocks.GRAVEL.defaultBlockState(),OreTypeRegistry.PLACER_GOLD,OreTypeRegistry.PLACER_IRON);
+        field(ctx,ores,"placer",DepositTypes.PLACER,p(160,2,95,0.5),s(28,64,28,64,4,4,0,0,.25,.08),Blocks.GRAVEL.defaultBlockState(),OreTypeRegistry.PLACER_GOLD,OreTypeRegistry.PLACER_IRON);
         field(ctx,ores,"stratiform_coal",DepositTypes.COAL,p(256,2,190,0.45),s(61.2,110.5,27.2,62.9,1.955,5.525,0,0,.25,.07),Blocks.DYED_TERRACOTTA.black().defaultBlockState(),OreTypeRegistry.LIMESTONE_COAL,OreTypeRegistry.SHALE_COAL);
         field(ctx,ores,"stratiform_copper",DepositTypes.COPPER,p(288,1,190,0.65),s(61.2,110.5,27.2,62.9,1.955,5.525,0,0,.25,.07),Blocks.DYED_TERRACOTTA.orange().defaultBlockState(),OreTypeRegistry.SEDIMENTARY_COPPER);
         field(ctx,ores,"sandstone_uranium",DepositTypes.URANIUM,p(320,1,190,0.6),s(68.0,114.75,30.6,62.9,2.38,4.25,0,0,.22,.07),Blocks.DYED_TERRACOTTA.lime().defaultBlockState(),OreTypeRegistry.SANDSTONE_URANIUM);

@@ -191,8 +191,18 @@ public class DepositGenerationContext {
     /** Reset column state, collect candidates, then prepare intrusions and BIF. */
     void prepareColumn(GeologyFieldSampler geology,int x,int z,int minY,int topY,int surfaceY,
                        BlockState surfaceState,Holder<Biome> biome){
+        prepareColumn(geology,x,z,minY,topY,surfaceY,surfaceState,biome,true);
+    }
+
+    void prepareUndergroundColumn(GeologyFieldSampler geology,int x,int z,int minY,int topY,int surfaceY,
+                                  BlockState surfaceState,Holder<Biome> biome){
+        prepareColumn(geology,x,z,minY,topY,surfaceY,surfaceState,biome,false);
+    }
+
+    private void prepareColumn(GeologyFieldSampler geology,int x,int z,int minY,int topY,int surfaceY,
+                               BlockState surfaceState,Holder<Biome> biome,boolean includePlacers){
         reset(geology,x,z,minY,topY,surfaceY,surfaceState,biome);
-        collectColumnCandidates(x,z);
+        collectColumnCandidates(x,z,includePlacers);
         prepareIntrusions();
         preparePegmatites();
         bif=BandedIronFormation.prepareBif(bifCandidates(),owners(),geology,x,z,bifAnchors);
@@ -223,9 +233,9 @@ public class DepositGenerationContext {
         }
     }
 
-    private void collectColumnCandidates(int x,int z){
+    private void collectColumnCandidates(int x,int z,boolean includePlacers){
         for(PreparedDefinition entry:preparedDefinitions){
-            if(entry.query()==null) continue;
+            if(entry.query()==null||(!includePlacers&&entry.deposit() instanceof PlacerDeposit)) continue;
             if(entry.deposit() instanceof PeatDeposit&&(!biome.is(net.neoforged.neoforge.common.Tags.Biomes.IS_SWAMP)||biome.is(net.neoforged.neoforge.common.Tags.Biomes.IS_OCEAN)))continue;
             entry.query().queryInto(x,z,queryBuffer);
             for(DepositCandidateSampler.Candidate candidate:queryBuffer){

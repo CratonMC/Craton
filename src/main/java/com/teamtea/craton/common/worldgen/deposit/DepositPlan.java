@@ -22,6 +22,7 @@ public class DepositPlan {
     public List<SkarnRule> skarns(){return skarns;}
 
     public double maximumPeatDepth(){return maximumPeatDepth;}
+    public double maximumPlacerDepth(){return maximumPlacerDepth;}
 
     public static DepositPlan compile(List<? extends Holder<Deposit>> deposits){
         return new DepositPlan(List.copyOf(deposits));

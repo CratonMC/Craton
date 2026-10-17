@@ -201,6 +201,7 @@ public class WorldSetter {
 
         // 2. Traverse blocks and prepare geology and deposits only when first needed.
         boolean river=biome.is(Tags.Biomes.IS_RIVER);
+        double placerDepth=context.generation.depositPlan().maximumPlacerDepth();
         double peatDepth=context.generation.depositPlan().maximumPeatDepth();
         boolean wetland=peatDepth>0&&biome.is(Tags.Biomes.IS_SWAMP)&&!biome.is(Tags.Biomes.IS_OCEAN);
         for(int y=minY;y<=startingHeight;y++){
@@ -219,24 +220,24 @@ public class WorldSetter {
             boolean rebuildRock=y<=topY||(material&2)!=0||current.is(Blocks.BEDROCK)
                     ||current.is(Blocks.SANDSTONE)||current.is(Blocks.RED_SANDSTONE)||cover!=null;
             boolean riverMaterial=river&&(current.is(Blocks.SAND)||current.is(Blocks.RED_SAND)||current.is(Blocks.GRAVEL));
-            if(depositContext==null&&(rebuildRock||riverMaterial||peatSoil)){
+            if(depositContext==null&&(rebuildRock||peatSoil)){
                 geology=context.geology(optional.get(),minY);
-                depositContext=DepositFieldEngine.prepare(context.deposits(),geology,x,z,minY,topY,startingHeight,surfaceState,biome);
+                depositContext=DepositFieldEngine.prepareUnderground(context.deposits(),geology,x,z,minY,topY,startingHeight,surfaceState,biome);
             }
-            boolean riverSediment=riverMaterial&&startingHeight-y<=depositContext.maximumPlacerDepth();
+            // Keep loose riverbed sediment for the later placer feature.
+            boolean riverSediment=riverMaterial&&startingHeight-y<=placerDepth;
             BlockState host=current,state=current;
             if(cover!=null&&startingHeight-y<cover.thickness()){
                 state=cover.material();
                 if(!state.equals(current)) column.setBlock(y,state);
                 continue;
             }
-            // 3. Use strata underground and the original sediment for riverbed placers.
+            // 3. Apply underground strata while preserving riverbed sediment.
             if(rebuildRock&&!riverSediment&&!peatSoil){
                 host=geology.sample(x,y,z);
                 state=DepositFieldEngine.apply(depositContext,host,host,y);
             }
             if(peatSoil) state=DepositFieldEngine.applyPeat(depositContext,current,y);
-            if(riverSediment) state=DepositFieldEngine.applyPlacer(depositContext,current,y);
             // 4. Apply debug output or write changed blocks only.
             if(debugmode){
                 if(state.equals(host)||state.equals(current)||state.is(Blocks.DIORITE)

@@ -207,6 +207,7 @@ dependencies {
     onlyMainRuntimeOnly "curse.maven:spark-361579:8918574"
     onlyMainRuntimeOnly "maven.modrinth:tectonic:yWpa8ww5"
     onlyMainRuntimeOnly "maven.modrinth:lithostitched:sQznZoKs"
+//    onlyMainRuntimeOnly "curse.maven:ultraterraforged-1715379:9181607"
 
     println("----Scan onlyMainRuntimeOnly libs begin----")
     fileTree(dir: 'libs', include: ['*.jar']).each { File file ->
