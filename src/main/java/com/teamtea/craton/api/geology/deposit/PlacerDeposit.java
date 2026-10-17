@@ -36,6 +36,9 @@ public class PlacerDeposit extends OrdinaryDeposit {
         if(!sediment) return null;
         SourceStrength source=ctx.sourceStrength(this);
         if(source.gold()<=0&&source.iron()<=0) return null;
+        // Nearby sources fade continuously; multiplying two moderate signals into a hard gate erased most placers.
+        double sourceWeight=GeologicalNoise.smoothstep(.10,.65,Math.max(source.gold(),source.iron()));
+        if(sourceWeight<=0)return null;
 
         double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
         Shape config=settings().shape();
@@ -45,13 +48,11 @@ public class PlacerDeposit extends OrdinaryDeposit {
                 +shapeNoise2(ctx.x(),ctx.z(),c.shapeSeed(),.015,.075,config.broadNoise(),config.detailNoise());
         if(score<-.10) return null;
         double placerGrade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.11,3);
-        double p=GeologicalNoise.smoothstep(-.10,.35,score)*(.30+.55*placerGrade);
+        double p=GeologicalNoise.smoothstep(-.10,.35,score)*(.30+.55*placerGrade)*sourceWeight;
         if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.18)>p) return null;
-        if(source.gold()>=source.iron()&&source.gold()*placerGrade>.42)
+        if(source.gold()>=source.iron())
             return abundantOre(this,ctx,c,y,0,state);
-        if(source.iron()*placerGrade>.38)
-            return abundantOre(this,ctx,c,y,1,state);
-        return null;
+        return abundantOre(this,ctx,c,y,1,state);
     }
 
     public SourceStrength primarySourceStrength(DepositGenerationContext ctx){
