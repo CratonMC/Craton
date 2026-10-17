@@ -48,7 +48,7 @@ public class DepositSurvey {
         long cells=0;
         for(var entry:plan.definitions()){
             Deposit d=entry.deposit();if(!independent(d))continue;
-            double reach=entry.reach();int size=d.placement().cellSize();
+            double reach=entry.reach()+(d instanceof PlacerDeposit?PlacerDeposit.RIVER_SEARCH_RADIUS:0);int size=d.placement().cellSize();
             long nx=(long)Math.floor((canvas.maximumX()+reach)/size)-(long)Math.floor((canvas.minimumX()-reach)/size)+1;
             long nz=(long)Math.floor((canvas.maximumZ()+reach)/size)-(long)Math.floor((canvas.minimumZ()-reach)/size)+1;
             cells+=nx*nz;
@@ -64,7 +64,8 @@ public class DepositSurvey {
         definition=null;
         while(++definitionIndex<plan.definitions().size()){
             var entry=plan.definitions().get(definitionIndex);if(!independent(entry.deposit()))continue;
-            definition=entry;int size=entry.deposit().placement().cellSize();double reach=entry.reach();
+            definition=entry;int size=entry.deposit().placement().cellSize();
+            double reach=entry.reach()+(entry.deposit() instanceof PlacerDeposit?PlacerDeposit.RIVER_SEARCH_RADIUS:0);
             cellX=(int)Math.floor((canvas.minimumX()-reach)/size);
             maxCellX=(int)Math.floor((canvas.maximumX()+reach)/size);
             cellZ=minCellZ=(int)Math.floor((canvas.minimumZ()-reach)/size);
@@ -82,7 +83,9 @@ public class DepositSurvey {
             if(cellX>maxCellX)nextDefinition();
             if(!exhausted){
                 var p=definition.deposit().placement();
-                candidates=cache.queryCell(definition.deposit().sequence(),definition.salt(),cellX,cellZ,
+                candidates=definition.deposit() instanceof PlacerDeposit
+                        ?List.of(cache.regionalSeed(definition.deposit().sequence(),definition.salt(),cellX,cellZ,p.cellSize()))
+                        :cache.queryCell(definition.deposit().sequence(),definition.salt(),cellX,cellZ,
                         p.cellSize(),p.maxCandidates(),p.frequency());candidateIndex=0;visitedCells++;
                 if(++cellZ>maxCellZ){cellZ=minCellZ;cellX++;}
                 return false;

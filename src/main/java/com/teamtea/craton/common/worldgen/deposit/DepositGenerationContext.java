@@ -30,6 +30,8 @@ public class DepositGenerationContext {
     private static class OrdinaryBatch {
         final OrdinaryDeposit definition;
         final List<DepositCandidateSampler.Candidate> candidates=new ArrayList<>();
+        int placerCellX=Integer.MIN_VALUE,placerCellZ;
+        DepositCandidateSampler.Candidate placerSeed;
         OrdinaryBatch(OrdinaryDeposit definition){this.definition=definition;}
     }
     private final Map<FieldDeposit,java.util.IdentityHashMap<DepositCandidateSampler.Candidate,MineralizationField>> abundanceFields=new java.util.IdentityHashMap<>();
@@ -95,21 +97,6 @@ public class DepositGenerationContext {
     private final List<OrdinaryBatch> ordinaryBatches;
     // Derived column results and reusable output containers.
     private PlacerDeposit.SourceStrength sourceStrength;
-    private java.util.function.LongPredicate placerRiver;
-    private Map<DepositCandidateSampler.Candidate,PlacerDeposit.Anchor> placerAnchors;
-    public void placerRiver(java.util.function.LongPredicate river){
-        placerRiver=river;
-        if(placerAnchors!=null)placerAnchors.clear();
-    }
-    public PlacerDeposit.Anchor placerAnchor(DepositCandidateSampler.Candidate candidate){
-        if(placerAnchors==null)placerAnchors=new java.util.LinkedHashMap<>(32,.75f,true){
-            @Override protected boolean removeEldestEntry(Map.Entry<DepositCandidateSampler.Candidate,PlacerDeposit.Anchor> entry){return size()>256;}
-        };
-        PlacerDeposit.Anchor anchor=placerAnchors.get(candidate);
-        if(anchor==null){anchor=PlacerDeposit.riverAnchor(candidate,placerRiver);placerAnchors.put(candidate,anchor);}
-        return anchor;
-    }
-
     private Boolean vmsProvince;
     private final IntrusiveDepositField.IntrusionResult graniteResult=new IntrusiveDepositField.IntrusionResult(0);
     private final IntrusiveDepositField.IntrusionResult dioriteResult=new IntrusiveDepositField.IntrusionResult(1);
@@ -196,9 +183,9 @@ public class DepositGenerationContext {
             Deposit.Placement placement=deposit.placement();
             if(placement.frequency()<=0||placement.maxCandidates()==0||deposit instanceof SkarnDeposit) continue;
             List<DepositCandidateSampler.Candidate> candidates=candidatesByType.computeIfAbsent(deposit.getType(),ignored -> new ArrayList<>());
-            entries.add(new PreparedDefinition(deposit,definition.salt(),deposit instanceof HydrothermalVeinDeposit?null:
+            entries.add(new PreparedDefinition(deposit,definition.salt(),(deposit instanceof HydrothermalVeinDeposit||deposit instanceof PlacerDeposit)?null:
                     cellCache.prepare(deposit.sequence(),definition.salt(),placement.cellSize(),
-                    definition.reach(),placement.maxCandidates(),placement.frequency()),candidates,byDefinition[i]));
+                    definition.reach(),placement.maxCandidates(),placement.frequency()),candidates,deposit instanceof PlacerDeposit?new OrdinaryBatch((OrdinaryDeposit)deposit):byDefinition[i]));
         }
         preparedDefinitions=List.copyOf(entries);
     }
@@ -250,7 +237,20 @@ public class DepositGenerationContext {
 
     private void collectColumnCandidates(int x,int z,boolean includePlacers){
         for(PreparedDefinition entry:preparedDefinitions){
-            if(entry.query()==null||(!includePlacers&&entry.deposit() instanceof PlacerDeposit)) continue;
+            if(entry.deposit() instanceof PlacerDeposit){
+                if(!includePlacers)continue;
+                var placement=entry.deposit().placement();
+                int cx=Math.floorDiv(x,placement.cellSize()),cz=Math.floorDiv(z,placement.cellSize());
+                var batch=entry.batch();
+                if(batch.placerSeed==null||batch.placerCellX!=cx||batch.placerCellZ!=cz){
+                    batch.placerSeed=cellCache.regionalSeed(entry.deposit().sequence(),entry.salt(),cx,cz,placement.cellSize());
+                    batch.placerCellX=cx;batch.placerCellZ=cz;
+                }
+                owners.put(batch.placerSeed,entry.deposit());
+                entry.candidates().add(batch.placerSeed);
+                continue;
+            }
+            if(entry.query()==null)continue;
             if(entry.deposit() instanceof PeatDeposit&&(!biome.is(net.neoforged.neoforge.common.Tags.Biomes.IS_SWAMP)||biome.is(net.neoforged.neoforge.common.Tags.Biomes.IS_OCEAN)))continue;
             entry.query().queryInto(x,z,queryBuffer);
             for(DepositCandidateSampler.Candidate candidate:queryBuffer){

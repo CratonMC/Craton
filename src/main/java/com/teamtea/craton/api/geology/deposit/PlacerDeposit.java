@@ -55,30 +55,24 @@ public class PlacerDeposit extends OrdinaryDeposit {
         if(ctx.surfaceY()-y<0||!ctx.biome().is(Tags.Biomes.IS_RIVER)) return null;
         boolean sediment=originalHost.is(Blocks.SAND)||originalHost.is(Blocks.RED_SAND)||originalHost.is(Blocks.GRAVEL);
         if(!sediment) return null;
-        // A candidate cannot reach this column even after its maximum river displacement.
-        double reach=placement().reach()+RIVER_SEARCH_RADIUS;
-        if(Math.abs(ctx.x()+.5-c.x())>reach||Math.abs(ctx.z()+.5-c.z())>reach)return null;
+        if(ctx.surfaceY()-y>settings().shape().y(c.shapeSeed()))return null;
         SourceStrength source=ctx.sourceStrength(this);
-        if(source.gold()<=0&&source.iron()<=0) return null;
-        // Nearby sources fade continuously; multiplying two moderate signals into a hard gate erased most placers.
-        double sourceWeight=GeologicalNoise.smoothstep(.10,.65,Math.max(source.gold(),source.iron()));
-        if(sourceWeight<=0)return null;
+        double strength=Math.min(1,Math.max(source.gold(),source.iron()));
+        if(strength<=0)return null;
 
-        Anchor anchor=ctx.placerAnchor(c);
-        if(!anchor.found())return null;
-        double dx=ctx.x()+.5-anchor.x(),dz=ctx.z()+.5-anchor.z();
-        Shape config=settings().shape();
-        if(ctx.surfaceY()-y>config.y(c.shapeSeed())) return null;
-        double r=config.x(c.shapeSeed()),rz=config.z(c.shapeSeed()^91);
-        double score=1-sq(dx/r)-sq(dz/rz)
-                +shapeNoise2(ctx.x(),ctx.z(),c.shapeSeed(),.015,.075,config.broadNoise(),config.detailNoise());
-        if(score<-.10) return null;
-        double placerGrade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.11,3);
-        double p=GeologicalNoise.smoothstep(-.10,.35,score)*(.30+.55*placerGrade)*sourceWeight;
-        if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.18)>p) return null;
-        if(source.gold()>=source.iron())
-            return abundantOre(this,ctx,c,y,0,state);
-        return abundantOre(this,ctx,c,y,1,state);
+        // Sources define eligibility; richness changes concentration without another empty lens mask.
+        Abundance abundance=settings().abundance();
+        double scale=1;
+        if(abundance.enabled()){
+            int cell=Math.max(24,abundance.cellX());
+            double choice=GeologicalNoise.hashUnit(Math.floorDiv(ctx.x(),cell),0,Math.floorDiv(ctx.z(),cell),c.gradeSeed());
+            scale=choice<abundance.poorChance()?abundance.poorScale():
+                    choice>1-abundance.richChance()?abundance.richScale():abundance.normalScale();
+        }
+        double grade=.5+.5*GeologicalNoise.fbm2(ctx.x(),ctx.z(),c.gradeSeed(),.018,2);
+        double density=(.025+.275*Math.sqrt(strength))*scale*(.65+.35*grade)*placement().frequency();
+        if(GeologicalNoise.hashUnit(ctx.x(),y,ctx.z(),c.occupancySeed())>=density)return null;
+        return ore(this,source.gold()>=source.iron()?0:1,state);
     }
 
     public SourceStrength primarySourceStrength(DepositGenerationContext ctx){

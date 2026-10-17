@@ -129,6 +129,18 @@ public class DepositCandidateSampler {
             return List.copyOf(selected);
         }
 
+        /** One deterministic concentration seed per cell; source-driven deposits do not roll occurrence. */
+        public Candidate regionalSeed(DepositRandomSequences sequence,long salt,int cellX,int cellZ,int cellSize){
+            PositionalRandomFactory random=sequences.computeIfAbsent(sequence,s -> s.factory(rootRandom));
+            long root=GeologicalNoise.mix(salt);
+            long instance=GeologicalNoise.mix(root^GeologicalNoise.mix(1L)^GeologicalNoise.mix((((long)cellX)<<32)^(cellZ&0xffffffffL)));
+            return new Candidate(cellX*cellSize+cellSize/2,cellZ*cellSize+cellSize/2,
+                    seed(random,cellX,cellZ,instance^SHAPE_SALT),seed(random,cellX,cellZ,instance^GRADE_SALT),
+                    seed(random,cellX,cellZ,instance^ORE_SALT),seed(random,cellX,cellZ,instance^VERTICAL_SALT),
+                    seed(random,cellX,cellZ,instance^ROTATION_SALT),seed(random,cellX,cellZ,instance^ALTERATION_SALT),
+                    seed(random,cellX,cellZ,instance^OCCUPANCY_SALT));
+        }
+
         /** Compile fixed query parameters once; each handle belongs to this chunk context. */
         public PreparedQuery prepare(DepositRandomSequences sequence,long salt,int cellSize,double reach,int maxCandidates,double frequency){
             if(cellSize<=0||!Double.isFinite(reach)||reach<0||reach/cellSize>8||maxCandidates<0||maxCandidates>8

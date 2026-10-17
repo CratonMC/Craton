@@ -63,7 +63,7 @@ public class CratonContents {
             List<Holder<GeologyRegion>> regions,
             Map<ResourceKey<GeologyRegion>, Holder<GeologyProfile>> profiles,
             GeologyTransition transition,
-            DepositPlan depositPlan
+            com.teamtea.craton.common.worldgen.deposit.DepositPlan depositPlan
     ) {
         public GenerationData {
             regions = List.copyOf(regions);
@@ -92,7 +92,7 @@ public class CratonContents {
     ) {
         private static final Contents EMPTY = new Contents(
                 new GenerationData(List.of(), Map.of(), new GeologyTransition(List.of(), Map.of()),
-                        DepositPlan.EMPTY),
+                        com.teamtea.craton.common.worldgen.deposit.DepositPlan.EMPTY),
                 List.of(), List.of(), Map.of(), Map.of());
     }
 
@@ -106,7 +106,7 @@ public class CratonContents {
         return contents.generation().classify(sample);
     }
     public static List<Holder<GeologyProfile>> getGeologyProfiles() { return contents.profiles(); }
-    public static DepositPlan getDepositPlan() {
+    public static com.teamtea.craton.common.worldgen.deposit.DepositPlan getDepositPlan() {
         return contents.generation().depositPlan();
     }
     public static Map<Identifier, List<Holder<Deposit>>> getDepositsByType() { return contents.depositsByType(); }
@@ -131,7 +131,7 @@ public class CratonContents {
         for (Holder<Deposit> entry : deposits)
             grouped.computeIfAbsent(entry.value().getType(), key -> new ArrayList<>()).add(entry);
         grouped.replaceAll((type, entries) -> List.copyOf(entries));
-        var plan = DepositPlan.compile(deposits);
+        var plan = com.teamtea.craton.common.worldgen.deposit.DepositPlan.compile(deposits);
 
         Map<ResourceKey<OreType>, Holder<OreType>> ores = new HashMap<>();
         event.getRegistries().lookup(CratonRegistries.ORE_TYPE)

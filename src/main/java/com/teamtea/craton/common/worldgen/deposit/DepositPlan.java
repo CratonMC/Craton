@@ -57,7 +57,6 @@ public class DepositPlan {
             Deposit deposit=entry.deposit();
             double candidateReach=deposit instanceof IntrusionDeposit intrusion
                     ?Math.max(entry.reach(),intrusion.contactReach(reach)):entry.reach();
-            if(deposit instanceof PlacerDeposit)candidateReach+=PlacerDeposit.RIVER_SEARCH_RADIUS;
             if(deposit instanceof GraniteIntrusionDeposit granite){
                 for(Definition child:entries){
                     if(!(child.deposit() instanceof HydrothermalVeinDeposit vein)
