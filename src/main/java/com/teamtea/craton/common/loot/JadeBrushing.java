@@ -32,7 +32,7 @@ public class JadeBrushing {
         if (level.isClientSide()) return;
         var ore = (OreBlock) state.getBlock();
         var products = new ArrayList<ItemStack>();
-        OreProductsEntry.roll(ore.oreDrops(), level.getRandom(), products::add);
+        OreProductsEntry.roll(ore.availableDrops(), level.getRandom(), products::add);
         if (products.isEmpty() || !level.setBlock(pos, ore.host().defaultBlockState(), Block.UPDATE_ALL)) return;
         for (var product : products) Block.popResource(level, pos, product);
         tool.hurtAndBreak(1, player, event.getHand() == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);

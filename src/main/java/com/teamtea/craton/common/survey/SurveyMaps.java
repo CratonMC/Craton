@@ -4,6 +4,7 @@ import com.teamtea.craton.common.worldgen.geology.GeologyClimateSampler;
 import com.teamtea.craton.common.worldgen.geology.GeologyFieldSampler;
 
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.common.loot.OreAvailability;
 import com.teamtea.craton.common.registry.CratonContents;
 import com.teamtea.craton.common.registry.CratonItems;
 import net.minecraft.ChatFormatting;
@@ -45,6 +46,7 @@ public class SurveyMaps {
     private record Key(ResourceKey<Level> dimension,int x,int z){}
     private static class State {
         CratonContents.GenerationData generation;
+        Object availabilityVersion;
         final ArrayDeque<Job> jobs=new ArrayDeque<>();
         final Map<Key,ItemStack> completed=new LinkedHashMap<>(16,.75f,true){
             @Override protected boolean removeEldestEntry(Map.Entry<Key,ItemStack> eldest){return size()>64;}
@@ -86,9 +88,10 @@ public class SurveyMaps {
         player.sendOverlayMessage(Component.translatable("survey.craton.finished"));
     }
     private static void refresh(State state,CratonContents.GenerationData generation){
-        if(state.generation==generation)return;
+        Object availabilityVersion=OreAvailability.version();
+        if(state.generation==generation&&state.availabilityVersion==availabilityVersion)return;
         for(Job job:state.jobs)job.player.sendOverlayMessage(Component.translatable("survey.craton.cancelled"));
-        state.jobs.clear();state.completed.clear();state.generation=generation;
+        state.jobs.clear();state.completed.clear();state.generation=generation;state.availabilityVersion=availabilityVersion;
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         State state=STATES.get(event.getServer());if(state==null)return;

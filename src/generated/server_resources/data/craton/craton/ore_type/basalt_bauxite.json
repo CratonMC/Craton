@@ -1,4 +1,7 @@
 {
+  "required_ingot_tags": [
+    "c:ingots/aluminum"
+  ],
   "variants": [
     {
       "hosts": "minecraft:basalt",

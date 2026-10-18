@@ -4,259 +4,178 @@
       "drops": [
         {
           "item": "craton:raw_hematite",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/iron"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:skarn_iron_ore": {
       "drops": [
         {
           "item": "craton:raw_magnetite",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/iron"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:sedimentary_copper_ore": {
       "drops": [
         {
           "item": "craton:raw_copper_oxide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/copper"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:limestone_coal_ore": {
       "drops": [
         {
-          "item": "minecraft:coal",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "minecraft:coal"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:shale_coal_ore": {
       "drops": [
         {
-          "item": "minecraft:coal",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "minecraft:coal"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:metasomatic_lapis_ore": {
       "drops": [
         {
-          "item": "minecraft:lapis_lazuli",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "minecraft:lapis_lazuli"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:pegmatite_quartz_ore": {
       "drops": [
         {
-          "item": "minecraft:quartz",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "minecraft:quartz"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:pegmatite_emerald_ore": {
       "drops": [
         {
-          "item": "minecraft:emerald",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "minecraft:emerald"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:fluorite_vein_ore": {
       "drops": [
         {
-          "item": "craton:fluorite",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "craton:fluorite"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:deep_hydrothermal_redstone_ore": {
       "drops": [
         {
-          "item": "minecraft:redstone",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "minecraft:redstone"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:bauxite_ore": {
       "drops": [
         {
           "item": "craton:bauxite",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/aluminum"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:peat": {
       "drops": [
         {
-          "item": "craton:peat",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "craton:peat"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:sedimentary_uranium_ore": {
       "drops": [
         {
           "item": "craton:raw_uranium",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/uranium"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:granite_cassiterite_ore": {
       "drops": [
         {
           "item": "craton:raw_tin",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/tin"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:granite_wolframite_ore": {
       "drops": [
         {
           "item": "craton:raw_tungsten",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/tungsten"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:auriferous_gravel": {
       "drops": [
         {
           "item": "minecraft:gold_nugget",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/gold"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:auriferous_sand": {
       "drops": [
         {
           "item": "minecraft:gold_nugget",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/gold"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:ferriferous_gravel": {
       "drops": [
         {
           "item": "minecraft:iron_nugget",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/iron"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:ferriferous_sand": {
       "drops": [
         {
           "item": "minecraft:iron_nugget",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/iron"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:diamond_bearing_kimberlite": {
       "drops": [
         {
-          "item": "craton:diamond_fragment",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "craton:diamond_fragment"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:diamond_rich_kimberlite": {
       "drops": [
         {
-          "item": "minecraft:diamond",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "minecraft:diamond"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:meteoric_iron_ore": {
       "drops": [
         {
           "item": "craton:meteoric_iron",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/iron"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:quartz_vein_gold_ore": {
       "drops": [
         {
           "item": "minecraft:raw_gold",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/gold"
         }
       ],
       "bonus_drops": [
         {
           "item": "minecraft:quartz",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
           "chance": 0.2
         }
       ]
@@ -265,24 +184,17 @@
       "drops": [
         {
           "item": "craton:raw_iron_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/iron"
         }
       ],
       "bonus_drops": [
         {
           "item": "minecraft:raw_gold",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.05
+          "chance": 0.05,
+          "required_ingot_tag": "c:ingots/gold"
         },
         {
           "item": "minecraft:quartz",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
           "chance": 0.2
         }
       ]
@@ -291,25 +203,19 @@
       "drops": [
         {
           "item": "craton:raw_iron_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/iron"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.05
+          "chance": 0.05,
+          "required_ingot_tag": "c:ingots/copper"
         },
         {
           "item": "minecraft:raw_gold",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.01
+          "chance": 0.01,
+          "required_ingot_tag": "c:ingots/gold"
         }
       ]
     },
@@ -317,26 +223,19 @@
       "drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/copper"
         }
       ],
       "bonus_drops": [
         {
           "item": "minecraft:raw_gold",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.03
+          "chance": 0.03,
+          "required_ingot_tag": "c:ingots/gold"
         },
         {
           "item": "craton:raw_molybdenum",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
           "chance": 0.05,
-          "enabled": false
+          "required_ingot_tag": "c:ingots/molybdenum"
         }
       ]
     },
@@ -344,18 +243,14 @@
       "drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/copper"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_zinc",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.05
+          "chance": 0.05,
+          "required_ingot_tag": "c:ingots/zinc"
         }
       ]
     },
@@ -363,18 +258,14 @@
       "drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/copper"
         }
       ],
       "bonus_drops": [
         {
           "item": "minecraft:raw_gold",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.03
+          "chance": 0.03,
+          "required_ingot_tag": "c:ingots/gold"
         }
       ]
     },
@@ -382,18 +273,14 @@
       "drops": [
         {
           "item": "craton:raw_nickel",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/nickel"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.25
+          "chance": 0.25,
+          "required_ingot_tag": "c:ingots/copper"
         }
       ]
     },
@@ -401,18 +288,14 @@
       "drops": [
         {
           "item": "minecraft:raw_gold",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/gold"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.1
+          "chance": 0.1,
+          "required_ingot_tag": "c:ingots/copper"
         }
       ]
     },
@@ -420,46 +303,36 @@
       "drops": [
         {
           "item": "minecraft:raw_gold",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/gold"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:epithermal_au_ag_ore": {
       "drops": [
         {
           "item": "minecraft:raw_gold",
           "weight": 40,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/gold"
         },
         {
           "item": "craton:raw_silver",
           "weight": 60,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/silver"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:vms_pb_ag_ore": {
       "drops": [
         {
           "item": "craton:raw_lead",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/lead"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_silver",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.1
+          "chance": 0.1,
+          "required_ingot_tag": "c:ingots/silver"
         }
       ]
     },
@@ -467,18 +340,14 @@
       "drops": [
         {
           "item": "craton:raw_zinc",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/zinc"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_lead",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.05
+          "chance": 0.05,
+          "required_ingot_tag": "c:ingots/lead"
         }
       ]
     },
@@ -486,18 +355,14 @@
       "drops": [
         {
           "item": "craton:raw_osmium",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/osmium"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_nickel",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.05
+          "chance": 0.05,
+          "required_ingot_tag": "c:ingots/nickel"
         }
       ]
     },
@@ -506,40 +371,33 @@
         {
           "item": "craton:raw_lead",
           "weight": 40,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/lead"
         },
         {
           "item": "craton:raw_zinc",
           "weight": 60,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/zinc"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:skarn_pb_zn_ore": {
       "drops": [
         {
           "item": "craton:raw_lead",
           "weight": 40,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/lead"
         },
         {
           "item": "craton:raw_zinc",
           "weight": 60,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/zinc"
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_silver",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1,
-          "chance": 0.05
+          "chance": 0.05,
+          "required_ingot_tag": "c:ingots/silver"
         }
       ]
     },
@@ -548,40 +406,27 @@
         {
           "item": "craton:raw_tin",
           "weight": 50,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/tin"
         },
         {
           "item": "craton:raw_tungsten",
           "weight": 50,
-          "min_count": 1,
-          "max_count": 1
+          "required_ingot_tag": "c:ingots/tungsten"
         }
-      ],
-      "bonus_drops": []
+      ]
     },
     "craton:suspicious_jadeitite": {
       "drops": [
         {
-          "item": "craton:green_jade",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "craton:green_jade"
         },
         {
-          "item": "craton:white_jade",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "craton:white_jade"
         },
         {
-          "item": "craton:lavender_jade",
-          "weight": 1,
-          "min_count": 1,
-          "max_count": 1
+          "item": "craton:lavender_jade"
         }
-      ],
-      "bonus_drops": []
+      ]
     }
   }
 }

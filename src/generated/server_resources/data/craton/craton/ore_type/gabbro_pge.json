@@ -1,4 +1,7 @@
 {
+  "required_ingot_tags": [
+    "c:ingots/osmium"
+  ],
   "variants": [
     {
       "hosts": "craton:gabbro",

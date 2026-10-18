@@ -168,6 +168,7 @@ public class DepositGenerationContext {
     public DepositGenerationContext(PositionalRandomFactory random){this(random,CratonContents.getDepositPlan());}
 
     public DepositGenerationContext(PositionalRandomFactory random,DepositPlan plan){
+        plan=plan.active();
         this.random=random;this.cellCache=new DepositCandidateSampler.CellCache(random);
         maximumPlacerDepth=plan.maximumPlacerDepth;maximumSkarnReach=plan.maximumSkarnReach;skarns=plan.skarns;
         OrdinaryBatch[] byDefinition=new OrdinaryBatch[plan.definitions.size()];

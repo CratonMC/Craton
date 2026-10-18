@@ -12,6 +12,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import java.util.List;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import com.teamtea.craton.common.worldgen.deposit.DepositGenerationContext;
 
 import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
@@ -26,6 +30,9 @@ public class PlacerDeposit extends OrdinaryDeposit {
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
+    private static final TagKey<Item> GOLD_SOURCE_TAG=
+            TagKey.create(Registries.ITEM,
+                    Identifier.parse("c:ingots/gold"));
     public record SourceStrength(double gold,double iron){}
     public static final int RIVER_SEARCH_RADIUS=96;
     public record Anchor(int x,int z,boolean found){}
@@ -80,46 +87,57 @@ public class PlacerDeposit extends OrdinaryDeposit {
 
     public SourceStrength primarySourceStrength(DepositGenerationContext ctx){
         double gold=0,iron=0;
-        for(DepositCandidateSampler.Candidate c:ctx.epithermal()){
-            double cy=shape(ctx,c).height(ctx.minY(),c.verticalSeed());
-            BlockState h=ctx.geology().sampleRaw(c.x(),(int)Math.round(cy),c.z());
-            if(h.is(Blocks.ANDESITE)||isRhyolite(h)) gold=Math.max(gold,proximity(ctx.x(),ctx.z(),c,120));
+        if(oreAvailable(0)){
+            for(DepositCandidateSampler.Candidate c:ctx.epithermal()){
+                if(!field(ctx,c).providesMetal(GOLD_SOURCE_TAG))continue;
+                double cy=shape(ctx,c).height(ctx.minY(),c.verticalSeed());
+                BlockState h=ctx.geology().sampleRaw(c.x(),(int)Math.round(cy),c.z());
+                if(h.is(Blocks.ANDESITE)||isRhyolite(h)) gold=Math.max(gold,proximity(ctx.x(),ctx.z(),c,120));
+            }
+            for(DepositCandidateSampler.Candidate c:ctx.veins()){
+                if(!field(ctx,c).providesMetal(GOLD_SOURCE_TAG))continue;
+                PreparedPegmatite geometry=ctx.pegmatite(c,shape(ctx,c));
+                double cy=geometry.centerY();
+                BlockState h=ctx.geology().sampleRaw(c.x(),(int)Math.round(cy),c.z());
+                if(geometry.attached()||h.is(Blocks.GRANITE)||isPegmatite(h)) gold=Math.max(gold,proximity(ctx.x(),ctx.z(),c,135));
+            }
+            for(DepositCandidateSampler.Candidate c:ctx.diorite()){
+                var parent=(DioriteIntrusionDeposit)field(ctx,c);
+                if(parent.providesMetal(GOLD_SOURCE_TAG)&&parent.isFertile(c))
+                    gold=Math.max(gold,proximity(ctx.x(),ctx.z(),c,145)*.75);
+            }
         }
-        for(DepositCandidateSampler.Candidate c:ctx.veins()){
-            PreparedPegmatite geometry=ctx.pegmatite(c,shape(ctx,c));
-            double cy=geometry.centerY();
-            BlockState h=ctx.geology().sampleRaw(c.x(),(int)Math.round(cy),c.z());
-            if(geometry.attached()||h.is(Blocks.GRANITE)||isPegmatite(h)) gold=Math.max(gold,proximity(ctx.x(),ctx.z(),c,135));
-        }
-        for(DepositCandidateSampler.Candidate c:ctx.diorite()) gold=Math.max(gold,proximity(ctx.x(),ctx.z(),c,145)*.75);
-        for(DepositCandidateSampler.Candidate c:ctx.vms()){
-            List<Integer> tuffLayers=matchingLayers(ctx,Blocks.TUFF.defaultBlockState(),c.x(),c.z());
-            if(tuffLayers.isEmpty()) continue;
-            double province=.5+.5*GeologicalNoise.fbm2(c.x(),c.z(),DepositRandomSequences.VMS.salt()^0x564D5350L,.0019,4);
-            if(province<.46) continue;
-            int layer=tuffLayers.get(index(c.verticalSeed(),tuffLayers.size()));
-            if(!VmsDeposit.isVolcanicHorizon(ctx.geology(),layer,c.x(),c.z())) continue;
-            double cy=ctx.geology().boundaryY(layer,c.x(),c.z())-2.0;
-            BlockState h=ctx.geology().sampleRaw(c.x(),(int)Math.round(cy),c.z());
-            if(h.is(Blocks.TUFF)) iron=Math.max(iron,proximity(ctx.x(),ctx.z(),c,105)*.55);
-        }
-        // BIF lenses in a gneiss horizon provide a regional iron source to nearby rivers.
-        {
-            for(DepositCandidateSampler.Candidate c:ctx.bif().candidates()){
-                List<Integer> gneissLayers=matchingLayers(ctx,
-                        CratonBlocks.GNEISS.getOrigin().getBaseBlock().defaultBlockState(),c.x(),c.z());
-                if(gneissLayers.isEmpty()) continue;
-                BandedIronFormation bif=(BandedIronFormation)ctx.owners().get(c);
-                int layer=gneissLayers.get(index(c.verticalSeed(),gneissLayers.size()));
-                double gx=(ctx.geology().boundaryY(layer,c.x()+4,c.z())-ctx.geology().boundaryY(layer,c.x()-4,c.z()))/8.0;
-                double gz=(ctx.geology().boundaryY(layer,c.x(),c.z()+4)-ctx.geology().boundaryY(layer,c.x(),c.z()-4))/8.0;
-                double dip=Math.toDegrees(Math.atan(Math.hypot(gx,gz)));
-                if(dip<bif.dipMin()||dip>bif.dipMax()) continue;
-                double[] strike=ctx.geology().strike(layer,c.x(),c.z());
-                double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
-                double along=dx*strike[0]+dz*strike[1],across=-dx*strike[1]+dz*strike[0];
-                double radial=Math.hypot(along/(bif.length()*.5+60),across/(bif.width()*.5+60));
-                if(radial<1) iron=Math.max(iron,(1-radial)*.8);
+        if(oreAvailable(1)){
+            for(DepositCandidateSampler.Candidate c:ctx.vms()){
+                if(!field(ctx,c).mineralizationAvailable())continue;
+                List<Integer> tuffLayers=matchingLayers(ctx,Blocks.TUFF.defaultBlockState(),c.x(),c.z());
+                if(tuffLayers.isEmpty()) continue;
+                double province=.5+.5*GeologicalNoise.fbm2(c.x(),c.z(),DepositRandomSequences.VMS.salt()^0x564D5350L,.0019,4);
+                if(province<.46) continue;
+                int layer=tuffLayers.get(index(c.verticalSeed(),tuffLayers.size()));
+                if(!VmsDeposit.isVolcanicHorizon(ctx.geology(),layer,c.x(),c.z())) continue;
+                double cy=ctx.geology().boundaryY(layer,c.x(),c.z())-2.0;
+                BlockState h=ctx.geology().sampleRaw(c.x(),(int)Math.round(cy),c.z());
+                if(h.is(Blocks.TUFF)) iron=Math.max(iron,proximity(ctx.x(),ctx.z(),c,105)*.55);
+            }
+            // BIF lenses in a gneiss horizon provide a regional iron source to nearby rivers.
+            {
+                for(DepositCandidateSampler.Candidate c:ctx.bif().candidates()){
+                    List<Integer> gneissLayers=matchingLayers(ctx,
+                            CratonBlocks.GNEISS.getOrigin().getBaseBlock().defaultBlockState(),c.x(),c.z());
+                    if(gneissLayers.isEmpty()) continue;
+                    BandedIronFormation bif=(BandedIronFormation)ctx.owners().get(c);
+                    int layer=gneissLayers.get(index(c.verticalSeed(),gneissLayers.size()));
+                    double gx=(ctx.geology().boundaryY(layer,c.x()+4,c.z())-ctx.geology().boundaryY(layer,c.x()-4,c.z()))/8.0;
+                    double gz=(ctx.geology().boundaryY(layer,c.x(),c.z()+4)-ctx.geology().boundaryY(layer,c.x(),c.z()-4))/8.0;
+                    double dip=Math.toDegrees(Math.atan(Math.hypot(gx,gz)));
+                    if(dip<bif.dipMin()||dip>bif.dipMax()) continue;
+                    double[] strike=ctx.geology().strike(layer,c.x(),c.z());
+                    double dx=ctx.x()+.5-c.x(),dz=ctx.z()+.5-c.z();
+                    double along=dx*strike[0]+dz*strike[1],across=-dx*strike[1]+dz*strike[0];
+                    double radial=Math.hypot(along/(bif.length()*.5+60),across/(bif.width()*.5+60));
+                    if(radial<1) iron=Math.max(iron,(1-radial)*.8);
+                }
             }
         }
         // Skarn candidates are intentionally not treated as placer sources unless a real

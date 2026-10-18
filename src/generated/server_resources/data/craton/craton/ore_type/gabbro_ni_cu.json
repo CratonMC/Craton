@@ -1,4 +1,8 @@
 {
+  "required_ingot_tags": [
+    "c:ingots/nickel",
+    "c:ingots/copper"
+  ],
   "variants": [
     {
       "hosts": "craton:gabbro",

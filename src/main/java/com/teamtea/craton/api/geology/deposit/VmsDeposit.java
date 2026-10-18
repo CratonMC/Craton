@@ -67,10 +67,8 @@ public class VmsDeposit extends OrdinaryDeposit {
         double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.075,3);
         if(!occupies(score,grade,c,ctx.x(),y,ctx.z(),.10,.78)) return null;
         double mix=GeologicalNoise.occupancy(ctx.x()+13,y,ctx.z()-7,c.oreSeed(),.12);
-        if(feeder*.70>lens) return ore(this,mix<.70?0:1,state);
-        if(mix<.43) return ore(this,0,state);
-        if(mix<.78) return ore(this,1,state);
-        return ore(this,2,state);
+        int mineral=feeder*.70>lens?selectOre(mix,.70,.30,0):selectOre(mix,.43,.35,.22);
+        return ore(this,mineral,state);
     }
 
     private static class Column {

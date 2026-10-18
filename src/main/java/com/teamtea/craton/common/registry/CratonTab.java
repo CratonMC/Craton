@@ -1,6 +1,8 @@
 package com.teamtea.craton.common.registry;
 
 import com.teamtea.craton.Craton;
+import com.teamtea.craton.common.loot.OreAvailability;
+import com.teamtea.craton.api.geology.ore.OreType;
 import com.teamtea.craton.common.block.StoneCollection;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;
@@ -38,8 +40,10 @@ public class CratonTab {
                     .title(Component.translatable("itemGroup." + Craton.MODID + ".ores"))
                     .icon(() -> new ItemStack(CratonBlocks.banded_iron_gneiss_ore.value()))
                     .displayItems((parameters, output) -> {
-                        CratonBlocks.ORE_BLOCKS.forEach(holder -> output.accept(holder.value()));
-                        CratonItems.ALL.forEach(holder -> output.accept(holder.value()));
+                        CratonBlocks.ORE_BLOCKS.stream().filter(holder -> OreType.available(holder.value()))
+                                .forEach(holder -> output.accept(holder.value()));
+                        CratonItems.ALL.stream().filter(holder -> OreAvailability.available(holder.value()))
+                                .forEach(holder -> output.accept(holder.value()));
                         output.accept(CratonItems.SURVEY_CHART.value());
                     })
                     .build()

@@ -49,7 +49,8 @@ public class GraniteIntrusionDeposit extends IntrusionDeposit {
         double grade=prepared.noise().grade(ctx.x(),y,ctx.z());
         if(prepared.occupies(cupola-.25,grade,ctx.x(),y,ctx.z(),.18,.72,1)){
             double mix=prepared.noise().mix(ctx.x(),y,ctx.z());
-            return ore(this,mix>.64-.18*intrusion.radial()+.08*intrusion.normalizedY()?1:0,host);
+            double tin=Math.max(0,Math.min(1,.64-.18*intrusion.radial()+.08*intrusion.normalizedY()));
+            return ore(this,selectOre(mix,tin,1-tin,0),host);
         }
         return host;
     }

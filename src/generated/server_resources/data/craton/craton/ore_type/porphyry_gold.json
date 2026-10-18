@@ -1,4 +1,7 @@
 {
+  "required_ingot_tags": [
+    "c:ingots/gold"
+  ],
   "variants": [
     {
       "hosts": "minecraft:diorite",

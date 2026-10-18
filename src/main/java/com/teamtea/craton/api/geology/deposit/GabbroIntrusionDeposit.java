@@ -50,7 +50,7 @@ public class GabbroIntrusionDeposit extends IntrusionDeposit {
         double grade=prepared.noise().grade(ctx.x(),y,ctx.z());
         if(prepared.occupies(intrusion.score()+floor*.35,grade,ctx.x(),y,ctx.z(),.05,.70,1)){
             double mix=prepared.noise().mix(ctx.x(),y,ctx.z());
-            return ore(this,mix>.78?1:0,host);
+            return ore(this,selectOre(mix,.78,.22,0),host);
         }
         return host;
     }

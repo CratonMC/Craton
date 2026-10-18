@@ -2,6 +2,7 @@ package com.teamtea.craton.data;
 
 import com.teamtea.craton.Craton;
 import com.teamtea.craton.common.registry.*;
+import com.teamtea.craton.data.datamaps.DataMapPro;
 import com.teamtea.craton.data.lang.Lang_EN;
 import com.teamtea.craton.data.lang.Lang_ZH;
 import com.teamtea.craton.data.loot.CLootTableProvider;
@@ -40,6 +41,7 @@ public class DataInit {
         var esb = new CBlockTagProvider(packOutput, lookupProvider, MODID);
         generator.addProvider(true, esb);
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new DataMapPro(packOutput, lookupProvider));
 //        event.createReloadableRegistryObjects(
 //                new RegistrySetBuilder()
 //                        .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))

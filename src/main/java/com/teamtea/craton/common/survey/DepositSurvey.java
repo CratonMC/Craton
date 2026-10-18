@@ -23,7 +23,7 @@ public class DepositSurvey {
         boolean ocean(int x,int z);
         double surfaceY(int x,int z);
     }
-    private record Source(int x,int z,double radius){}
+    private record Source(int x,int z,double radius,boolean gold){}
     private record PendingPlacer(PlacerDeposit deposit,DepositCandidateSampler.Candidate candidate,PlacerDeposit.Anchor anchor){}
     private final DepositPlan plan;
     private final GeologyFieldSampler geology;
@@ -42,6 +42,7 @@ public class DepositSurvey {
 
     public DepositSurvey(DepositPlan plan,GeologyFieldSampler geology,PositionalRandomFactory random,
                          int minY,SurveyMapCanvas canvas,Environment environment){
+        plan=plan.active();
         this.plan=plan;this.geology=geology;this.cache=new DepositCandidateSampler.CellCache(random);
         this.minY=minY;this.canvas=canvas;this.environment=environment;
         this.placerRiver=key->environment.river((int)(key>>32),(int)key);
@@ -93,10 +94,10 @@ public class DepositSurvey {
         }
         if(placerIndex<placers.size()){
             var pending=placers.get(placerIndex++);var c=pending.candidate();
-            for(Source source:placerSources)if(Math.hypot(pending.anchor().x()-source.x(),pending.anchor().z()-source.z())<source.radius()){
+            for(Source source:placerSources)if(pending.deposit().oreAvailable(source.gold()?0:1)&&Math.hypot(pending.anchor().x()-source.x(),pending.anchor().z()-source.z())<source.radius()){
                 var shape=pending.deposit().settings().shape();
                 canvas.add(new SurveyMapCanvas.Mark(pending.anchor().x(),pending.anchor().z(),shape.x(c.shapeSeed()),
-                        shape.z(c.shapeSeed()^91),angle(c.rotationSeed()),GOLD,c.shapeSeed()));break;
+                        shape.z(c.shapeSeed()^91),angle(c.rotationSeed()),source.gold()?GOLD:IRON,c.shapeSeed()));break;
             }
             return false;
         }
@@ -114,7 +115,17 @@ public class DepositSurvey {
         for(Block rock:rocks)if(state.is(rock))return true;
         return false;
     }
+    private boolean hasMetal(FieldDeposit deposit,String metal){
+        var tag=net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                net.minecraft.resources.Identifier.parse("c:ingots/"+metal));
+        return deposit.providesMetal(tag);
+    }
+    private boolean available(Deposit deposit){
+        return DepositPlan.mineralizationAvailable(deposit);
+    }
     private void inspect(Deposit deposit,long salt,DepositCandidateSampler.Candidate c){
+        boolean mineralized=available(deposit);
+        if(!mineralized&&!(deposit instanceof IntrusionDeposit))return;
         if(deposit instanceof BandedIronFormation bif){
             var host=CratonBlocks.GNEISS.getOrigin().getBaseBlock();var layers=geology.matchingLayersAt(host.defaultBlockState(),c.x(),c.z());
             if(layers.isEmpty()||bif.oreDensity()<=0)return;
@@ -126,27 +137,30 @@ public class DepositSurvey {
             double[] strike=geology.strike(layer,c.x(),c.z());
             canvas.add(new SurveyMapCanvas.Mark(c.x(),c.z(),bif.length()*.5,bif.width()*.5,
                     Math.atan2(strike[1],strike[0]),IRON,c.shapeSeed()));
-            placerSources.add(new Source(c.x(),c.z(),Math.max(bif.length(),bif.width())*.5+60));return;
+            placerSources.add(new Source(c.x(),c.z(),Math.max(bif.length(),bif.width())*.5+60,false));return;
         }
         if(!(deposit instanceof FieldDeposit field))return;
         if(deposit instanceof IntrusionDeposit intrusion){
-            if(intrusion instanceof DioriteIntrusionDeposit diorite){
-                placerSources.add(new Source(c.x(),c.z(),145));
+            if(intrusion instanceof DioriteIntrusionDeposit diorite&&hasMetal(diorite,"gold")&&diorite.isFertile(c)){
+                placerSources.add(new Source(c.x(),c.z(),145,true));
             }
             var parent=intrusion.prepare(c,minY);
-            if(!(intrusion instanceof DioriteIntrusionDeposit diorite)||diorite.isFertile(c))
+            if(mineralized&&(!(intrusion instanceof DioriteIntrusionDeposit diorite)||diorite.isFertile(c)))
                 canvas.add(new SurveyMapCanvas.Mark(c.x(),c.z(),parent.rx,parent.rz,parent.angle,
-                        intrusion instanceof GraniteIntrusionDeposit?TIN_TUNGSTEN:intrusion instanceof GabbroIntrusionDeposit?NICKEL:COPPER,c.shapeSeed()));
+                        intrusion instanceof GraniteIntrusionDeposit?TIN_TUNGSTEN:
+                                intrusion instanceof GabbroIntrusionDeposit&&(hasMetal(intrusion,"nickel")||hasMetal(intrusion,"osmium"))
+                                        ?NICKEL:hasMetal(intrusion,"copper")?COPPER:GOLD,c.shapeSeed()));
             if(intrusion instanceof GraniteIntrusionDeposit)
-                for(var entry:plan.definitions())if(entry.deposit() instanceof HydrothermalVeinDeposit vein)
+                for(var entry:plan.definitions())if(entry.deposit() instanceof HydrothermalVeinDeposit vein&&available(vein))
                     for(var child:vein.attachedTo(parent,entry.salt())){
                         var shape=vein.settings().shape();
                         canvas.add(new SurveyMapCanvas.Mark(child.candidate().x(),child.candidate().z(),
                                 child.geometry().projectedHalfLength(),child.geometry().projectedHalfWidth(),
                                 child.geometry().worldAngle(),PEGMATITE,child.candidate().shapeSeed()));
-                        placerSources.add(new Source(child.candidate().x(),child.candidate().z(),135));
+                        if(hasMetal(vein,"gold"))placerSources.add(new Source(child.candidate().x(),child.candidate().z(),135,true));
                     }
             for(var rule:plan.skarns()){
+                if(!available(rule.deposit()))continue;
                 if(rand01(c.alterationSeed()^rule.salt())>=rule.deposit().placement().frequency())continue;
                 if(!hasLayer(c,CratonBlocks.LIMESTONE.getOrigin().getBaseBlock())&&!hasLayer(c,CratonBlocks.MARBLE.getOrigin().getBaseBlock()))continue;
                 double reach=rule.deposit().settings().shape().y(c.shapeSeed());
@@ -165,10 +179,10 @@ public class DepositSurvey {
             if(layers.isEmpty()||.5+.5*GeologicalNoise.fbm2(c.x(),c.z(),DepositRandomSequences.VMS.salt()^0x564D5350L,.0019,4)<.46)return;
             int layer=layers.get(index(c.verticalSeed(),layers.size()));
             if(!VmsDeposit.isVolcanicHorizon(geology,layer,c.x(),c.z()))return;
-            add(field,c,COPPER);placerSources.add(new Source(c.x(),c.z(),105));
+            add(field,c,COPPER);placerSources.add(new Source(c.x(),c.z(),105,false));
         }else if(deposit instanceof EpithermalDeposit){
             if(atCenter(field,c,Blocks.ANDESITE,CratonBlocks.RHYOLITE.getOrigin().getBaseBlock())){
-                add(field,c,GOLD);placerSources.add(new Source(c.x(),c.z(),120));
+                add(field,c,GOLD);if(hasMetal(field,"gold"))placerSources.add(new Source(c.x(),c.z(),120,true));
             }
         }else if(deposit instanceof JadeititeDeposit){
             if(atCenter(field,c,CratonBlocks.ECLOGITE.getOrigin().getBaseBlock(),CratonBlocks.SCHIST.getOrigin().getBaseBlock()))add(field,c,GEM);

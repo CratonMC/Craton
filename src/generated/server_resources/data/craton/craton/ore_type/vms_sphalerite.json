@@ -1,4 +1,7 @@
 {
+  "required_ingot_tags": [
+    "c:ingots/zinc"
+  ],
   "variants": [
     {
       "hosts": "minecraft:tuff",

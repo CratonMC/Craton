@@ -31,7 +31,9 @@ public class CBlockTagProvider extends BlockTagsProvider {
             for (BlockFamily blockFamily : collection.getAll()) {
                 addStoneFamilyTags(blockFamily);
             }
-            tag(BlockTags.STONE_ORE_REPLACEABLES).add(collection.getOrigin().getBaseBlock());
+            tag(collection == CratonBlocks.ECLOGITE
+                    ? BlockTags.DEEPSLATE_ORE_REPLACEABLES
+                    : BlockTags.STONE_ORE_REPLACEABLES).add(collection.getOrigin().getBaseBlock());
         }
         for (var holder : CratonBlocks.ORE_BLOCKS) {
             Block ore = holder.value();

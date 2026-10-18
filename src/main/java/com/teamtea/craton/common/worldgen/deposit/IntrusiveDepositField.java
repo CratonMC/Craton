@@ -72,7 +72,8 @@ public class IntrusiveDepositField {
     }
 
     static BlockState applyIntrusiveOre(DepositGenerationContext ctx,BlockState host,int y,IntrusionResult r){
-        return ((IntrusionDeposit)field(ctx,r.candidate())).placeOre(ctx,host,y,r);
+        IntrusionDeposit deposit=(IntrusionDeposit)field(ctx,r.candidate());
+        return deposit.mineralizationAvailable()?deposit.placeOre(ctx,host,y,r):host;
     }
 
 }

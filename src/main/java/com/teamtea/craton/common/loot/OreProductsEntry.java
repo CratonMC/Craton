@@ -6,7 +6,6 @@ import com.teamtea.craton.common.block.OreBlock;
 import com.teamtea.craton.common.registry.CratonDataMaps;
 import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.entries.SingleEntryContainerBase;
@@ -15,7 +14,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /** Emits all data-map products so ordinary loot modifiers apply to every resulting stack. */
@@ -28,12 +26,11 @@ public class OreProductsEntry extends SingleEntryContainerBase {
     }
     @Override public MapCodec<OreProductsEntry> codec() { return CODEC; }
 
-//    @Override public Set<ContextKey<?>> getReferencedContextParams() { return Set.of(LootContextParams.BLOCK_STATE); }
 
     @Override public void createItemStack(Consumer<ItemStack> output, LootContext context) {
         var state = context.getOptional(LootContextParams.BLOCK_STATE);
         if (state != null && state.getBlock() instanceof OreBlock ore)
-            roll(ore.oreDrops(), context.getRandom(), output);
+            roll(ore.availableDrops(), context.getRandom(), output);
     }
     public static Builder<?> products() {
         return simpleBuilder((weight, quality, condition, modifier) -> new OreProductsEntry(condition, modifier));

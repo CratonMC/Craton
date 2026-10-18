@@ -70,6 +70,8 @@ public class CratonContents {
             profiles = Map.copyOf(profiles);
         }
 
+        public DepositPlan depositPlan() { return depositPlan.active(); }
+
         private Optional<Holder<GeologyRegion>> classify(Climate.TargetPoint sample) {
             long pv = GeologyRegion.peaksAndValleys(sample.weirdness());
             for (Holder<GeologyRegion> region : regions) {

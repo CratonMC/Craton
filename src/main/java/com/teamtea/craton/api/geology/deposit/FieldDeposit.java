@@ -13,6 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import com.teamtea.craton.common.loot.OreAvailability;
 import java.util.function.Function;
 
 /** Common immutable state for typed, continuous deposit definitions. */
@@ -34,6 +39,47 @@ public abstract class FieldDeposit extends AbstractDeposit {
 
     public Identifier type() { return type; }
     public Settings settings() { return settings; }
+    private record Availability(Object version,boolean enabled,boolean[] slots,Set<TagKey<Item>> metals){}
+    private volatile Availability cachedAvailability;
+    private Availability availability(){
+        Object version=OreAvailability.version();
+        Availability cached=cachedAvailability;
+        if(cached!=null&&cached.version()==version)return cached;
+        boolean enabled=false;
+        boolean[] slots=new boolean[settings.ores().size()];
+        var metals=new HashSet<TagKey<Item>>();
+        for(int i=0;i<settings.ores().size();i++){
+            var ore=settings.ores().get(i);
+            slots[i]=ore.value().available();
+            enabled|=slots[i];
+            if(slots[i])for(var tag:ore.value().requiredIngotTags())
+                if(OreType.hasIngot(tag))metals.add(tag);
+        }
+        Availability resolved=new Availability(version,enabled,slots,Set.copyOf(metals));
+        cachedAvailability=resolved;
+        return resolved;
+    }
+    public boolean mineralizationAvailable() { return availability().enabled(); }
+    public boolean oreAvailable(int index){
+        boolean[] slots=availability().slots();
+        return index>=0&&index<slots.length&&slots[index];
+    }
+    /** Normalize only the minerals participating in this local mixture. No per-voxel arrays. */
+    public int selectOre(double roll,double first,double second,double third){
+        boolean[] slots=availability().slots();
+        double a=slots.length>0&&slots[0]?Math.max(0,first):0;
+        double b=slots.length>1&&slots[1]?Math.max(0,second):0;
+        double c=slots.length>2&&slots[2]?Math.max(0,third):0;
+        double total=a+b+c;
+        if(total<=0)return -1;
+        double value=Math.max(0,Math.min(1,roll))*total;
+        if(a>0&&value<a)return 0;
+        if(b>0&&value<a+b)return 1;
+        return c>0?2:b>0?1:0;
+    }
+    public boolean providesMetal(TagKey<Item> metal) {
+        return availability().metals().contains(metal);
+    }
     @Override public DepositRandomSequences sequence(){return sequence;}
 
     private static Deposit.Placement resolvePlacement(Settings settings,double requiredReach) {

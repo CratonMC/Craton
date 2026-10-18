@@ -2,6 +2,7 @@ package com.teamtea.craton.common.worldgen.deposit;
 
 import com.teamtea.craton.api.geology.deposit.*;
 import net.minecraft.core.Holder;
+import com.teamtea.craton.common.loot.OreAvailability;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,10 @@ import java.util.List;
  */
 public class DepositPlan {
     public static final DepositPlan EMPTY=new DepositPlan(List.of());
+    private final List<Holder<Deposit>> sources;
+    private final boolean availabilityResolved;
+    private record ActivePlan(Object version,DepositPlan plan){}
+    private volatile ActivePlan activePlan;
     final List<Definition> definitions;
     final List<SkarnRule> skarns;
     final double maximumPlacerDepth,maximumSkarnReach,maximumPeatDepth;
@@ -28,11 +33,36 @@ public class DepositPlan {
         return new DepositPlan(List.copyOf(deposits));
     }
 
+    /** Resolve after data maps and tags are available; keep original IDs and salts. */
+    public DepositPlan active(){
+        if(availabilityResolved||sources.isEmpty())return this;
+        Object version=OreAvailability.version();
+        ActivePlan cached=activePlan;
+        if(cached!=null&&cached.version()==version)return cached.plan();
+        DepositPlan resolved=new DepositPlan(sources,true);
+        activePlan=new ActivePlan(version,resolved);
+        return resolved;
+    }
+
+    public static boolean mineralizationAvailable(Deposit deposit){
+        if(deposit instanceof BandedIronFormation bif)return bif.ore().value().available();
+        return !(deposit instanceof FieldDeposit field)||field.mineralizationAvailable();
+    }
+
     private DepositPlan(List<? extends Holder<Deposit>> deposits){
+        this(deposits,false);
+    }
+
+    private DepositPlan(List<? extends Holder<Deposit>> deposits,boolean availabilityResolved){
+        this.sources=List.copyOf(deposits);
+        this.availabilityResolved=availabilityResolved;
         List<Definition> entries=new ArrayList<>();
         List<SkarnRule> contacts=new ArrayList<>();
         for(Holder<Deposit> holder:deposits){
             Deposit deposit=holder.value();
+            // Intrusions and contact alteration retain their geological bodies without ores.
+            if(availabilityResolved&&!(deposit instanceof IntrusionDeposit)&&!(deposit instanceof SkarnDeposit)
+                    &&!mineralizationAvailable(deposit))continue;
             long salt=DepositCandidateSampler.salt(holder.unwrapKey().orElseThrow().identifier().toString());
             entries.add(new Definition(deposit,salt,deposit.placement().reach()));
             if(deposit instanceof SkarnDeposit skarn && skarn.settings().placement().frequency()>0) contacts.add(new SkarnRule(skarn,salt));

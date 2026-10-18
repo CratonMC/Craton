@@ -73,48 +73,48 @@ public class OreTypeRegistry {
         Block jadeitite=CratonBlocks.JADEITITE.getOrigin().getBaseBlock();
 
         register(context,BIF_IRON,List.of(
-                variant(gneiss,CratonBlocks.banded_iron_gneiss_ore)));
+                variant(gneiss,CratonBlocks.banded_iron_gneiss_ore)), "c:ingots/iron");
         register(context,LIMESTONE_COAL,CratonBlocks.limestone_coal_ore,limestone);
-        register(context,SEDIMENTARY_COPPER,CratonBlocks.sedimentary_copper_ore,limestone);
+        register(context,SEDIMENTARY_COPPER,List.of("c:ingots/copper"),CratonBlocks.sedimentary_copper_ore,limestone);
         register(context,METASOMATIC_LAPIS,CratonBlocks.metasomatic_lapis_ore,marble);
-        register(context,GABBRO_PGE,CratonBlocks.magmatic_pge_ore,gabbro);
-        register(context,GABBRO_NI_CU,CratonBlocks.magmatic_ni_cu_ore,gabbro);
+        register(context,GABBRO_PGE,List.of("c:ingots/osmium"),CratonBlocks.magmatic_pge_ore,gabbro);
+        register(context,GABBRO_NI_CU,List.of("c:ingots/nickel", "c:ingots/copper"),CratonBlocks.magmatic_ni_cu_ore,gabbro);
         register(context,PEGMATITE_QUARTZ,CratonBlocks.pegmatite_quartz_ore,pegmatite);
         register(context,PEGMATITE_EMERALD,CratonBlocks.pegmatite_emerald_ore,pegmatite);
-        register(context,QUARTZ_VEIN_GOLD,CratonBlocks.quartz_vein_gold_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
-        register(context,QUARTZ_VEIN_PYRITE,CratonBlocks.quartz_vein_pyrite_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
+        register(context,QUARTZ_VEIN_GOLD,List.of("c:ingots/gold"),CratonBlocks.quartz_vein_gold_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
+        register(context,QUARTZ_VEIN_PYRITE,List.of("c:ingots/iron"),CratonBlocks.quartz_vein_pyrite_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
         register(context,HYDROTHERMAL_FLUORITE,CratonBlocks.fluorite_vein_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
-        register(context,SANDSTONE_URANIUM,CratonBlocks.sedimentary_uranium_ore,arkose);
-        register(context,SHALE_PB_ZN,CratonBlocks.sedimentary_pb_zn_ore,shale);
+        register(context,SANDSTONE_URANIUM,List.of("c:ingots/uranium"),CratonBlocks.sedimentary_uranium_ore,arkose);
+        register(context,SHALE_PB_ZN,List.of("c:ingots/lead", "c:ingots/zinc"),CratonBlocks.sedimentary_pb_zn_ore,shale);
         register(context,SHALE_COAL,CratonBlocks.shale_coal_ore,shale);
         register(context,DEEP_HYDROTHERMAL_REDSTONE,CratonBlocks.deep_hydrothermal_redstone_ore,eclogite);
-        register(context,GRANITE_CASSITERITE,CratonBlocks.granite_cassiterite_ore,Blocks.GRANITE);
-        register(context,GRANITE_WOLFRAMITE,CratonBlocks.granite_wolframite_ore,Blocks.GRANITE);
-        register(context,PORPHYRY_GOLD,CratonBlocks.porphyry_gold_ore,Blocks.DIORITE);
-        register(context,PORPHYRY_COPPER,CratonBlocks.porphyry_copper_ore,Blocks.DIORITE);
-        register(context,PORPHYRY_SULFIDE,CratonBlocks.porphyry_sulfide_ore,Blocks.DIORITE);
-        register(context,EPITHERMAL_AU_AG,CratonBlocks.epithermal_au_ag_ore,Blocks.ANDESITE,rhyolite,Blocks.QUARTZ_BLOCK);
-        register(context,VMS_CHALCOPYRITE,CratonBlocks.vms_copper_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
-        register(context,VMS_SPHALERITE,CratonBlocks.vms_zinc_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
-        register(context,VMS_GALENA,CratonBlocks.vms_pb_ag_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
-        register(context,BASALT_BAUXITE,CratonBlocks.bauxite_ore,Blocks.BASALT);
+        register(context,GRANITE_CASSITERITE,List.of("c:ingots/tin"),CratonBlocks.granite_cassiterite_ore,Blocks.GRANITE);
+        register(context,GRANITE_WOLFRAMITE,List.of("c:ingots/tungsten"),CratonBlocks.granite_wolframite_ore,Blocks.GRANITE);
+        register(context,PORPHYRY_GOLD,List.of("c:ingots/gold"),CratonBlocks.porphyry_gold_ore,Blocks.DIORITE);
+        register(context,PORPHYRY_COPPER,List.of("c:ingots/copper"),CratonBlocks.porphyry_copper_ore,Blocks.DIORITE);
+        register(context,PORPHYRY_SULFIDE,List.of("c:ingots/iron"),CratonBlocks.porphyry_sulfide_ore,Blocks.DIORITE);
+        register(context,EPITHERMAL_AU_AG,List.of("c:ingots/gold", "c:ingots/silver"),CratonBlocks.epithermal_au_ag_ore,Blocks.ANDESITE,rhyolite,Blocks.QUARTZ_BLOCK);
+        register(context,VMS_CHALCOPYRITE,List.of("c:ingots/copper"),CratonBlocks.vms_copper_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
+        register(context,VMS_SPHALERITE,List.of("c:ingots/zinc"),CratonBlocks.vms_zinc_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
+        register(context,VMS_GALENA,List.of("c:ingots/lead"),CratonBlocks.vms_pb_ag_ore,Blocks.TUFF,Blocks.BASALT,Blocks.ANDESITE,gabbro);
+        register(context,BASALT_BAUXITE,List.of("c:ingots/aluminum"),CratonBlocks.bauxite_ore,Blocks.BASALT);
         register(context,PEAT,CratonBlocks.peat,Blocks.MUD,Blocks.DIRT,Blocks.GRASS_BLOCK);
         register(context,PLACER_GOLD,List.of(
                 variant(Blocks.GRAVEL,CratonBlocks.auriferous_gravel),
-                variant(Blocks.SAND,CratonBlocks.auriferous_sand)));
+                variant(Blocks.SAND,CratonBlocks.auriferous_sand)), "c:ingots/gold");
         register(context,PLACER_IRON,List.of(
                 variant(Blocks.GRAVEL,CratonBlocks.ferriferous_gravel),
                 variant(Blocks.RED_SAND,CratonBlocks.ferriferous_sand),
-                variant(Blocks.SAND,CratonBlocks.ferriferous_sand)));
+                variant(Blocks.SAND,CratonBlocks.ferriferous_sand)), "c:ingots/iron");
         register(context,KIMBERLITE_DIAMOND,CratonBlocks.diamond_bearing_kimberlite,kimberlite);
         register(context,KIMBERLITE_DIAMOND_RICH,CratonBlocks.diamond_rich_kimberlite,
                 kimberlite);
-        register(context,SKARN_IRON,CratonBlocks.skarn_iron_ore,skarn);
-        register(context,SKARN_COPPER,CratonBlocks.skarn_copper_ore,skarn);
-        register(context,SKARN_W_SN,CratonBlocks.skarn_w_sn_ore,skarn);
-        register(context,SKARN_PB_ZN_AG,CratonBlocks.skarn_pb_zn_ore,skarn);
-        register(context,SKARN_GOLD,CratonBlocks.skarn_gold_ore,skarn);
-        register(context,METEORITIC_IRON,CratonBlocks.meteoric_iron_ore,CratonBlocks.METEORITE.getOrigin().getBaseBlock());
+        register(context,SKARN_IRON,List.of("c:ingots/iron"),CratonBlocks.skarn_iron_ore,skarn);
+        register(context,SKARN_COPPER,List.of("c:ingots/copper"),CratonBlocks.skarn_copper_ore,skarn);
+        register(context,SKARN_W_SN,List.of("c:ingots/tungsten", "c:ingots/tin"),CratonBlocks.skarn_w_sn_ore,skarn);
+        register(context,SKARN_PB_ZN_AG,List.of("c:ingots/lead", "c:ingots/zinc"),CratonBlocks.skarn_pb_zn_ore,skarn);
+        register(context,SKARN_GOLD,List.of("c:ingots/gold"),CratonBlocks.skarn_gold_ore,skarn);
+        register(context,METEORITIC_IRON,List.of("c:ingots/iron"),CratonBlocks.meteoric_iron_ore,CratonBlocks.METEORITE.getOrigin().getBaseBlock());
         register(context,JADEITITE_JADE,CratonBlocks.suspicious_jadeitite,jadeitite);
     }
 
@@ -124,13 +124,21 @@ public class OreTypeRegistry {
 
     private static void register(BootstrapContext<OreType> context,ResourceKey<OreType> key,
                                  Holder<Block> result,Block... hosts){
-        List<OreType.Variant> variants=new ArrayList<>(hosts.length);
-        for(Block host:hosts) variants.add(variant(host,result));
-        register(context,key,variants);
+        register(context,key,List.of(),result,hosts);
     }
 
     private static void register(BootstrapContext<OreType> context,ResourceKey<OreType> key,
-                                 List<OreType.Variant> variants){
-        context.register(key,new OreType(List.copyOf(variants)));
+                                 List<String> requiredIngotTags,Holder<Block> result,Block... hosts){
+        List<OreType.Variant> variants=new ArrayList<>(hosts.length);
+        for(Block host:hosts) variants.add(variant(host,result));
+        register(context,key,variants,requiredIngotTags.toArray(String[]::new));
+    }
+
+    private static void register(BootstrapContext<OreType> context,ResourceKey<OreType> key,
+                                 List<OreType.Variant> variants,String... requiredIngotTags){
+        var tags=java.util.Arrays.stream(requiredIngotTags)
+                .map(id -> net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM,
+                        net.minecraft.resources.Identifier.parse(id))).toList();
+        context.register(key,new OreType(List.copyOf(variants),tags));
     }
 }

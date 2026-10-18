@@ -46,24 +46,19 @@ public class SkarnDeposit extends FieldDeposit {
         if(settings().ores().size()>5&&intrusion.kind()==0
                 &&rand01(c.alterationSeed()^salt^0x4C41504953L)<.40&&broad>-.03){
             BlockState marble=com.teamtea.craton.common.registry.CratonBlocks.MARBLE.getOrigin().getBaseBlock().defaultBlockState();
-            if(grade>.53&&detail>-.04)return abundantOre(this,ctx,c,y,5,marble);
+            if(grade>.53&&detail>-.04&&oreAvailable(5))return abundantOre(this,ctx,c,y,5,marble);
             return marble;
         }
 
         BlockState altered=settings().rock();
-        if(grade<.62) return altered;
+        int first=intrusion.kind()==0?0:intrusion.kind()==1?2:4;
+        int second=intrusion.kind()==0?1:intrusion.kind()==1?3:2;
+        if(grade<.62||!oreAvailable(first)&&!oreAvailable(second)) return altered;
         double mix=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed()^salt,.115);
-        return switch(intrusion.kind()){
-            case 0 -> mix<.50
-                    ?abundantOre(this,ctx,c,y,0,altered)
-                    :abundantOre(this,ctx,c,y,1,altered);
-            case 1 -> mix<.51
-                    ?abundantOre(this,ctx,c,y,2,altered)
-                    :abundantOre(this,ctx,c,y,3,altered);
-            default -> mix<.58
-                    ?abundantOre(this,ctx,c,y,4,altered)
-                    :abundantOre(this,ctx,c,y,2,altered);
-        };
+        double threshold=intrusion.kind()==0?.50:intrusion.kind()==1?.51:.58;
+        int mineral=mix<threshold?first:second;
+        if(!oreAvailable(mineral))mineral=mineral==first?second:first;
+        return abundantOre(this,ctx,c,y,mineral,altered);
     }
 
 }
