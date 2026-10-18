@@ -72,7 +72,10 @@ public class PlacerDeposit extends OrdinaryDeposit {
         double grade=.5+.5*GeologicalNoise.fbm2(ctx.x(),ctx.z(),c.gradeSeed(),.018,2);
         double density=(.025+.275*Math.sqrt(strength))*scale*(.65+.35*grade)*placement().frequency();
         if(GeologicalNoise.hashUnit(ctx.x(),y,ctx.z(),c.occupancySeed())>=density)return null;
-        return ore(this,source.gold()>=source.iron()?0:1,state);
+        // Select the mineral independently of occupancy so overlapping sources can mix.
+        double goldShare=source.gold()/(source.gold()+source.iron());
+        double mineral=GeologicalNoise.hashUnit(ctx.x(),y,ctx.z(),c.occupancySeed()^0x504C414345525459L);
+        return ore(this,mineral<goldShare?0:1,state);
     }
 
     public SourceStrength primarySourceStrength(DepositGenerationContext ctx){
