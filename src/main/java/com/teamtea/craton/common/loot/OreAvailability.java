@@ -37,7 +37,7 @@ public class OreAvailability {
             for (var product : bonus) {
                 int weight = Math.max(1, (int) Math.round(product.chance() * 10000));
                 main.add(new Product(product.item(), weight, product.minCount(), product.maxCount(),
-                        1.0, true, product.requiredIngotTag()));
+                        1.0, true, product.requiredIngotTag(), product.fortuneScale(), product.luckScale()));
             }
             bonus.clear();
         }

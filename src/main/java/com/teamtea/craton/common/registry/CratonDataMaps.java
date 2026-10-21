@@ -15,7 +15,25 @@ import net.minecraft.tags.TagKey;
 
 public class CratonDataMaps {
     /** Main products use weight; bonus products each use an independent chance. */
-    public record Product(Item item, int weight, int minCount, int maxCount, double chance, boolean enabled, Optional<TagKey<Item>> requiredIngotTag) {
+    public record Product(Item item, int weight, int minCount, int maxCount, double chance, boolean enabled, Optional<TagKey<Item>> requiredIngotTag, double fortuneScale, double luckScale, double fortuneChanceScale) {
+        // Defaults for omitted fields: Fortune amount 1.0, Luck amount 0.0,
+        // bonus trigger Fortune sensitivity 0.5. The chance sensitivity is
+        // only read for bonusDrops; regular drops ignore it.
+        // Explicit fortune_chance_scale = 0 disables chance scaling.
+        // Source compatibility for existing product registrations.
+        public Product(Item item, int weight, int minCount, int maxCount, double chance,
+                       boolean enabled, Optional<TagKey<Item>> requiredIngotTag) {
+            this(item, weight, minCount, maxCount, chance, enabled, requiredIngotTag, 1.0, 0.0, 0.5);
+        }
+
+        // Compatibility with the previous per-product Fortune/Luck constructor.
+        public Product(Item item, int weight, int minCount, int maxCount, double chance,
+                       boolean enabled, Optional<TagKey<Item>> requiredIngotTag,
+                       double fortuneScale, double luckScale) {
+            this(item, weight, minCount, maxCount, chance, enabled, requiredIngotTag,
+                    fortuneScale, luckScale, 0.5);
+        }
+
         public static final Codec<Product> CODEC = RecordCodecBuilder.<Product>create(instance -> instance.group(
                 BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(Product::item),
                 Codec.intRange(1, 10000).optionalFieldOf("weight", 1).forGetter(Product::weight),
@@ -23,9 +41,14 @@ public class CratonDataMaps {
                 Codec.intRange(1, 64).optionalFieldOf("max_count", 1).forGetter(Product::maxCount),
                 Codec.doubleRange(0, 1).optionalFieldOf("chance", 1.0).forGetter(Product::chance),
                 Codec.BOOL.optionalFieldOf("enabled", true).forGetter(Product::enabled),
-                TagKey.codec(Registries.ITEM).optionalFieldOf("required_ingot_tag").forGetter(Product::requiredIngotTag)
+                TagKey.codec(Registries.ITEM).optionalFieldOf("required_ingot_tag").forGetter(Product::requiredIngotTag),
+                Codec.doubleRange(0.0, 100.0).optionalFieldOf("fortune_scale", 1.0).forGetter(Product::fortuneScale),
+                Codec.doubleRange(0.0, 100.0).optionalFieldOf("luck_scale", 0.0).forGetter(Product::luckScale),
+                Codec.doubleRange(0.0, 100.0).optionalFieldOf("fortune_chance_scale", 0.5).forGetter(Product::fortuneChanceScale)
         ).apply(instance, Product::new)).validate(product -> product.minCount() <= product.maxCount()
                 && Double.isFinite(product.chance())
+                && Double.isFinite(product.fortuneScale()) && Double.isFinite(product.luckScale())
+                && Double.isFinite(product.fortuneChanceScale())
                 ? com.mojang.serialization.DataResult.success(product)
                 : com.mojang.serialization.DataResult.error(() -> "Invalid ore product count or chance"));
     }

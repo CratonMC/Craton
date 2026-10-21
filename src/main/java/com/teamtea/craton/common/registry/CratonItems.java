@@ -24,10 +24,9 @@ public class CratonItems {
     public static final Holder<Item> RAW_TUNGSTEN = ITEMS.registerSimpleItem("raw_tungsten");
     public static final Holder<Item> RAW_URANIUM = ITEMS.registerSimpleItem("raw_uranium");
     public static final Holder<Item> RAW_OSMIUM = ITEMS.registerSimpleItem("raw_osmium");
-    public static final Holder<Item> RAW_MOLYBDENUM = ITEMS.registerSimpleItem("raw_molybdenum");
     public static final Holder<Item> FLUORITE = ITEMS.registerSimpleItem("fluorite");
     public static final Holder<Item> BAUXITE = ITEMS.registerSimpleItem("bauxite");
-    public static final Holder<Item> DIAMOND_FRAGMENT = ITEMS.registerSimpleItem("diamond_fragment");
+
     public static final Holder<Item> METEORIC_IRON = ITEMS.registerSimpleItem("meteoric_iron");
     public static final Holder<Item> GREEN_JADE = ITEMS.registerSimpleItem("green_jade");
     public static final Holder<Item> WHITE_JADE = ITEMS.registerSimpleItem("white_jade");
@@ -36,8 +35,7 @@ public class CratonItems {
             RAW_HEMATITE, RAW_MAGNETITE, RAW_IRON_SULFIDE, RAW_COPPER_OXIDE,
             RAW_COPPER_SULFIDE, RAW_SILVER, RAW_NICKEL, RAW_LEAD,
             RAW_ZINC, RAW_TIN, RAW_TUNGSTEN, RAW_URANIUM,
-            RAW_OSMIUM, RAW_MOLYBDENUM, FLUORITE, BAUXITE,
-            DIAMOND_FRAGMENT, METEORIC_IRON, GREEN_JADE, WHITE_JADE,
+            METEORIC_IRON, GREEN_JADE, WHITE_JADE,
             LAVENDER_JADE);
 
     public static void addChinese(BiConsumer<String,String> add) {
@@ -73,10 +71,8 @@ public class CratonItems {
         add.accept("item.craton.raw_tungsten", "钨原矿");
         add.accept("item.craton.raw_uranium", "铀原矿");
         add.accept("item.craton.raw_osmium", "锇原矿");
-        add.accept("item.craton.raw_molybdenum", "钼原矿");
         add.accept("item.craton.fluorite", "萤石");
         add.accept("item.craton.bauxite", "铝土");
-        add.accept("item.craton.diamond_fragment", "碎钻");
         add.accept("item.craton.meteoric_iron", "陨铁");
         add.accept("item.craton.green_jade", "绿色翡翠");
         add.accept("item.craton.white_jade", "白色翡翠");
@@ -115,10 +111,8 @@ public class CratonItems {
         add.accept("item.craton.raw_tungsten", "Raw Tungsten");
         add.accept("item.craton.raw_uranium", "Raw Uranium");
         add.accept("item.craton.raw_osmium", "Raw Osmium");
-        add.accept("item.craton.raw_molybdenum", "Raw Molybdenum");
         add.accept("item.craton.fluorite", "Fluorite");
         add.accept("item.craton.bauxite", "Bauxite");
-        add.accept("item.craton.diamond_fragment", "Diamond Fragment");
         add.accept("item.craton.meteoric_iron", "Meteoric Iron");
         add.accept("item.craton.green_jade", "Green Jade");
         add.accept("item.craton.white_jade", "White Jade");

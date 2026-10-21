@@ -83,7 +83,7 @@ public class OreTypeRegistry {
         register(context,PEGMATITE_EMERALD,CratonBlocks.pegmatite_emerald_ore,pegmatite);
         register(context,QUARTZ_VEIN_GOLD,List.of("c:ingots/gold"),CratonBlocks.quartz_vein_gold_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
         register(context,QUARTZ_VEIN_PYRITE,List.of("c:ingots/iron"),CratonBlocks.quartz_vein_pyrite_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
-        register(context,HYDROTHERMAL_FLUORITE,CratonBlocks.fluorite_vein_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
+        register(context,HYDROTHERMAL_FLUORITE,List.of("c:gems/fluorite"),CratonBlocks.fluorite_vein_ore,Blocks.GRANITE,pegmatite,Blocks.QUARTZ_BLOCK);
         register(context,SANDSTONE_URANIUM,List.of("c:ingots/uranium"),CratonBlocks.sedimentary_uranium_ore,arkose);
         register(context,SHALE_PB_ZN,List.of("c:ingots/lead", "c:ingots/zinc"),CratonBlocks.sedimentary_pb_zn_ore,shale);
         register(context,SHALE_COAL,CratonBlocks.shale_coal_ore,shale);

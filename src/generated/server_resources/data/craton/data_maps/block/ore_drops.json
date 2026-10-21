@@ -62,7 +62,8 @@
     "craton:fluorite_vein_ore": {
       "drops": [
         {
-          "item": "craton:fluorite"
+          "item": "craton:fluorite",
+          "required_ingot_tag": "c:gems/fluorite"
         }
       ]
     },
@@ -147,14 +148,18 @@
     "craton:diamond_bearing_kimberlite": {
       "drops": [
         {
-          "item": "craton:diamond_fragment"
+          "item": "minecraft:diamond",
+          "fortune_scale": 0.5,
+          "chance": 0.35
         }
       ]
     },
     "craton:diamond_rich_kimberlite": {
       "drops": [
         {
-          "item": "minecraft:diamond"
+          "item": "minecraft:diamond",
+          "fortune_scale": 1.0,
+          "chance": 0.85
         }
       ]
     },
@@ -176,7 +181,8 @@
       "bonus_drops": [
         {
           "item": "minecraft:quartz",
-          "chance": 0.2
+          "chance": 0.25,
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -190,12 +196,15 @@
       "bonus_drops": [
         {
           "item": "minecraft:raw_gold",
-          "chance": 0.05,
-          "required_ingot_tag": "c:ingots/gold"
+          "chance": 0.1,
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.75,
+          "fortune_chance_scale": 0.3
         },
         {
           "item": "minecraft:quartz",
-          "chance": 0.2
+          "chance": 0.25,
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -209,13 +218,16 @@
       "bonus_drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "chance": 0.05,
-          "required_ingot_tag": "c:ingots/copper"
+          "chance": 0.2,
+          "required_ingot_tag": "c:ingots/copper",
+          "fortune_chance_scale": 0.5
         },
         {
           "item": "minecraft:raw_gold",
-          "chance": 0.01,
-          "required_ingot_tag": "c:ingots/gold"
+          "chance": 0.1,
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.75,
+          "fortune_chance_scale": 0.3
         }
       ]
     },
@@ -229,13 +241,9 @@
       "bonus_drops": [
         {
           "item": "minecraft:raw_gold",
-          "chance": 0.03,
-          "required_ingot_tag": "c:ingots/gold"
-        },
-        {
-          "item": "craton:raw_molybdenum",
-          "chance": 0.05,
-          "required_ingot_tag": "c:ingots/molybdenum"
+          "chance": 0.15,
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_chance_scale": 0.3
         }
       ]
     },
@@ -249,8 +257,9 @@
       "bonus_drops": [
         {
           "item": "craton:raw_zinc",
-          "chance": 0.05,
-          "required_ingot_tag": "c:ingots/zinc"
+          "chance": 0.2,
+          "required_ingot_tag": "c:ingots/zinc",
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -264,8 +273,10 @@
       "bonus_drops": [
         {
           "item": "minecraft:raw_gold",
-          "chance": 0.03,
-          "required_ingot_tag": "c:ingots/gold"
+          "chance": 0.1,
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.75,
+          "fortune_chance_scale": 0.3
         }
       ]
     },
@@ -280,7 +291,8 @@
         {
           "item": "craton:raw_copper_sulfide",
           "chance": 0.25,
-          "required_ingot_tag": "c:ingots/copper"
+          "required_ingot_tag": "c:ingots/copper",
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -294,8 +306,9 @@
       "bonus_drops": [
         {
           "item": "craton:raw_copper_sulfide",
-          "chance": 0.1,
-          "required_ingot_tag": "c:ingots/copper"
+          "chance": 0.2,
+          "required_ingot_tag": "c:ingots/copper",
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -331,8 +344,9 @@
       "bonus_drops": [
         {
           "item": "craton:raw_silver",
-          "chance": 0.1,
-          "required_ingot_tag": "c:ingots/silver"
+          "chance": 0.2,
+          "required_ingot_tag": "c:ingots/silver",
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -346,8 +360,9 @@
       "bonus_drops": [
         {
           "item": "craton:raw_lead",
-          "chance": 0.05,
-          "required_ingot_tag": "c:ingots/lead"
+          "chance": 0.2,
+          "required_ingot_tag": "c:ingots/lead",
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -355,14 +370,16 @@
       "drops": [
         {
           "item": "craton:raw_osmium",
-          "required_ingot_tag": "c:ingots/osmium"
+          "required_ingot_tag": "c:ingots/osmium",
+          "fortune_scale": 0.5
         }
       ],
       "bonus_drops": [
         {
           "item": "craton:raw_nickel",
-          "chance": 0.05,
-          "required_ingot_tag": "c:ingots/nickel"
+          "chance": 0.2,
+          "required_ingot_tag": "c:ingots/nickel",
+          "fortune_chance_scale": 0.5
         }
       ]
     },
@@ -396,8 +413,9 @@
       "bonus_drops": [
         {
           "item": "craton:raw_silver",
-          "chance": 0.05,
-          "required_ingot_tag": "c:ingots/silver"
+          "chance": 0.15,
+          "required_ingot_tag": "c:ingots/silver",
+          "fortune_chance_scale": 0.5
         }
       ]
     },
