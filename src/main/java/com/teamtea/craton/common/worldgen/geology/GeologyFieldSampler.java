@@ -199,6 +199,58 @@ public class GeologyFieldSampler {
         return rawBelowCap(column,y);
     }
 
+    /** Return the exact registered horizon selected by the same contact/cap logic as sample(). */
+    public Holder<GeologyLayer> sampleLayer(int x, int y, int z) {
+        if (layers.isEmpty()) throw new IllegalArgumentException("Geology profile has no layers");
+        Column column = column(x, z);
+        if (useCap(column, x, y, z)) return capLayer(column, x, z);
+        int[] active = column.activeLayers();
+        double center = y + .5;
+        int nearest = -1;
+        double nearestAbs = Double.MAX_VALUE, nearestDistance = 0;
+        int lo = 0, hi = Math.max(0, active.length - 1);
+        while (lo < hi) {
+            int mid = (lo + hi) >>> 1;
+            if (column.interfaces()[active[mid + 1]] > center) lo = mid + 1;
+            else hi = mid;
+        }
+        for (int j = Math.max(0, lo - 1); j <= lo && j < active.length - 1; j++) {
+            double d = center - column.interfaces()[active[j + 1]];
+            if (Math.abs(d) < nearestAbs) {
+                nearestAbs = Math.abs(d); nearest = j; nearestDistance = d;
+            }
+        }
+        if (nearest >= 0 && nearestAbs <= column.contactWidths()[nearest]) {
+            double pUpper = GeologicalNoise.smoothstep(-column.contactWidths()[nearest],
+                    column.contactWidths()[nearest], nearestDistance);
+            double occupancy = column.contactOccupancies()[nearest].sample(x, y, z);
+            return layers.get(occupancy < pUpper ? active[nearest] : active[nearest + 1]);
+        }
+        for (int j = active.length - 1; j >= 0; j--) {
+            int i = active[j];
+            if (center < column.interfaces()[i]) return layers.get(i);
+        }
+        return active.length == 0 ? layers.get(0) : layers.get(active[0]);
+    }
+
+    /** Exact source horizon of the upper cap, including blended geological profiles. */
+    private Holder<GeologyLayer> capLayer(Column column, int x, int z) {
+        if (transition == null) return layers.get(0);
+        for (int source = 0; source < sources.length; source++) {
+            if (column.weights()[source] == 1) return sources[source].layers.get(0);
+        }
+        double pick = GeologicalNoise.clamp(.5 + 2.0 * capRockNoise.sample(x, 0, z), 0, 1);
+        double sum = 0;
+        Holder<GeologyLayer> fallback = layers.get(0);
+        for (int source = 0; source < sources.length; source++) {
+            if (column.weights()[source] <= 0) continue;
+            fallback = sources[source].layers.get(0);
+            sum += column.weights()[source];
+            if (pick < sum) return fallback;
+        }
+        return fallback;
+    }
+
     /** Raw layer membership without contact mixing, useful for locating a named stratigraphic horizon. */
     public BlockState sampleRaw(int x,int y,int z){
         Column column=column(x,z);
@@ -314,20 +366,7 @@ public class GeologyFieldSampler {
 
     /** Above the finite profile, continue one shallow rock rather than repeating beds. */
     private BlockState capRock(Column column,int x,int z){
-        if(transition==null)return layers.get(0).value().blockState();
-        for(int source=0;source<sources.length;source++)
-            if(column.weights()[source]==1)return sources[source].layers.get(0).value().blockState();
-        // One horizontal choice per column also prevents vertical cycling in transition regions.
-        double pick=GeologicalNoise.clamp(.5+2.0*capRockNoise.sample(x,0,z),0,1);
-        double sum=0;
-        BlockState fallback=Blocks.STONE.defaultBlockState();
-        for(int source=0;source<sources.length;source++){
-            if(column.weights()[source]<=0)continue;
-            fallback=sources[source].layers.get(0).value().blockState();
-            sum+=column.weights()[source];
-            if(pick<sum)return fallback;
-        }
-        return fallback;
+        return capLayer(column, x, z).value().blockState();
     }
 
     public double[] strike(int layerIndex,int x,int z){

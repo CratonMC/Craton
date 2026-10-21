@@ -41,6 +41,7 @@ public class WorldSetter {
         private final GeologyClimateSampler climate;
         private final CratonContents.GenerationData generation;
         private final SeabedSediments sediments;
+        private final SurfaceSedimentEngine surfaceSedimentEngine;
         private final ColumnSurface[] surfaces=new ColumnSurface[256];
         private int capturedColumns;
         private GeologyFieldSampler continuousGeology;
@@ -74,6 +75,7 @@ public class WorldSetter {
         public ChunkContext(PositionalRandomFactory random,GeologyClimateSampler climate){
             this.random=random;this.climate=climate;
             this.generation=CratonContents.getGenerationData();
+            this.surfaceSedimentEngine=new SurfaceSedimentEngine(random);
             this.sediments=new SeabedSediments(climate,random.fromHashOf(com.teamtea.craton.Craton.rl("seabed_sediments")).nextLong());
         }
 
@@ -112,7 +114,19 @@ public class WorldSetter {
                 if(top<minY||top>chunk.getHeightAccessorForGeneration().getMaxY()) continue;
                 BlockState material=column.getBlock(top);
                 SeabedSediments.Cover cover=null;
-                if(top>=minY&&top<seaLevel&&!surface.biome().is(Tags.Biomes.IS_RIVER)
+                // Do not run the legacy seabed painter over datapack-defined sediment environments.
+                boolean customSediment = false;
+                // An environment match alone is insufficient: geology and climate may reject
+                // every datapack rule, in which case the legacy seabed painter must run.
+                if (!DEBUG_DEPOSITS && top >= minY && top < seaLevel
+                        && column.getBlock(top + 1).is(Blocks.WATER)) {
+                    var profile = generation.getGeologyProfile(point);
+                    if (profile.isPresent()) {
+                        customSediment = surfaceSedimentEngine.appliesAt(column, x, z, top,
+                                seaLevel, minY, surface.biome(), point, geology(profile.get(), minY));
+                    }
+                }
+                if(!customSediment && top>=minY&&top<seaLevel&&!surface.biome().is(Tags.Biomes.IS_RIVER)
                         &&(material.is(BlockTags.SAND)||material.is(Blocks.GRAVEL))
                         &&(surface.biome().is(Tags.Biomes.IS_OCEAN)
                         ||top<chunk.getHeightAccessorForGeneration().getMaxY()&&column.getBlock(top+1).is(Blocks.WATER))){
@@ -125,6 +139,11 @@ public class WorldSetter {
                     cover=sediments.cover(material,x,z,top,slope,basin);
                 }
                 rebuildColumnExtension(column,position,x,z,top,chunk,point,surface.biome(),this,cover);
+                if(!DEBUG_DEPOSITS && customSediment) {
+                    var profile = generation.getGeologyProfile(point);
+                    if(profile.isPresent()) surfaceSedimentEngine.apply(column,x,z,top,seaLevel,
+                            minY,surface.biome(),point,geology(profile.get(),minY));
+                }
             }
         }
 

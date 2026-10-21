@@ -41,7 +41,9 @@
     "craton:metasomatic_lapis_ore": {
       "drops": [
         {
-          "item": "minecraft:lapis_lazuli"
+          "item": "minecraft:lapis_lazuli",
+          "min_count": 4,
+          "max_count": 9
         }
       ]
     },
@@ -55,7 +57,8 @@
     "craton:pegmatite_emerald_ore": {
       "drops": [
         {
-          "item": "minecraft:emerald"
+          "item": "minecraft:emerald",
+          "fortune_scale": 0.5
         }
       ]
     },
@@ -70,7 +73,9 @@
     "craton:deep_hydrothermal_redstone_ore": {
       "drops": [
         {
-          "item": "minecraft:redstone"
+          "item": "minecraft:redstone",
+          "min_count": 4,
+          "max_count": 5
         }
       ]
     },
@@ -78,7 +83,8 @@
       "drops": [
         {
           "item": "craton:bauxite",
-          "required_ingot_tag": "c:ingots/aluminum"
+          "required_ingot_tag": "c:ingots/aluminum",
+          "fortune_scale": 0.75
         }
       ]
     },
@@ -93,7 +99,8 @@
       "drops": [
         {
           "item": "craton:raw_uranium",
-          "required_ingot_tag": "c:ingots/uranium"
+          "required_ingot_tag": "c:ingots/uranium",
+          "fortune_scale": 0.75
         }
       ]
     },
@@ -101,7 +108,8 @@
       "drops": [
         {
           "item": "craton:raw_tin",
-          "required_ingot_tag": "c:ingots/tin"
+          "required_ingot_tag": "c:ingots/tin",
+          "fortune_scale": 0.75
         }
       ]
     },
@@ -109,7 +117,8 @@
       "drops": [
         {
           "item": "craton:raw_tungsten",
-          "required_ingot_tag": "c:ingots/tungsten"
+          "required_ingot_tag": "c:ingots/tungsten",
+          "fortune_scale": 0.75
         }
       ]
     },
@@ -117,7 +126,10 @@
       "drops": [
         {
           "item": "minecraft:gold_nugget",
-          "required_ingot_tag": "c:ingots/gold"
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.65,
+          "min_count": 2,
+          "max_count": 4
         }
       ]
     },
@@ -125,7 +137,10 @@
       "drops": [
         {
           "item": "minecraft:gold_nugget",
-          "required_ingot_tag": "c:ingots/gold"
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.65,
+          "min_count": 2,
+          "max_count": 4
         }
       ]
     },
@@ -133,7 +148,9 @@
       "drops": [
         {
           "item": "minecraft:iron_nugget",
-          "required_ingot_tag": "c:ingots/iron"
+          "required_ingot_tag": "c:ingots/iron",
+          "min_count": 2,
+          "max_count": 4
         }
       ]
     },
@@ -141,7 +158,9 @@
       "drops": [
         {
           "item": "minecraft:iron_nugget",
-          "required_ingot_tag": "c:ingots/iron"
+          "required_ingot_tag": "c:ingots/iron",
+          "min_count": 2,
+          "max_count": 4
         }
       ]
     },
@@ -158,7 +177,7 @@
       "drops": [
         {
           "item": "minecraft:diamond",
-          "fortune_scale": 1.0,
+          "fortune_scale": 0.65,
           "chance": 0.85
         }
       ]
@@ -167,7 +186,8 @@
       "drops": [
         {
           "item": "craton:meteoric_iron",
-          "required_ingot_tag": "c:ingots/iron"
+          "required_ingot_tag": "c:ingots/iron",
+          "fortune_scale": 0.35
         }
       ]
     },
@@ -175,7 +195,8 @@
       "drops": [
         {
           "item": "minecraft:raw_gold",
-          "required_ingot_tag": "c:ingots/gold"
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.65
         }
       ],
       "bonus_drops": [
@@ -198,7 +219,7 @@
           "item": "minecraft:raw_gold",
           "chance": 0.1,
           "required_ingot_tag": "c:ingots/gold",
-          "fortune_scale": 0.75,
+          "fortune_scale": 0.65,
           "fortune_chance_scale": 0.3
         },
         {
@@ -226,7 +247,7 @@
           "item": "minecraft:raw_gold",
           "chance": 0.1,
           "required_ingot_tag": "c:ingots/gold",
-          "fortune_scale": 0.75,
+          "fortune_scale": 0.65,
           "fortune_chance_scale": 0.3
         }
       ]
@@ -243,7 +264,8 @@
           "item": "minecraft:raw_gold",
           "chance": 0.15,
           "required_ingot_tag": "c:ingots/gold",
-          "fortune_chance_scale": 0.3
+          "fortune_chance_scale": 0.3,
+          "fortune_scale": 0.65
         }
       ]
     },
@@ -259,7 +281,8 @@
           "item": "craton:raw_zinc",
           "chance": 0.2,
           "required_ingot_tag": "c:ingots/zinc",
-          "fortune_chance_scale": 0.5
+          "fortune_chance_scale": 0.5,
+          "fortune_scale": 1
         }
       ]
     },
@@ -275,7 +298,7 @@
           "item": "minecraft:raw_gold",
           "chance": 0.1,
           "required_ingot_tag": "c:ingots/gold",
-          "fortune_scale": 0.75,
+          "fortune_scale": 0.65,
           "fortune_chance_scale": 0.3
         }
       ]
@@ -300,7 +323,8 @@
       "drops": [
         {
           "item": "minecraft:raw_gold",
-          "required_ingot_tag": "c:ingots/gold"
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.65
         }
       ],
       "bonus_drops": [
@@ -316,7 +340,8 @@
       "drops": [
         {
           "item": "minecraft:raw_gold",
-          "required_ingot_tag": "c:ingots/gold"
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.65
         }
       ]
     },
@@ -325,12 +350,14 @@
         {
           "item": "minecraft:raw_gold",
           "weight": 40,
-          "required_ingot_tag": "c:ingots/gold"
+          "required_ingot_tag": "c:ingots/gold",
+          "fortune_scale": 0.65
         },
         {
           "item": "craton:raw_silver",
           "weight": 60,
-          "required_ingot_tag": "c:ingots/silver"
+          "required_ingot_tag": "c:ingots/silver",
+          "fortune_scale": 0.75
         }
       ]
     },
@@ -346,7 +373,8 @@
           "item": "craton:raw_silver",
           "chance": 0.2,
           "required_ingot_tag": "c:ingots/silver",
-          "fortune_chance_scale": 0.5
+          "fortune_chance_scale": 0.4,
+          "fortune_scale": 0.75
         }
       ]
     },
@@ -362,7 +390,8 @@
           "item": "craton:raw_lead",
           "chance": 0.2,
           "required_ingot_tag": "c:ingots/lead",
-          "fortune_chance_scale": 0.5
+          "fortune_chance_scale": 0.5,
+          "fortune_scale": 1
         }
       ]
     },
@@ -371,7 +400,7 @@
         {
           "item": "craton:raw_osmium",
           "required_ingot_tag": "c:ingots/osmium",
-          "fortune_scale": 0.5
+          "fortune_scale": 0.35
         }
       ],
       "bonus_drops": [
@@ -415,7 +444,8 @@
           "item": "craton:raw_silver",
           "chance": 0.15,
           "required_ingot_tag": "c:ingots/silver",
-          "fortune_chance_scale": 0.5
+          "fortune_chance_scale": 0.4,
+          "fortune_scale": 0.75
         }
       ]
     },
@@ -424,25 +454,30 @@
         {
           "item": "craton:raw_tin",
           "weight": 50,
-          "required_ingot_tag": "c:ingots/tin"
+          "required_ingot_tag": "c:ingots/tin",
+          "fortune_scale": 0.75
         },
         {
           "item": "craton:raw_tungsten",
           "weight": 50,
-          "required_ingot_tag": "c:ingots/tungsten"
+          "required_ingot_tag": "c:ingots/tungsten",
+          "fortune_scale": 0.75
         }
       ]
     },
     "craton:suspicious_jadeitite": {
       "drops": [
         {
-          "item": "craton:green_jade"
+          "item": "craton:green_jade",
+          "fortune_scale": 0.5
         },
         {
-          "item": "craton:white_jade"
+          "item": "craton:white_jade",
+          "fortune_scale": 0.5
         },
         {
-          "item": "craton:lavender_jade"
+          "item": "craton:lavender_jade",
+          "fortune_scale": 0.5
         }
       ]
     }

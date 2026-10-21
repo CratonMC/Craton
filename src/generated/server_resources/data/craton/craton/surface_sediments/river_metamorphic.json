@@ -1,0 +1,16 @@
+{
+  "type": "craton:riverbed",
+  "environment": "craton:river",
+  "main_block": "minecraft:gravel",
+  "secondary": [
+    {
+      "block": "minecraft:sand",
+      "type": "craton:alluvial"
+    }
+  ],
+  "rocks": [
+    "craton:gneiss",
+    "craton:schist",
+    "craton:eclogite"
+  ]
+}

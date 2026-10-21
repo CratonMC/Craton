@@ -32,15 +32,8 @@ public class OreAvailability {
         for (var product : data.drops()) if (available(product)) main.add(product);
         for (var product : data.bonusDrops())
             if (product.chance() > 0 && available(product)) bonus.add(product);
-        // If the primary metal is absent, retained byproducts become the main product pool.
-        if (main.isEmpty()) {
-            for (var product : bonus) {
-                int weight = Math.max(1, (int) Math.round(product.chance() * 10000));
-                main.add(new Product(product.item(), weight, product.minCount(), product.maxCount(),
-                        1.0, true, product.requiredIngotTag(), product.fortuneScale(), product.luckScale()));
-            }
-            bonus.clear();
-        }
+        // Missing main products must not promote rare bonuses to guaranteed drops.
+        // Retain independent bonus probabilities even when no primary is available.
         return new OreDrops(main, bonus);
     }
 

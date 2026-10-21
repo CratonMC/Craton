@@ -1,0 +1,15 @@
+{
+  "type": "craton:seabed",
+  "environment": "craton:ocean",
+  "main_block": "minecraft:gravel",
+  "secondary": [
+    {
+      "block": "minecraft:clay",
+      "type": "craton:deposit_patch"
+    },
+    {
+      "block": "minecraft:sand",
+      "type": "craton:alluvial"
+    }
+  ]
+}

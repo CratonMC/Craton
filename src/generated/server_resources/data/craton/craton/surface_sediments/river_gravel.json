@@ -1,0 +1,8 @@
+{
+  "type": "craton:riverbed",
+  "environment": "craton:river",
+  "main_block": "minecraft:gravel",
+  "rocks": [
+    "craton:gravel"
+  ]
+}

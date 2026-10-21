@@ -3,6 +3,9 @@ package com.teamtea.craton.common.registry;
 import com.teamtea.craton.common.worldgen.deposit.DepositPlan;
 
 import com.teamtea.craton.api.geology.GeologyLayer;
+import com.teamtea.craton.api.geology.surface.SurfaceEnvironment;
+import com.teamtea.craton.api.geology.surface.SurfaceSediment;
+import com.teamtea.craton.api.geology.surface.SurfaceSedimentType;
 import com.teamtea.craton.api.geology.GeologyProfile;
 import com.teamtea.craton.api.geology.deposit.Deposit;
 import net.minecraft.resources.Identifier;
@@ -27,6 +30,13 @@ public class CratonContents {
 
     @SubscribeEvent
     public static void onNewRegistry(NewDatapackRegistryEvent event) {
+        event.worldRegistry(CratonRegistries.SURFACE_ENVIRONMENT,
+                SurfaceEnvironment.CODEC, SurfaceEnvironment.CODEC);
+        event.worldRegistry(CratonRegistries.SURFACE_SEDIMENT_TYPE,
+                SurfaceSedimentType.CODEC, SurfaceSedimentType.CODEC);
+        event.worldRegistry(CratonRegistries.SURFACE_SEDIMENT,
+                SurfaceSediment.CODEC, SurfaceSediment.CODEC);
+
         event.worldRegistry(
                 CratonRegistries.GEOLOGY_REGION,
                 GeologyRegion.CODEC,
@@ -86,6 +96,7 @@ public class CratonContents {
     }
 
     private record Contents(
+            List<Holder<SurfaceSediment>> surfaceSediments,
             GenerationData generation,
             List<Holder<GeologyProfile>> profiles,
             List<Holder<Deposit>> deposits,
@@ -93,7 +104,7 @@ public class CratonContents {
             Map<Identifier, List<Holder<Deposit>>> depositsByType
     ) {
         private static final Contents EMPTY = new Contents(
-                new GenerationData(List.of(), Map.of(), new GeologyTransition(List.of(), Map.of()),
+                List.of(), new GenerationData(List.of(), Map.of(), new GeologyTransition(List.of(), Map.of()),
                         DepositPlan.EMPTY),
                 List.of(), List.of(), Map.of(), Map.of());
     }
@@ -101,6 +112,7 @@ public class CratonContents {
     // Publish only after all rules have compiled successfully. No collection is mutated in place.
     private static volatile Contents contents = Contents.EMPTY;
 
+    public static List<Holder<SurfaceSediment>> getSurfaceSediments() { return contents.surfaceSediments(); }
     public static GenerationData getGenerationData() { return contents.generation(); }
     public static GeologyTransition getGeologyTransition() { return contents.generation().transition(); }
     public static List<Holder<GeologyRegion>> getGeologyRegions() { return contents.generation().regions(); }
@@ -152,9 +164,14 @@ public class CratonContents {
         for (Holder<GeologyProfile> profile : profiles)
             selected.putIfAbsent(profile.value().region().unwrapKey().orElseThrow(), profile);
 
+        List<Holder<SurfaceSediment>> surfaceSediments = event.getRegistries()
+                .lookup(CratonRegistries.SURFACE_SEDIMENT).map(Registry::listElements)
+                .map(Stream::toList).orElse(List.of());
+        surfaceSediments = surfaceSediments.stream().sorted(
+                Comparator.comparing(holder -> holder.unwrapKey().orElseThrow().identifier().toString())).toList();
         GenerationData generation = new GenerationData(regions, selected,
                 new GeologyTransition(regions, selected), plan);
-        contents = new Contents(generation, List.copyOf(profiles), List.copyOf(deposits),
+        contents = new Contents(surfaceSediments, generation, List.copyOf(profiles), List.copyOf(deposits),
                 Map.copyOf(ores), Map.copyOf(grouped));
     }
 

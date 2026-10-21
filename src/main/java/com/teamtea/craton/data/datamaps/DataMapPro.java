@@ -54,7 +54,7 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.metasomatic_lapis_ore,
-                List.of(product(Items.LAPIS_LAZULI)),
+                List.of(counts(product(Items.LAPIS_LAZULI), 4, 9)),
                 List.of());
 
         add(CratonBlocks.pegmatite_quartz_ore,
@@ -62,7 +62,7 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.pegmatite_emerald_ore,
-                List.of(product(Items.EMERALD)),
+                List.of(tuned(product(Items.EMERALD), 0.50, 0.0)),
                 List.of());
 
         add(CratonBlocks.fluorite_vein_ore,
@@ -70,11 +70,11 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.deep_hydrothermal_redstone_ore,
-                List.of(product(Items.REDSTONE)),
+                List.of(counts(product(Items.REDSTONE), 4, 5)),
                 List.of());
 
         add(CratonBlocks.bauxite_ore,
-                List.of(product(CratonItems.BAUXITE.value(), "c:ingots/aluminum")),
+                List.of(tuned(product(CratonItems.BAUXITE.value(), "c:ingots/aluminum"), 0.75, 0.0)),
                 List.of());
 
         add(CratonBlocks.peat,
@@ -82,31 +82,31 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.sedimentary_uranium_ore,
-                List.of(product(CratonItems.RAW_URANIUM.value(), "c:ingots/uranium")),
+                List.of(tuned(product(CratonItems.RAW_URANIUM.value(), "c:ingots/uranium"), 0.75, 0.0)),
                 List.of());
 
         add(CratonBlocks.granite_cassiterite_ore,
-                List.of(product(CratonItems.RAW_TIN.value(), "c:ingots/tin")),
+                List.of(tuned(product(CratonItems.RAW_TIN.value(), "c:ingots/tin"), 0.75, 0.0)),
                 List.of());
 
         add(CratonBlocks.granite_wolframite_ore,
-                List.of(product(CratonItems.RAW_TUNGSTEN.value(), "c:ingots/tungsten")),
+                List.of(tuned(product(CratonItems.RAW_TUNGSTEN.value(), "c:ingots/tungsten"), 0.75, 0.0)),
                 List.of());
 
         add(CratonBlocks.auriferous_gravel,
-                List.of(product(Items.GOLD_NUGGET, "c:ingots/gold")),
+                List.of(counts(tuned(product(Items.GOLD_NUGGET, "c:ingots/gold"), 0.65, 0.0), 2, 4)),
                 List.of());
 
         add(CratonBlocks.auriferous_sand,
-                List.of(product(Items.GOLD_NUGGET, "c:ingots/gold")),
+                List.of(counts(tuned(product(Items.GOLD_NUGGET, "c:ingots/gold"), 0.65, 0.0), 2, 4)),
                 List.of());
 
         add(CratonBlocks.ferriferous_gravel,
-                List.of(product(Items.IRON_NUGGET, "c:ingots/iron")),
+                List.of(counts(product(Items.IRON_NUGGET, "c:ingots/iron"), 2, 4)),
                 List.of());
 
         add(CratonBlocks.ferriferous_sand,
-                List.of(product(Items.IRON_NUGGET, "c:ingots/iron")),
+                List.of(counts(product(Items.IRON_NUGGET, "c:ingots/iron"), 2, 4)),
                 List.of());
 
         add(CratonBlocks.diamond_bearing_kimberlite,
@@ -114,15 +114,15 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.diamond_rich_kimberlite,
-                List.of(tuned(new Product(Items.DIAMOND, 1, 1, 1, 0.85, true, Optional.empty()), 1.00, 0.0)),
+                List.of(tuned(new Product(Items.DIAMOND, 1, 1, 1, 0.85, true, Optional.empty()), 0.65, 0.0)),
                 List.of());
 
         add(CratonBlocks.meteoric_iron_ore,
-                List.of(product(CratonItems.METEORIC_IRON.value(), "c:ingots/iron")),
+                List.of(tuned(product(CratonItems.METEORIC_IRON.value(), "c:ingots/iron"), 0.35, 0.0)),
                 List.of());
 
         add(CratonBlocks.quartz_vein_gold_ore,
-                List.of(product(Items.RAW_GOLD, "c:ingots/gold")),
+                List.of(tuned(product(Items.RAW_GOLD, "c:ingots/gold"), 0.65, 0.0)),
                 List.of(
                         bonus(Items.QUARTZ, 0.25)
                 ));
@@ -130,7 +130,7 @@ public class DataMapPro extends DataMapProvider {
         add(CratonBlocks.quartz_vein_pyrite_ore,
                 List.of(product(CratonItems.RAW_IRON_SULFIDE.value(), "c:ingots/iron")),
                 List.of(
-                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.75, 0.0), 0.3),
+                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3),
                         bonus(Items.QUARTZ, 0.25)
                 ));
 
@@ -138,25 +138,25 @@ public class DataMapPro extends DataMapProvider {
                 List.of(product(CratonItems.RAW_IRON_SULFIDE.value(), "c:ingots/iron")),
                 List.of(
                         bonus(CratonItems.RAW_COPPER_SULFIDE.value(), 0.20, "c:ingots/copper"),
-                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.75, 0.0), 0.3)
+                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3)
                 ));
 
         add(CratonBlocks.porphyry_copper_ore,
                 List.of(product(CratonItems.RAW_COPPER_SULFIDE.value(), "c:ingots/copper")),
                 List.of(
-                        bonusChance(bonus(Items.RAW_GOLD, 0.15, "c:ingots/gold"), 0.3)
+                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.15, "c:ingots/gold"), 0.65, 0.0), 0.3)
                 ));
 
         add(CratonBlocks.vms_copper_ore,
                 List.of(product(CratonItems.RAW_COPPER_SULFIDE.value(), "c:ingots/copper")),
                 List.of(
-                        bonus(CratonItems.RAW_ZINC.value(), 0.20, "c:ingots/zinc")
+                        bonusChance(tuned(bonus(CratonItems.RAW_ZINC.value(), 0.20, "c:ingots/zinc"), 1.00, 0.0), 0.50)
                 ));
 
         add(CratonBlocks.skarn_copper_ore,
                 List.of(product(CratonItems.RAW_COPPER_SULFIDE.value(), "c:ingots/copper")),
                 List.of(
-                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.75, 0.0), 0.3)
+                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3)
                 ));
 
         add(CratonBlocks.magmatic_ni_cu_ore,
@@ -166,36 +166,36 @@ public class DataMapPro extends DataMapProvider {
                 ));
 
         add(CratonBlocks.porphyry_gold_ore,
-                List.of(product(Items.RAW_GOLD, "c:ingots/gold")),
+                List.of(tuned(product(Items.RAW_GOLD, "c:ingots/gold"), 0.65, 0.0)),
                 List.of(
                         bonus(CratonItems.RAW_COPPER_SULFIDE.value(), 0.20, "c:ingots/copper")
                 ));
 
         add(CratonBlocks.skarn_gold_ore,
-                List.of(product(Items.RAW_GOLD, "c:ingots/gold")),
+                List.of(tuned(product(Items.RAW_GOLD, "c:ingots/gold"), 0.65, 0.0)),
                 List.of());
 
         add(CratonBlocks.epithermal_au_ag_ore,
                 List.of(
-                        product(Items.RAW_GOLD, 40, "c:ingots/gold"),
-                        product(CratonItems.RAW_SILVER.value(), 60, "c:ingots/silver")
+                        tuned(product(Items.RAW_GOLD, 40, "c:ingots/gold"), 0.65, 0.0),
+                        tuned(product(CratonItems.RAW_SILVER.value(), 60, "c:ingots/silver"), 0.75, 0.0)
                 ),
                 List.of());
 
         add(CratonBlocks.vms_pb_ag_ore,
                 List.of(product(CratonItems.RAW_LEAD.value(), "c:ingots/lead")),
                 List.of(
-                        bonus(CratonItems.RAW_SILVER.value(), 0.20, "c:ingots/silver")
+                        bonusChance(tuned(bonus(CratonItems.RAW_SILVER.value(), 0.20, "c:ingots/silver"), 0.75, 0.0), 0.40)
                 ));
 
         add(CratonBlocks.vms_zinc_ore,
                 List.of(product(CratonItems.RAW_ZINC.value(), "c:ingots/zinc")),
                 List.of(
-                        bonus(CratonItems.RAW_LEAD.value(), 0.20, "c:ingots/lead")
+                        bonusChance(tuned(bonus(CratonItems.RAW_LEAD.value(), 0.20, "c:ingots/lead"), 1.00, 0.0), 0.50)
                 ));
 
         add(CratonBlocks.magmatic_pge_ore,
-                List.of(tuned(product(CratonItems.RAW_OSMIUM.value(), "c:ingots/osmium"), 0.5, 0.0)),
+                List.of(tuned(product(CratonItems.RAW_OSMIUM.value(), "c:ingots/osmium"), 0.35, 0.0)),
                 List.of(
                         bonus(CratonItems.RAW_NICKEL.value(), 0.20, "c:ingots/nickel")
                 ));
@@ -213,23 +213,30 @@ public class DataMapPro extends DataMapProvider {
                         product(CratonItems.RAW_ZINC.value(), 60, "c:ingots/zinc")
                 ),
                 List.of(
-                        bonus(CratonItems.RAW_SILVER.value(), 0.15, "c:ingots/silver")
+                        bonusChance(tuned(bonus(CratonItems.RAW_SILVER.value(), 0.15, "c:ingots/silver"), 0.75, 0.0), 0.40)
                 ));
 
         add(CratonBlocks.skarn_w_sn_ore,
                 List.of(
-                        product(CratonItems.RAW_TIN.value(), 50, "c:ingots/tin"),
-                        product(CratonItems.RAW_TUNGSTEN.value(), 50, "c:ingots/tungsten")
+                        tuned(product(CratonItems.RAW_TIN.value(), 50, "c:ingots/tin"), 0.75, 0.0),
+                        tuned(product(CratonItems.RAW_TUNGSTEN.value(), 50, "c:ingots/tungsten"), 0.75, 0.0)
                 ),
                 List.of());
 
         add(CratonBlocks.suspicious_jadeitite,
                 List.of(
-                        product(CratonItems.GREEN_JADE.value()),
-                        product(CratonItems.WHITE_JADE.value()),
-                        product(CratonItems.LAVENDER_JADE.value())
+                        tuned(product(CratonItems.GREEN_JADE.value()), 0.50, 0.0),
+                        tuned(product(CratonItems.WHITE_JADE.value()), 0.50, 0.0),
+                        tuned(product(CratonItems.LAVENDER_JADE.value()), 0.50, 0.0)
                 ),
                 List.of());
+    }
+
+    /** Base drops per successful product roll (before Fortune), with optional per-product tuning. */
+    private Product counts(Product product, int minCount, int maxCount) {
+        return new Product(product.item(), product.weight(), minCount, maxCount,
+                product.chance(), product.enabled(), product.requiredIngotTag(),
+                product.fortuneScale(), product.luckScale(), product.fortuneChanceScale());
     }
 
     /** Per-product amount scaling: 1.0 = vanilla Fortune; 0.0 = no Fortune bonus.

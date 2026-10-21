@@ -42,24 +42,6 @@ public class DataInit {
         generator.addProvider(true, esb);
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
         generator.addProvider(true, new DataMapPro(packOutput, lookupProvider));
-//        event.createReloadableRegistryObjects(
-//                new RegistrySetBuilder()
-//                        .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
-//                        .add(Registries.LOOT_TABLE, new CLootTableProvider())
-//        );
-//        event.createWorldRegistryObjects(
-//                new RegistrySetBuilder()
-//                        .add(CratonRegistries.GEOLOGY_REGION, GeologyRegionRegistry::bootstrap)
-//                        .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
-//                        .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
-//                        .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)
-//                        .add(CratonRegistries.DEPOSIT, DepositRegistry::bootstrap)
-//                        .add(Registries.FEATURE, CratonWorldgenFeatures::bootstrap)
-//                        .add(Registries.PLACED_FEATURE, CratonWorldgenFeatures::bootstrapPlaced)
-//                        .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModBiomeModifiers::bootstrap)
-//        );
-    }
-
     public static void gatherRegistryEntries(GatherDataRegistryEntriesEvent event) {
         event
                 .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
@@ -68,6 +50,9 @@ public class DataInit {
                 .add(CratonRegistries.GEOLOGY_REGION, GeologyRegionRegistry::bootstrap)
                 .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
                 .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
+                .add(CratonRegistries.SURFACE_ENVIRONMENT, SurfaceEnvironmentRegistry::bootstrap)
+                .add(CratonRegistries.SURFACE_SEDIMENT_TYPE, SurfaceSedimentTypeRegistry::bootstrap)
+                .add(CratonRegistries.SURFACE_SEDIMENT, SurfaceSedimentRegistry::bootstrap)
                 .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)
                 .add(CratonRegistries.DEPOSIT, DepositRegistry::bootstrap)
 
