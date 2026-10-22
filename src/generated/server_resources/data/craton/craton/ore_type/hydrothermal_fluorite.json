@@ -1,4 +1,7 @@
 {
+  "required_ingot_tags": [
+    "c:gems/fluorite"
+  ],
   "variants": [
     {
       "hosts": "minecraft:granite",
@@ -12,8 +15,5 @@
       "hosts": "minecraft:quartz_block",
       "result": "craton:fluorite_vein_ore"
     }
-  ],
-  "required_ingot_tags": [
-    "c:gems/fluorite"
   ]
 }

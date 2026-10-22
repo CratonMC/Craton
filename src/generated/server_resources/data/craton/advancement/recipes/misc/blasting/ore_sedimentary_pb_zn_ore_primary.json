@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ore_sedimentary_pb_zn_ore_primary": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:sedimentary_pb_zn_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/ore_sedimentary_pb_zn_ore_primary"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ore_sedimentary_pb_zn_ore_primary"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/ore_sedimentary_pb_zn_ore_primary"
+    ]
+  }
+}

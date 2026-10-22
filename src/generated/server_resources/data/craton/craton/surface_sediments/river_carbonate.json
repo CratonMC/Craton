@@ -2,14 +2,14 @@
   "type": "craton:riverbed",
   "environment": "craton:river",
   "main_block": "minecraft:gravel",
-  "secondary": [
-    {
-      "block": "minecraft:sand",
-      "type": "craton:alluvial"
-    }
-  ],
   "rocks": [
     "craton:limestone",
     "craton:marble"
+  ],
+  "secondary": [
+    {
+      "type": "craton:alluvial",
+      "block": "minecraft:sand"
+    }
   ]
 }

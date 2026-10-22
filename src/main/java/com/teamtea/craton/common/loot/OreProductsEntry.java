@@ -8,6 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.entries.SingleEntryContainerBase;
@@ -77,9 +78,13 @@ public class OreProductsEntry extends SingleEntryContainerBase {
                 (1.0 + drop.fortuneChanceScale() * Math.log1p((double) fortuneLevel)));
     }
 
+    /** LootContextParams.TOOL is ItemInstance in this Minecraft version;
+     *  ItemStack is used only for emitted loot stacks.
+     *  getEnchantmentLevel reads the gameplay level (including modded levels).
+     */
     private static int fortuneLevel(LootContext context) {
-        ItemStack tool = context.getOptional(LootContextParams.TOOL);
-        if (tool == null || tool.isEmpty()) return 0;
+        ItemInstance tool = context.getOptional(LootContextParams.TOOL);
+        if (tool == null || tool.count() <= 0) return 0;
         var fortune = context.getLevel().registryAccess()
                 .lookupOrThrow(Registries.ENCHANTMENT)
                 .getOrThrow(Enchantments.FORTUNE);

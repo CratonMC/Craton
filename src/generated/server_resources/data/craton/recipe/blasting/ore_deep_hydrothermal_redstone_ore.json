@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "ingredient": "craton:deep_hydrothermal_redstone_ore",
+  "result": {
+    "id": "minecraft:redstone"
+  }
+}

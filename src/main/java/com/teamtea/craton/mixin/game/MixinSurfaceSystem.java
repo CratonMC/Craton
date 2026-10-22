@@ -70,7 +70,7 @@ public abstract class MixinSurfaceSystem {
                 sampler.set(new GeologyClimateSampler(
                         randomState.createClimateSampler(SamplerContext.EMPTY_UNCACHED), getSeaLevel()));
             }
-            chunkContext.set(new WorldSetter.ChunkContext(noiseRandom, sampler.get()));
+            chunkContext.set(new WorldSetter.ChunkContext(noiseRandom, sampler.get(), biomeManager));
             original.call(randomState, biomeManager, generationContext, protoChunk, noiseChunk,
                     ruleSource, possibleBiomes);
             chunkContext.get().finishSurface(protoChunk,getSeaLevel());

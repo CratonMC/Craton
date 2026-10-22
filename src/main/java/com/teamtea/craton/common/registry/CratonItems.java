@@ -16,6 +16,7 @@ public class CratonItems {
     public static final Holder<Item> RAW_IRON_SULFIDE = ITEMS.registerSimpleItem("raw_iron_sulfide");
     public static final Holder<Item> RAW_COPPER_OXIDE = ITEMS.registerSimpleItem("raw_copper_oxide");
     public static final Holder<Item> RAW_COPPER_SULFIDE = ITEMS.registerSimpleItem("raw_copper_sulfide");
+    public static final Holder<Item> RAW_GOLD = ITEMS.registerSimpleItem("raw_gold");
     public static final Holder<Item> RAW_SILVER = ITEMS.registerSimpleItem("raw_silver");
     public static final Holder<Item> RAW_NICKEL = ITEMS.registerSimpleItem("raw_nickel");
     public static final Holder<Item> RAW_LEAD = ITEMS.registerSimpleItem("raw_lead");
@@ -33,7 +34,7 @@ public class CratonItems {
     public static final Holder<Item> LAVENDER_JADE = ITEMS.registerSimpleItem("lavender_jade");
     public static final List<Holder<Item>> ALL = List.of(
             RAW_HEMATITE, RAW_MAGNETITE, RAW_IRON_SULFIDE, RAW_COPPER_OXIDE,
-            RAW_COPPER_SULFIDE, RAW_SILVER, RAW_NICKEL, RAW_LEAD,
+            RAW_COPPER_SULFIDE, RAW_GOLD, RAW_SILVER, RAW_NICKEL, RAW_LEAD,
             RAW_ZINC, RAW_TIN, RAW_TUNGSTEN, RAW_URANIUM,
             METEORIC_IRON, GREEN_JADE, WHITE_JADE,
             LAVENDER_JADE);
@@ -63,6 +64,7 @@ public class CratonItems {
         add.accept("item.craton.raw_iron_sulfide", "硫化铁原矿");
         add.accept("item.craton.raw_copper_oxide", "氧化铜原矿");
         add.accept("item.craton.raw_copper_sulfide", "硫化铜原矿");
+        add.accept("item.craton.raw_gold", "金原矿");
         add.accept("item.craton.raw_silver", "银原矿");
         add.accept("item.craton.raw_nickel", "镍原矿");
         add.accept("item.craton.raw_lead", "铅原矿");
@@ -103,6 +105,7 @@ public class CratonItems {
         add.accept("item.craton.raw_iron_sulfide", "Raw Iron Sulfide");
         add.accept("item.craton.raw_copper_oxide", "Raw Copper Oxide");
         add.accept("item.craton.raw_copper_sulfide", "Raw Copper Sulfide");
+        add.accept("item.craton.raw_gold", "Raw Gold");
         add.accept("item.craton.raw_silver", "Raw Silver");
         add.accept("item.craton.raw_nickel", "Raw Nickel");
         add.accept("item.craton.raw_lead", "Raw Lead");

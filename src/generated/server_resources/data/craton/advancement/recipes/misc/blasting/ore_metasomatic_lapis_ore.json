@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ore_metasomatic_lapis_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:metasomatic_lapis_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/ore_metasomatic_lapis_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ore_metasomatic_lapis_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/ore_metasomatic_lapis_ore"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "craton:alluvial",
+  "environment": "craton:river_shallow_dry",
+  "main_block": "minecraft:red_sand",
+  "secondary": [
+    {
+      "type": "craton:deposit_patch",
+      "block": "minecraft:gravel"
+    }
+  ]
+}

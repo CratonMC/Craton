@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": "craton:diamond_bearing_kimberlite",
+  "result": {
+    "id": "minecraft:diamond"
+  }
+}

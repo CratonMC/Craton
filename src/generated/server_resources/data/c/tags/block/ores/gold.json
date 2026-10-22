@@ -1,0 +1,10 @@
+{
+  "values": [
+    "craton:auriferous_gravel",
+    "craton:auriferous_sand",
+    "craton:epithermal_au_ag_ore",
+    "craton:porphyry_gold_ore",
+    "craton:quartz_vein_gold_ore",
+    "craton:skarn_gold_ore"
+  ]
+}

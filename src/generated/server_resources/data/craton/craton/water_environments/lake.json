@@ -1,0 +1,9 @@
+{
+  "continentalness": {
+    "min": -0.11
+  },
+  "fluid": "minecraft:water",
+  "peaks_and_valleys": {
+    "min": -0.65
+  }
+}

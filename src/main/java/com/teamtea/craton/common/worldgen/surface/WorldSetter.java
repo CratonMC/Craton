@@ -17,6 +17,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Block;
@@ -73,6 +74,10 @@ public class WorldSetter {
         public ChunkContext(PositionalRandomFactory random){this(random,null);}
 
         public ChunkContext(PositionalRandomFactory random,GeologyClimateSampler climate){
+            this(random, climate, null);
+        }
+
+        public ChunkContext(PositionalRandomFactory random,GeologyClimateSampler climate,BiomeManager biomeManager){
             this.random=random;this.climate=climate;
             this.generation=CratonContents.getGenerationData();
             this.surfaceSedimentEngine=new SurfaceSedimentEngine(random);
@@ -94,10 +99,35 @@ public class WorldSetter {
             if(climate==null) throw new IllegalStateException("Surface finishing requires a climate sampler");
             int minY=chunk.getHeightAccessorForGeneration().getMinY();
             int[] tops=new int[256];
+            int[] waterSurfaces=new int[256];
             // Snapshot the real floor before any writes; do not query/generate adjacent chunks.
             for(int i=0;i<surfaces.length;i++){
                 ColumnSurface surface=surfaces[i];
-                tops[i]=surface==null?Integer.MIN_VALUE:chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,surface.x(),surface.z());
+                if (surface == null) {
+                    tops[i] = Integer.MIN_VALUE;
+                    waterSurfaces[i] = Integer.MIN_VALUE;
+                } else {
+                    // Chunk heightmaps may expose the first free Y. Resolve the actual
+                    // occupied position explicitly instead of assuming an off-by-one.
+                    int floorHeight = chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, surface.x(), surface.z());
+                    int surfaceHeight = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, surface.x(), surface.z());
+                    tops[i] = occupiedY(chunk, surface.x(), surface.z(), floorHeight, true);
+                    waterSurfaces[i] = occupiedY(chunk, surface.x(), surface.z(), surfaceHeight, false);
+                }
+            }
+            // Resolve actual submerged columns before any geology/sediment writes.
+            // Only chunk-owned coordinates are queried; neighboring chunks are never loaded.
+            boolean[] submergedColumns = new boolean[256];
+            for (int i = 0; i < surfaces.length; i++) {
+                ColumnSurface surface = surfaces[i];
+                if (surface == null || tops[i] < minY) continue;
+                BlockPos.MutableBlockPos scan = new BlockPos.MutableBlockPos(surface.x(), minY, surface.z());
+                BlockColumn scanColumn = new BlockColumn() {
+                    @Override public BlockState getBlock(int y) { return chunk.getBlockState(scan.setY(y)); }
+                    @Override public void setBlock(int y, BlockState state) { throw new UnsupportedOperationException(); }
+                };
+                submergedColumns[i] = SurfaceSedimentEngine.classifyWater(scanColumn, tops[i],
+                        waterSurfaces[i], seaLevel, minY, surface.biome(), climate.sample(surface.x(), surface.z())).submerged();
             }
             for(int index=0;index<surfaces.length;index++){
                 ColumnSurface surface=surfaces[index];
@@ -113,20 +143,23 @@ public class WorldSetter {
                 int top=tops[index];
                 if(top<minY||top>chunk.getHeightAccessorForGeneration().getMaxY()) continue;
                 BlockState material=column.getBlock(top);
+                SurfaceSedimentEngine.WaterColumn water = SurfaceSedimentEngine.classifyWater(
+                        column, top, waterSurfaces[index], seaLevel, minY, surface.biome(), point);
                 SeabedSediments.Cover cover=null;
                 // Do not run the legacy seabed painter over datapack-defined sediment environments.
                 boolean customSediment = false;
                 // An environment match alone is insufficient: geology and climate may reject
                 // every datapack rule, in which case the legacy seabed painter must run.
                 if (!DEBUG_DEPOSITS && top >= minY && top < seaLevel
-                        && column.getBlock(top + 1).is(Blocks.WATER)) {
+                        && water.submerged()) {
                     var profile = generation.getGeologyProfile(point);
                     if (profile.isPresent()) {
                         customSediment = surfaceSedimentEngine.appliesAt(column, x, z, top,
-                                seaLevel, minY, surface.biome(), point, geology(profile.get(), minY));
+                                seaLevel, minY, surface.biome(), point, geology(profile.get(), minY), water);
                     }
                 }
-                if(!customSediment && top>=minY&&top<seaLevel&&!surface.biome().is(Tags.Biomes.IS_RIVER)
+                if(!customSediment && (surface.biome().is(Tags.Biomes.IS_OCEAN) ||
+                        Climate.unquantizeCoord(point.continentalness()) < -0.19) && top>=minY&&top<seaLevel
                         &&(material.is(BlockTags.SAND)||material.is(Blocks.GRAVEL))
                         &&(surface.biome().is(Tags.Biomes.IS_OCEAN)
                         ||top<chunk.getHeightAccessorForGeneration().getMaxY()&&column.getBlock(top+1).is(Blocks.WATER))){
@@ -142,9 +175,69 @@ public class WorldSetter {
                 if(!DEBUG_DEPOSITS && customSediment) {
                     var profile = generation.getGeologyProfile(point);
                     if(profile.isPresent()) surfaceSedimentEngine.apply(column,x,z,top,seaLevel,
-                            minY,surface.biome(),point,geology(profile.get(),minY));
+                            minY,surface.biome(),point,geology(profile.get(),minY),water);
+                }
+                // Exposed shoreline: reuse the actual adjacent submerged sediment
+                // profile. No independent dry-bank material/temperature rule.
+                if (!DEBUG_DEPOSITS && !water.submerged() && top >= seaLevel - 1 && top <= seaLevel + 2) {
+                    com.teamtea.craton.api.geology.surface.SurfaceSediment bankSource = findBankSource(
+                            chunk, x, z, top, seaLevel, minY, surfaces, tops,
+                            waterSurfaces, submergedColumns);
+                    if (bankSource != null) {
+                        surfaceSedimentEngine.applyBank(column, x, z, top, minY, bankSource);
+                    }
                 }
             }
+        }
+
+        /** Pick the closest verified submerged column, using its own climate and
+         *  geology. Read only current-chunk snapshots to avoid generation recursion.
+         */
+        private com.teamtea.craton.api.geology.surface.SurfaceSediment findBankSource(
+                ChunkAccess chunk, int x, int z, int bankY, int seaLevel, int minY,
+                ColumnSurface[] surfaces, int[] tops, int[] waterSurfaces, boolean[] submerged) {
+            int lx = Math.floorMod(x, 16), lz = Math.floorMod(z, 16);
+            for (int distance = 1; distance <= 2; distance++) {
+                for (int dz = -distance; dz <= distance; dz++) {
+                    int dxAbs = distance - Math.abs(dz);
+                    for (int sign = -1; sign <= 1; sign += 2) {
+                        if (dxAbs == 0 && sign == 1) continue;
+                        int nx = lx + sign * dxAbs, nz = lz + dz;
+                        if (nx < 0 || nx >= 16 || nz < 0 || nz >= 16) continue;
+                        int i = (nz << 4) | nx;
+                        ColumnSurface neighbor = surfaces[i];
+                        if (neighbor == null || !submerged[i] || Math.abs(tops[i] - bankY) > 3) continue;
+                        int neighborY = tops[i];
+                        Climate.TargetPoint point = climate.sample(neighbor.x(), neighbor.z());
+                        var profile = generation.getGeologyProfile(point);
+                        if (profile.isEmpty()) continue;
+                        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(neighbor.x(), minY, neighbor.z());
+                        BlockColumn sourceColumn = new BlockColumn() {
+                            @Override public BlockState getBlock(int y) { return chunk.getBlockState(pos.setY(y)); }
+                            @Override public void setBlock(int y, BlockState state) { throw new UnsupportedOperationException(); }
+                        };
+                        var water = new SurfaceSedimentEngine.WaterColumn(neighborY, waterSurfaces[i], true);
+                        var selected = surfaceSedimentEngine.selectSubmergedRule(sourceColumn,
+                                neighbor.x(), neighbor.z(), neighborY, neighbor.biome(), point,
+                                geology(profile.get(), minY), water, minY);
+                        if (selected != null) return selected;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private static int occupiedY(ChunkAccess chunk, int x, int z, int height, boolean solidFloor) {
+            int minY = chunk.getHeightAccessorForGeneration().getMinY();
+            int maxY = chunk.getHeightAccessorForGeneration().getMaxY();
+            int candidate = Math.min(height, maxY);
+            if (candidate > minY) {
+                BlockState state = chunk.getBlockState(new BlockPos(x, candidate, z));
+                if (state.isAir() || (solidFloor && !state.getFluidState().isEmpty())) {
+                    candidate--;
+                }
+            }
+            return candidate;
         }
 
         private static int validHeight(int neighbor,int fallback){return neighbor==Integer.MIN_VALUE?fallback:neighbor;}
@@ -208,7 +301,8 @@ public class WorldSetter {
 
         LevelHeightAccessor height=chunk.getHeightAccessorForGeneration();
         int minY=height.getMinY();
-        startingHeight=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
+        // Respect the caller's heightmap snapshot: seabed and river profiles are
+        // selected against the same physical floor, not a post-write heightmap.
         if(startingHeight<minY||startingHeight>height.getMaxY()) return;
         BlockState surfaceState=column.getBlock(startingHeight);
         // Do not mutate the BlockPos local owned by vanilla's surface builder.

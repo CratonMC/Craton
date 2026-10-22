@@ -66,6 +66,19 @@ public class CratonDataMaps {
 
     public static final DataMapType<Block, OreDrops> ORE_DROPS =
             DataMapType.builder(Craton.rl("ore_drops"), Registries.BLOCK, OreDrops.CODEC).synced(OreDrops.CODEC, false).build();
-    public static void register(RegisterDataMapTypesEvent event) { event.register(ORE_DROPS); }
+    /** Read-only discovery index: ore block -> replaceable host blocks. Worldgen still uses OreType. */
+    public record OreHosts(List<Block> hosts) {
+        public OreHosts { hosts = List.copyOf(hosts); }
+        public static final Codec<OreHosts> CODEC = RecordCodecBuilder.create(i -> i.group(
+                BuiltInRegistries.BLOCK.byNameCodec().listOf().fieldOf("hosts").forGetter(OreHosts::hosts)
+        ).apply(i, OreHosts::new));
+    }
+    public static final DataMapType<Block, OreHosts> ORE_HOSTS =
+            DataMapType.builder(Craton.rl("ore_hosts"), Registries.BLOCK, OreHosts.CODEC)
+                    .synced(OreHosts.CODEC, false).build();
+    public static void register(RegisterDataMapTypesEvent event) {
+        event.register(ORE_DROPS);
+        event.register(ORE_HOSTS);
+    }
     private CratonDataMaps() {}
 }

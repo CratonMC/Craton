@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": "craton:epithermal_au_ag_ore",
+  "result": {
+    "id": "craton:raw_silver"
+  }
+}

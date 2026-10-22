@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ore_magmatic_ni_cu_ore_secondary": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:magmatic_ni_cu_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/ore_magmatic_ni_cu_ore_secondary"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ore_magmatic_ni_cu_ore_secondary"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/ore_magmatic_ni_cu_ore_secondary"
+    ]
+  }
+}

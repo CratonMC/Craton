@@ -1,16 +1,16 @@
 {
   "type": "craton:riverbed",
+  "climate": "craton:arid_plains",
   "environment": "craton:river",
   "main_block": "minecraft:red_sand",
-  "secondary": [
-    {
-      "block": "minecraft:gravel",
-      "type": "craton:alluvial"
-    }
-  ],
   "rocks": [
     "craton:arkose_sandstone",
     "craton:sandstone"
   ],
-  "climate": "craton:arid_plains"
+  "secondary": [
+    {
+      "type": "craton:alluvial",
+      "block": "minecraft:gravel"
+    }
+  ]
 }

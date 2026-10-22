@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 0.2,
+  "ingredient": "craton:auriferous_gravel",
+  "result": {
+    "count": 4,
+    "id": "minecraft:gold_nugget"
+  }
+}

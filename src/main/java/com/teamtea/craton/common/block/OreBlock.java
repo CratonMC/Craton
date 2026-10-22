@@ -3,6 +3,11 @@ package com.teamtea.craton.common.block;
 import com.teamtea.craton.common.registry.CratonDataMaps;
 import com.teamtea.craton.common.loot.OreAvailability;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.Tags;
 
 /** The host is immutable block identity; mineral drops are reloadable block data. */
 public class OreBlock extends Block {
@@ -16,6 +21,22 @@ public class OreBlock extends Block {
     }
 
     public Block host(){return host;}
+
+    /**
+     * Coal behaves like vanilla coal ore: mining releases 0-2 XP, but Silk Touch
+     * does not. The vanilla block-breaking pipeline supplies dropExperience=false
+     * when experience should be suppressed (including Silk Touch).
+     * Item drops remain handled by the reloadable ore loot table.
+     */
+    @Override
+    protected void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos,
+                                   ItemStack tool, boolean dropExperience) {
+        super.spawnAfterBreak(state, level, pos, tool, dropExperience);
+        if (!dropExperience) return;
+        if (state.is(Tags.Blocks.ORES_COAL)) {
+            popExperience(level, pos, level.getRandom().nextInt(3));
+        }
+    }
 
     /** Reloadable product definition attached to this registered block. */
     public CratonDataMaps.OreDrops oreDrops() {

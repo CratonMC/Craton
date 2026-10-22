@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_auriferous_sand": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:auriferous_sand"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:smelting/auriferous_sand"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_auriferous_sand"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:smelting/auriferous_sand"
+    ]
+  }
+}

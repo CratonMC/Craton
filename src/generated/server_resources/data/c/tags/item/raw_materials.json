@@ -1,0 +1,18 @@
+{
+  "values": [
+    "craton:raw_hematite",
+    "craton:raw_magnetite",
+    "craton:raw_iron_sulfide",
+    "craton:raw_copper_oxide",
+    "craton:raw_copper_sulfide",
+    "craton:raw_gold",
+    "craton:raw_silver",
+    "craton:raw_nickel",
+    "craton:raw_lead",
+    "craton:raw_zinc",
+    "craton:raw_tin",
+    "craton:raw_tungsten",
+    "craton:raw_uranium",
+    "craton:raw_osmium"
+  ]
+}

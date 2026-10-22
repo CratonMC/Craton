@@ -4,8 +4,8 @@
   "main_block": "minecraft:sand",
   "secondary": [
     {
-      "block": "minecraft:gravel",
-      "type": "craton:alluvial"
+      "type": "craton:alluvial",
+      "block": "minecraft:gravel"
     }
   ]
 }

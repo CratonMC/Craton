@@ -32,6 +32,7 @@ public class DataMapPro extends DataMapProvider {
 
     @Override
     protected void gather(HolderLookup.Provider provider) {
+        gatherOreHosts(provider);
 
         add(CratonBlocks.banded_iron_gneiss_ore,
                 List.of(product(CratonItems.RAW_HEMATITE.value(), "c:ingots/iron")),
@@ -109,6 +110,10 @@ public class DataMapPro extends DataMapProvider {
                 List.of(counts(product(Items.IRON_NUGGET, "c:ingots/iron"), 2, 4)),
                 List.of());
 
+        add(CratonBlocks.ferriferous_red_sand,
+                List.of(counts(product(Items.IRON_NUGGET, "c:ingots/iron"), 2, 4)),
+                List.of());
+
         add(CratonBlocks.diamond_bearing_kimberlite,
                 List.of(tuned(new Product(Items.DIAMOND, 1, 1, 1, 0.35, true, Optional.empty()), 0.50, 0.0)),
                 List.of());
@@ -122,7 +127,7 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.quartz_vein_gold_ore,
-                List.of(tuned(product(Items.RAW_GOLD, "c:ingots/gold"), 0.65, 0.0)),
+                List.of(tuned(product(CratonItems.RAW_GOLD.value(), "c:ingots/gold"), 0.65, 0.0)),
                 List.of(
                         bonus(Items.QUARTZ, 0.25)
                 ));
@@ -130,7 +135,7 @@ public class DataMapPro extends DataMapProvider {
         add(CratonBlocks.quartz_vein_pyrite_ore,
                 List.of(product(CratonItems.RAW_IRON_SULFIDE.value(), "c:ingots/iron")),
                 List.of(
-                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3),
+                        bonusChance(tuned(bonus(CratonItems.RAW_GOLD.value(), 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3),
                         bonus(Items.QUARTZ, 0.25)
                 ));
 
@@ -138,13 +143,13 @@ public class DataMapPro extends DataMapProvider {
                 List.of(product(CratonItems.RAW_IRON_SULFIDE.value(), "c:ingots/iron")),
                 List.of(
                         bonus(CratonItems.RAW_COPPER_SULFIDE.value(), 0.20, "c:ingots/copper"),
-                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3)
+                        bonusChance(tuned(bonus(CratonItems.RAW_GOLD.value(), 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3)
                 ));
 
         add(CratonBlocks.porphyry_copper_ore,
                 List.of(product(CratonItems.RAW_COPPER_SULFIDE.value(), "c:ingots/copper")),
                 List.of(
-                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.15, "c:ingots/gold"), 0.65, 0.0), 0.3)
+                        bonusChance(tuned(bonus(CratonItems.RAW_GOLD.value(), 0.15, "c:ingots/gold"), 0.65, 0.0), 0.3)
                 ));
 
         add(CratonBlocks.vms_copper_ore,
@@ -156,7 +161,7 @@ public class DataMapPro extends DataMapProvider {
         add(CratonBlocks.skarn_copper_ore,
                 List.of(product(CratonItems.RAW_COPPER_SULFIDE.value(), "c:ingots/copper")),
                 List.of(
-                        bonusChance(tuned(bonus(Items.RAW_GOLD, 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3)
+                        bonusChance(tuned(bonus(CratonItems.RAW_GOLD.value(), 0.10, "c:ingots/gold"), 0.65, 0.0), 0.3)
                 ));
 
         add(CratonBlocks.magmatic_ni_cu_ore,
@@ -166,18 +171,18 @@ public class DataMapPro extends DataMapProvider {
                 ));
 
         add(CratonBlocks.porphyry_gold_ore,
-                List.of(tuned(product(Items.RAW_GOLD, "c:ingots/gold"), 0.65, 0.0)),
+                List.of(tuned(product(CratonItems.RAW_GOLD.value(), "c:ingots/gold"), 0.65, 0.0)),
                 List.of(
                         bonus(CratonItems.RAW_COPPER_SULFIDE.value(), 0.20, "c:ingots/copper")
                 ));
 
         add(CratonBlocks.skarn_gold_ore,
-                List.of(tuned(product(Items.RAW_GOLD, "c:ingots/gold"), 0.65, 0.0)),
+                List.of(tuned(product(CratonItems.RAW_GOLD.value(), "c:ingots/gold"), 0.65, 0.0)),
                 List.of());
 
         add(CratonBlocks.epithermal_au_ag_ore,
                 List.of(
-                        tuned(product(Items.RAW_GOLD, 40, "c:ingots/gold"), 0.65, 0.0),
+                        tuned(product(CratonItems.RAW_GOLD.value(), 40, "c:ingots/gold"), 0.65, 0.0),
                         tuned(product(CratonItems.RAW_SILVER.value(), 60, "c:ingots/silver"), 0.75, 0.0)
                 ),
                 List.of());
@@ -253,6 +258,24 @@ public class DataMapPro extends DataMapProvider {
         return new Product(product.item(), product.weight(), product.minCount(), product.maxCount(),
                 product.chance(), product.enabled(), product.requiredIngotTag(),
                 product.fortuneScale(), product.luckScale(), chanceScale);
+    }
+
+    /** Derive the host index from actual OreType variants rather than duplicating host lists. */
+    private void gatherOreHosts(HolderLookup.Provider provider) {
+        java.util.Map<Block, java.util.Set<Block>> hostsByOre = new java.util.LinkedHashMap<>();
+        provider.lookup(com.teamtea.craton.common.registry.CratonRegistries.ORE_TYPE)
+                .ifPresent(types -> types.listElements().forEach(typeHolder -> {
+                    var type = typeHolder.value();
+                    for (var variant : type.variants()) {
+                        java.util.Set<Block> hosts = hostsByOre.computeIfAbsent(
+                                variant.result().getBlock(), ignored -> new java.util.LinkedHashSet<>());
+                        variant.hosts().forEach(holder -> hosts.add(holder.value()));
+                    }
+                }));
+        hostsByOre.forEach((ore, hosts) -> builder(CratonDataMaps.ORE_HOSTS).add(
+                net.minecraft.resources.ResourceKey.create(Registries.BLOCK,
+                        net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(ore)),
+                new CratonDataMaps.OreHosts(List.copyOf(hosts)), false));
     }
 
     private void add(

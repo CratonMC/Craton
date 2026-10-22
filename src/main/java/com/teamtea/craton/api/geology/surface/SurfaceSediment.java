@@ -16,7 +16,7 @@ import java.util.Optional;
 /** Main sediment cover and localized secondary deposits, linked to existing geology/climate registries. */
 public record SurfaceSediment(
         Holder<SurfaceSedimentType> type,
-        Holder<SurfaceEnvironment> environment,
+        Holder<WaterEnvironment> environment,
         Block mainBlock,
         List<Secondary> secondary,
         List<Holder<GeologyLayer>> rocks,
@@ -38,7 +38,7 @@ public record SurfaceSediment(
     public static final Codec<SurfaceSediment> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RegistryFixedCodec.create(CratonRegistries.SURFACE_SEDIMENT_TYPE)
                     .fieldOf("type").forGetter(SurfaceSediment::type),
-            RegistryFixedCodec.create(CratonRegistries.SURFACE_ENVIRONMENT)
+            RegistryFixedCodec.create(CratonRegistries.WATER_ENVIRONMENT)
                     .fieldOf("environment").forGetter(SurfaceSediment::environment),
             BuiltInRegistries.BLOCK.byNameCodec()
                     .fieldOf("main_block").forGetter(SurfaceSediment::mainBlock),

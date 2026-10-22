@@ -1,0 +1,16 @@
+{
+  "continentalness": {
+    "min": -0.19
+  },
+  "fluid": "minecraft:water",
+  "humidity": {
+    "max": 0.3
+  },
+  "max_depth": 8,
+  "peaks_and_valleys": {
+    "max": -0.65
+  },
+  "temperature": {
+    "min": 0.55
+  }
+}

@@ -17,6 +17,10 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.CookingBookCategory;
+import com.teamtea.craton.common.registry.CratonItems;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -38,12 +42,14 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
     @Override
     protected void buildRecipes() {
         ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC,
-                        com.teamtea.craton.common.registry.CratonItems.SURVEY_CHART.value())
-                .requires(net.minecraft.world.item.Items.MAP)
-                .requires(net.minecraft.world.item.Items.AMETHYST_SHARD)
-                .requires(net.minecraft.world.item.Items.RAW_COPPER)
-                .unlockedBy("has_map", has(net.minecraft.world.item.Items.MAP))
+                        CratonItems.SURVEY_CHART.value())
+                .requires(Items.MAP)
+                .requires(Items.AMETHYST_SHARD)
+                .requires(Items.RAW_COPPER)
+                .unlockedBy("has_map", has(Items.MAP))
                 .save(output);
+        generateMineralSmelting();
+        generateOreBlockSmelting();
         for (StoneCollection stoneCollection : CratonBlocks.STONE_COLLECTIONS) {
             for (BlockFamily blockFamily : stoneCollection.getAll()) {
                 generateRecipes(blockFamily, FeatureFlagSet.of(FeatureFlags.VANILLA));
@@ -69,6 +75,89 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
                 );
             }
         }
+    }
+
+    /** Datapack recipes for mineral products. Output is generated under data/craton/recipe/. */
+    private void generateMineralSmelting() {
+        cooking("raw_hematite", CratonItems.RAW_HEMATITE.value(), Items.IRON_INGOT, 1, 0.7f);
+        cooking("raw_magnetite", CratonItems.RAW_MAGNETITE.value(), Items.IRON_INGOT, 1, 0.7f);
+        cooking("raw_iron_sulfide", CratonItems.RAW_IRON_SULFIDE.value(), Items.IRON_INGOT, 1, 0.7f);
+        cooking("raw_copper_oxide", CratonItems.RAW_COPPER_OXIDE.value(), Items.COPPER_INGOT, 1, 0.7f);
+        cooking("raw_copper_sulfide", CratonItems.RAW_COPPER_SULFIDE.value(), Items.COPPER_INGOT, 1, 0.7f);
+        cooking("raw_gold", CratonItems.RAW_GOLD.value(), Items.GOLD_INGOT, 1, 1.0f);
+        // A placer block represents diluted gold-bearing sediment, not a full ingot.
+        cooking("auriferous_gravel", CratonBlocks.auriferous_gravel.value(), Items.GOLD_NUGGET, 3, 4, 0.2f);
+        cooking("auriferous_sand", CratonBlocks.auriferous_sand.value(), Items.GOLD_NUGGET, 2, 3, 0.2f);
+        cooking("ferriferous_gravel", CratonBlocks.ferriferous_gravel.value(), Items.IRON_NUGGET, 1, 2, 0.2f);
+        cooking("ferriferous_sand", CratonBlocks.ferriferous_sand.value(), Items.IRON_NUGGET, 1, 2, 0.2f);
+        cooking("ferriferous_red_sand", CratonBlocks.ferriferous_red_sand.value(), Items.IRON_NUGGET, 1, 2, 0.2f);
+    }
+
+    /** Direct block smelting follows vanilla ore behavior; placer sediments are configured separately. */
+    private void generateOreBlockSmelting() {
+        cooking("ore_banded_iron_gneiss_ore", CratonBlocks.banded_iron_gneiss_ore.value(), Items.IRON_INGOT, 1, 0.7f);
+        cooking("ore_limestone_coal_ore", CratonBlocks.limestone_coal_ore.value(), Items.COAL, 1, 0.1f);
+        cooking("ore_sedimentary_copper_ore", CratonBlocks.sedimentary_copper_ore.value(), Items.COPPER_INGOT, 1, 0.7f);
+        cooking("ore_metasomatic_lapis_ore", CratonBlocks.metasomatic_lapis_ore.value(), Items.LAPIS_LAZULI, 1, 0.2f);
+        cooking("ore_magmatic_pge_ore", CratonBlocks.magmatic_pge_ore.value(), CratonItems.RAW_OSMIUM.value(), 1, 0.7f);
+        dualCooking("ore_magmatic_ni_cu_ore", CratonBlocks.magmatic_ni_cu_ore.value(), CratonItems.RAW_NICKEL.value(), Items.COPPER_INGOT, 1, 0.7f);
+        cooking("ore_pegmatite_quartz_ore", CratonBlocks.pegmatite_quartz_ore.value(), Items.QUARTZ, 1, 0.2f);
+        cooking("ore_pegmatite_emerald_ore", CratonBlocks.pegmatite_emerald_ore.value(), Items.EMERALD, 1, 1.0f);
+        cooking("ore_quartz_vein_gold_ore", CratonBlocks.quartz_vein_gold_ore.value(), Items.GOLD_INGOT, 1, 1.0f);
+        cooking("ore_quartz_vein_pyrite_ore", CratonBlocks.quartz_vein_pyrite_ore.value(), Items.IRON_INGOT, 1, 0.7f);
+        cooking("ore_fluorite_vein_ore", CratonBlocks.fluorite_vein_ore.value(), CratonItems.FLUORITE.value(), 1, 0.2f);
+        cooking("ore_sedimentary_uranium_ore", CratonBlocks.sedimentary_uranium_ore.value(), CratonItems.RAW_URANIUM.value(), 1, 0.7f);
+        dualCooking("ore_sedimentary_pb_zn_ore", CratonBlocks.sedimentary_pb_zn_ore.value(), CratonItems.RAW_ZINC.value(), CratonItems.RAW_LEAD.value(), 1, 0.7f);
+        cooking("ore_shale_coal_ore", CratonBlocks.shale_coal_ore.value(), Items.COAL, 1, 0.1f);
+        cooking("ore_deep_hydrothermal_redstone_ore", CratonBlocks.deep_hydrothermal_redstone_ore.value(), Items.REDSTONE, 1, 0.7f);
+        cooking("ore_granite_cassiterite_ore", CratonBlocks.granite_cassiterite_ore.value(), CratonItems.RAW_TIN.value(), 1, 0.7f);
+        cooking("ore_granite_wolframite_ore", CratonBlocks.granite_wolframite_ore.value(), CratonItems.RAW_TUNGSTEN.value(), 1, 0.7f);
+        cooking("ore_porphyry_gold_ore", CratonBlocks.porphyry_gold_ore.value(), Items.GOLD_INGOT, 1, 1.0f);
+        cooking("ore_porphyry_copper_ore", CratonBlocks.porphyry_copper_ore.value(), Items.COPPER_INGOT, 1, 0.7f);
+        cooking("ore_porphyry_sulfide_ore", CratonBlocks.porphyry_sulfide_ore.value(), Items.IRON_INGOT, 1, 0.7f);
+        dualCooking("ore_epithermal_au_ag_ore", CratonBlocks.epithermal_au_ag_ore.value(), Items.GOLD_INGOT, CratonItems.RAW_SILVER.value(), 1, 1.0f);
+        cooking("ore_vms_copper_ore", CratonBlocks.vms_copper_ore.value(), Items.COPPER_INGOT, 1, 0.7f);
+        cooking("ore_vms_zinc_ore", CratonBlocks.vms_zinc_ore.value(), CratonItems.RAW_ZINC.value(), 1, 0.7f);
+        dualCooking("ore_vms_pb_ag_ore", CratonBlocks.vms_pb_ag_ore.value(), CratonItems.RAW_LEAD.value(), CratonItems.RAW_SILVER.value(), 1, 0.7f);
+        cooking("ore_bauxite_ore", CratonBlocks.bauxite_ore.value(), CratonItems.BAUXITE.value(), 1, 0.7f);
+        cooking("ore_diamond_bearing_kimberlite", CratonBlocks.diamond_bearing_kimberlite.value(), Items.DIAMOND, 1, 1.0f);
+        cooking("ore_diamond_rich_kimberlite", CratonBlocks.diamond_rich_kimberlite.value(), Items.DIAMOND, 1, 1.0f);
+        cooking("ore_skarn_iron_ore", CratonBlocks.skarn_iron_ore.value(), Items.IRON_INGOT, 1, 0.7f);
+        cooking("ore_skarn_copper_ore", CratonBlocks.skarn_copper_ore.value(), Items.COPPER_INGOT, 1, 0.7f);
+        dualCooking("ore_skarn_w_sn_ore", CratonBlocks.skarn_w_sn_ore.value(), CratonItems.RAW_TIN.value(), CratonItems.RAW_TUNGSTEN.value(), 1, 0.7f);
+        dualCooking("ore_skarn_pb_zn_ore", CratonBlocks.skarn_pb_zn_ore.value(), CratonItems.RAW_ZINC.value(), CratonItems.RAW_LEAD.value(), 1, 0.7f);
+        cooking("ore_skarn_gold_ore", CratonBlocks.skarn_gold_ore.value(), Items.GOLD_INGOT, 1, 1.0f);
+        cooking("ore_meteoric_iron_ore", CratonBlocks.meteoric_iron_ore.value(), Items.IRON_INGOT, 1, 0.7f);
+    }
+
+    /**
+     * Publish both metal recovery routes as independent datapack recipes.
+     * A furnace or blast furnace may choose only one matching recipe; external
+     * processing mods and datapacks can use these declarations independently.
+     */
+    private void dualCooking(String name, ItemLike input, ItemLike firstResult,
+                             ItemLike secondResult, int count, float xp) {
+        cooking(name + "_primary", input, firstResult, count, xp);
+        cooking(name + "_secondary", input, secondResult, count, xp);
+    }
+
+    private void cooking(String name, ItemLike input, ItemLike result, int count, float xp) {
+        cooking(name, input, result, count, count, xp);
+    }
+
+    private void cooking(String name, ItemLike input, ItemLike result, int count, int blastCount, float xp) {
+        var ingredient = Ingredient.of(input);
+        var outputStack = new ItemStackTemplate(result.asItem(), count);
+        // Only placer sediments receive an additional recovery bonus in the blast furnace.
+        // Primary raw ores keep the same output in both furnaces.
+        var blastOutputStack = new ItemStackTemplate(result.asItem(), blastCount);
+        SimpleCookingRecipeBuilder.smelting(ingredient, RecipeCategory.MISC, CookingBookCategory.MISC, outputStack, xp, 200)
+                .unlockedBy("has_" + name, has(input))
+                .save(output, net.minecraft.resources.ResourceKey.create(Registries.RECIPE, Craton.rl("smelting/" + name)));
+        // In 26.3 the blast furnace gets its speedup from fuel: cookingtime stays 200.
+        SimpleCookingRecipeBuilder.blasting(ingredient, RecipeCategory.MISC, CookingBookCategory.MISC, blastOutputStack, xp, 200)
+                .unlockedBy("has_" + name, has(input))
+                .save(output, net.minecraft.resources.ResourceKey.create(Registries.RECIPE, Craton.rl("blasting/" + name)));
     }
 
     private void verticalSlabRecipes(ItemLike verticalSlab, ItemLike baseBlock) {

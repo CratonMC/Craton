@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 0.2,
+  "ingredient": "craton:auriferous_sand",
+  "result": {
+    "count": 3,
+    "id": "minecraft:gold_nugget"
+  }
+}

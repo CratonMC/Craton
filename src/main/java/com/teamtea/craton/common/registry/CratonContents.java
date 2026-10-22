@@ -3,7 +3,7 @@ package com.teamtea.craton.common.registry;
 import com.teamtea.craton.common.worldgen.deposit.DepositPlan;
 
 import com.teamtea.craton.api.geology.GeologyLayer;
-import com.teamtea.craton.api.geology.surface.SurfaceEnvironment;
+import com.teamtea.craton.api.geology.surface.WaterEnvironment;
 import com.teamtea.craton.api.geology.surface.SurfaceSediment;
 import com.teamtea.craton.api.geology.surface.SurfaceSedimentType;
 import com.teamtea.craton.api.geology.GeologyProfile;
@@ -30,8 +30,8 @@ public class CratonContents {
 
     @SubscribeEvent
     public static void onNewRegistry(NewDatapackRegistryEvent event) {
-        event.worldRegistry(CratonRegistries.SURFACE_ENVIRONMENT,
-                SurfaceEnvironment.CODEC, SurfaceEnvironment.CODEC);
+        event.worldRegistry(CratonRegistries.WATER_ENVIRONMENT,
+                WaterEnvironment.CODEC, WaterEnvironment.CODEC);
         event.worldRegistry(CratonRegistries.SURFACE_SEDIMENT_TYPE,
                 SurfaceSedimentType.CODEC, SurfaceSedimentType.CODEC);
         event.worldRegistry(CratonRegistries.SURFACE_SEDIMENT,
@@ -164,11 +164,11 @@ public class CratonContents {
         for (Holder<GeologyProfile> profile : profiles)
             selected.putIfAbsent(profile.value().region().unwrapKey().orElseThrow(), profile);
 
-        List<Holder<SurfaceSediment>> surfaceSediments = event.getRegistries()
-                .lookup(CratonRegistries.SURFACE_SEDIMENT).map(Registry::listElements)
-                .map(Stream::toList).orElse(List.of());
-        surfaceSediments = surfaceSediments.stream().sorted(
-                Comparator.comparing(holder -> holder.unwrapKey().orElseThrow().identifier().toString())).toList();
+        List<Holder<SurfaceSediment>> surfaceSediments = new ArrayList<>();
+        event.getRegistries().lookup(CratonRegistries.SURFACE_SEDIMENT)
+                .ifPresent(registry -> registry.listElements().forEach(surfaceSediments::add));
+        surfaceSediments.sort(Comparator.comparing(
+                holder -> holder.unwrapKey().orElseThrow().identifier().toString()));
         GenerationData generation = new GenerationData(regions, selected,
                 new GeologyTransition(regions, selected), plan);
         contents = new Contents(surfaceSediments, generation, List.copyOf(profiles), List.copyOf(deposits),

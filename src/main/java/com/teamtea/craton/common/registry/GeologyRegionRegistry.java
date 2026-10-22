@@ -19,6 +19,7 @@ public class GeologyRegionRegistry {
     public static final ResourceKey<GeologyRegion> WARM_SEMIARID = createKey("warm_semiarid");
     public static final ResourceKey<GeologyRegion> PLAINS = createKey("plains");
 
+
     private GeologyRegionRegistry() {}
 
     private static ResourceKey<GeologyRegion> createKey(String name) {

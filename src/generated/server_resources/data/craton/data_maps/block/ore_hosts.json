@@ -1,0 +1,223 @@
+{
+  "values": {
+    "craton:auriferous_gravel": {
+      "hosts": [
+        "minecraft:gravel"
+      ]
+    },
+    "craton:auriferous_sand": {
+      "hosts": [
+        "minecraft:sand"
+      ]
+    },
+    "craton:banded_iron_gneiss_ore": {
+      "hosts": [
+        "craton:gneiss"
+      ]
+    },
+    "craton:bauxite_ore": {
+      "hosts": [
+        "minecraft:basalt"
+      ]
+    },
+    "craton:deep_hydrothermal_redstone_ore": {
+      "hosts": [
+        "craton:eclogite"
+      ]
+    },
+    "craton:diamond_bearing_kimberlite": {
+      "hosts": [
+        "craton:kimberlite"
+      ]
+    },
+    "craton:diamond_rich_kimberlite": {
+      "hosts": [
+        "craton:kimberlite"
+      ]
+    },
+    "craton:epithermal_au_ag_ore": {
+      "hosts": [
+        "minecraft:andesite",
+        "craton:rhyolite",
+        "minecraft:quartz_block"
+      ]
+    },
+    "craton:ferriferous_gravel": {
+      "hosts": [
+        "minecraft:gravel"
+      ]
+    },
+    "craton:ferriferous_red_sand": {
+      "hosts": [
+        "minecraft:red_sand"
+      ]
+    },
+    "craton:ferriferous_sand": {
+      "hosts": [
+        "minecraft:sand"
+      ]
+    },
+    "craton:fluorite_vein_ore": {
+      "hosts": [
+        "minecraft:granite",
+        "craton:pegmatite",
+        "minecraft:quartz_block"
+      ]
+    },
+    "craton:granite_cassiterite_ore": {
+      "hosts": [
+        "minecraft:granite"
+      ]
+    },
+    "craton:granite_wolframite_ore": {
+      "hosts": [
+        "minecraft:granite"
+      ]
+    },
+    "craton:limestone_coal_ore": {
+      "hosts": [
+        "craton:limestone"
+      ]
+    },
+    "craton:magmatic_ni_cu_ore": {
+      "hosts": [
+        "craton:gabbro"
+      ]
+    },
+    "craton:magmatic_pge_ore": {
+      "hosts": [
+        "craton:gabbro"
+      ]
+    },
+    "craton:metasomatic_lapis_ore": {
+      "hosts": [
+        "craton:marble"
+      ]
+    },
+    "craton:meteoric_iron_ore": {
+      "hosts": [
+        "craton:meteorite"
+      ]
+    },
+    "craton:peat": {
+      "hosts": [
+        "minecraft:mud",
+        "minecraft:dirt",
+        "minecraft:grass_block"
+      ]
+    },
+    "craton:pegmatite_emerald_ore": {
+      "hosts": [
+        "craton:pegmatite"
+      ]
+    },
+    "craton:pegmatite_quartz_ore": {
+      "hosts": [
+        "craton:pegmatite"
+      ]
+    },
+    "craton:porphyry_copper_ore": {
+      "hosts": [
+        "minecraft:diorite"
+      ]
+    },
+    "craton:porphyry_gold_ore": {
+      "hosts": [
+        "minecraft:diorite"
+      ]
+    },
+    "craton:porphyry_sulfide_ore": {
+      "hosts": [
+        "minecraft:diorite"
+      ]
+    },
+    "craton:quartz_vein_gold_ore": {
+      "hosts": [
+        "minecraft:granite",
+        "craton:pegmatite",
+        "minecraft:quartz_block"
+      ]
+    },
+    "craton:quartz_vein_pyrite_ore": {
+      "hosts": [
+        "minecraft:granite",
+        "craton:pegmatite",
+        "minecraft:quartz_block"
+      ]
+    },
+    "craton:sedimentary_copper_ore": {
+      "hosts": [
+        "craton:limestone"
+      ]
+    },
+    "craton:sedimentary_pb_zn_ore": {
+      "hosts": [
+        "craton:shale"
+      ]
+    },
+    "craton:sedimentary_uranium_ore": {
+      "hosts": [
+        "craton:arkose_sandstone"
+      ]
+    },
+    "craton:shale_coal_ore": {
+      "hosts": [
+        "craton:shale"
+      ]
+    },
+    "craton:skarn_copper_ore": {
+      "hosts": [
+        "craton:skarn"
+      ]
+    },
+    "craton:skarn_gold_ore": {
+      "hosts": [
+        "craton:skarn"
+      ]
+    },
+    "craton:skarn_iron_ore": {
+      "hosts": [
+        "craton:skarn"
+      ]
+    },
+    "craton:skarn_pb_zn_ore": {
+      "hosts": [
+        "craton:skarn"
+      ]
+    },
+    "craton:skarn_w_sn_ore": {
+      "hosts": [
+        "craton:skarn"
+      ]
+    },
+    "craton:suspicious_jadeitite": {
+      "hosts": [
+        "craton:jadeitite"
+      ]
+    },
+    "craton:vms_copper_ore": {
+      "hosts": [
+        "minecraft:tuff",
+        "minecraft:basalt",
+        "minecraft:andesite",
+        "craton:gabbro"
+      ]
+    },
+    "craton:vms_pb_ag_ore": {
+      "hosts": [
+        "minecraft:tuff",
+        "minecraft:basalt",
+        "minecraft:andesite",
+        "craton:gabbro"
+      ]
+    },
+    "craton:vms_zinc_ore": {
+      "hosts": [
+        "minecraft:tuff",
+        "minecraft:basalt",
+        "minecraft:andesite",
+        "craton:gabbro"
+      ]
+    }
+  }
+}

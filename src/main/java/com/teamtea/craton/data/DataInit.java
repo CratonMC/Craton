@@ -42,6 +42,8 @@ public class DataInit {
         generator.addProvider(true, esb);
         generator.addProvider(true, new CItemTagProvider(packOutput, lookupProvider));
         generator.addProvider(true, new DataMapPro(packOutput, lookupProvider));
+    }
+
     public static void gatherRegistryEntries(GatherDataRegistryEntriesEvent event) {
         event
                 .add(RecipeProvider.asBootstrap(CratonRecipeProvider::new))
@@ -50,7 +52,7 @@ public class DataInit {
                 .add(CratonRegistries.GEOLOGY_REGION, GeologyRegionRegistry::bootstrap)
                 .add(CratonRegistries.GEOLOGY_LAYER, GeologyLayerRegistry::bootstrap)
                 .add(CratonRegistries.GEOLOGY_PROFILE, GeologyProfileRegistry::bootstrap)
-                .add(CratonRegistries.SURFACE_ENVIRONMENT, SurfaceEnvironmentRegistry::bootstrap)
+                .add(CratonRegistries.WATER_ENVIRONMENT, WaterEnvironmentRegistry::bootstrap)
                 .add(CratonRegistries.SURFACE_SEDIMENT_TYPE, SurfaceSedimentTypeRegistry::bootstrap)
                 .add(CratonRegistries.SURFACE_SEDIMENT, SurfaceSedimentRegistry::bootstrap)
                 .add(CratonRegistries.ORE_TYPE, OreTypeRegistry::bootstrap)

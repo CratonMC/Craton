@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_auriferous_gravel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:auriferous_gravel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/auriferous_gravel"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_auriferous_gravel"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/auriferous_gravel"
+    ]
+  }
+}

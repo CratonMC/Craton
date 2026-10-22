@@ -1,0 +1,11 @@
+{
+  "type": "craton:riverbed",
+  "environment": "craton:river_temperate",
+  "main_block": "minecraft:sand",
+  "secondary": [
+    {
+      "type": "craton:deposit_patch",
+      "block": "minecraft:gravel"
+    }
+  ]
+}

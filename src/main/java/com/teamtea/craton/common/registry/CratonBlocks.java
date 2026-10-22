@@ -80,7 +80,8 @@ public class CratonBlocks {
     public static final Holder<Block> auriferous_gravel = registerOreBlock("auriferous_gravel", () -> Blocks.GRAVEL);
     public static final Holder<Block> ferriferous_gravel = registerOreBlock("ferriferous_gravel", () -> Blocks.GRAVEL);
     public static final Holder<Block> auriferous_sand = registerOreBlock("auriferous_sand", () -> Blocks.SAND);
-    public static final Holder<Block> ferriferous_sand = registerOreBlock("ferriferous_sand", () -> Blocks.RED_SAND);
+    public static final Holder<Block> ferriferous_sand = registerOreBlock("ferriferous_sand", () -> Blocks.SAND);
+    public static final Holder<Block> ferriferous_red_sand = registerOreBlock("ferriferous_red_sand", () -> Blocks.RED_SAND);
 
     public static final Holder<Block> diamond_bearing_kimberlite = registerOreBlock("diamond_bearing_kimberlite", () -> KIMBERLITE.getOrigin().getBaseBlock());
     public static final Holder<Block> diamond_rich_kimberlite = registerOreBlock("diamond_rich_kimberlite", () -> KIMBERLITE.getOrigin().getBaseBlock());
@@ -123,6 +124,7 @@ public class CratonBlocks {
             ferriferous_gravel,
             auriferous_sand,
             ferriferous_sand,
+            ferriferous_red_sand,
             diamond_bearing_kimberlite,
             diamond_rich_kimberlite,
             skarn_iron_ore,

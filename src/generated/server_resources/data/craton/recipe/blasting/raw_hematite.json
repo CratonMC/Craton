@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "ingredient": "craton:raw_hematite",
+  "result": {
+    "id": "minecraft:iron_ingot"
+  }
+}

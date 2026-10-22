@@ -1,15 +1,15 @@
 {
   "type": "craton:riverbed",
+  "climate": "craton:warm_humid",
   "environment": "craton:river",
   "main_block": "minecraft:dirt",
-  "secondary": [
-    {
-      "block": "minecraft:clay",
-      "type": "craton:deposit_patch"
-    }
-  ],
   "rocks": [
     "craton:shale"
   ],
-  "climate": "craton:warm_humid"
+  "secondary": [
+    {
+      "type": "craton:deposit_patch",
+      "block": "minecraft:clay"
+    }
+  ]
 }

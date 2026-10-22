@@ -1,0 +1,9 @@
+{
+  "values": [
+    "craton:magmatic_ni_cu_ore",
+    "craton:porphyry_copper_ore",
+    "craton:sedimentary_copper_ore",
+    "craton:skarn_copper_ore",
+    "craton:vms_copper_ore"
+  ]
+}

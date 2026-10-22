@@ -4,12 +4,12 @@
   "main_block": "minecraft:gravel",
   "secondary": [
     {
-      "block": "minecraft:clay",
-      "type": "craton:deposit_patch"
+      "type": "craton:deposit_patch",
+      "block": "minecraft:clay"
     },
     {
-      "block": "minecraft:sand",
-      "type": "craton:alluvial"
+      "type": "craton:alluvial",
+      "block": "minecraft:sand"
     }
   ]
 }

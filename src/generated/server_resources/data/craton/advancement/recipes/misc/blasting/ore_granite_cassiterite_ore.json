@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ore_granite_cassiterite_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:granite_cassiterite_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/ore_granite_cassiterite_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ore_granite_cassiterite_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/ore_granite_cassiterite_ore"
+    ]
+  }
+}

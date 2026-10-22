@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ore_epithermal_au_ag_ore_secondary": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:epithermal_au_ag_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:smelting/ore_epithermal_au_ag_ore_secondary"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ore_epithermal_au_ag_ore_secondary"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:smelting/ore_epithermal_au_ag_ore_secondary"
+    ]
+  }
+}

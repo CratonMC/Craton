@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ferriferous_sand": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:ferriferous_sand"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/ferriferous_sand"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ferriferous_sand"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/ferriferous_sand"
+    ]
+  }
+}

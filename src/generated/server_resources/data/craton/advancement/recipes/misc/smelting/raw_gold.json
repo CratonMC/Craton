@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_gold": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:raw_gold"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:smelting/raw_gold"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_gold"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:smelting/raw_gold"
+    ]
+  }
+}

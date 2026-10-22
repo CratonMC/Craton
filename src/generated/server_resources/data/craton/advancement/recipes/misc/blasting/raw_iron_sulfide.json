@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_iron_sulfide": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:raw_iron_sulfide"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/raw_iron_sulfide"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_iron_sulfide"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/raw_iron_sulfide"
+    ]
+  }
+}

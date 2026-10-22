@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": "craton:raw_gold",
+  "result": {
+    "id": "minecraft:gold_ingot"
+  }
+}

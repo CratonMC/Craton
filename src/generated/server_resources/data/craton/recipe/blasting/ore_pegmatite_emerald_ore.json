@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": "craton:pegmatite_emerald_ore",
+  "result": {
+    "id": "minecraft:emerald"
+  }
+}

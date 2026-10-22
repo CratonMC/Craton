@@ -27,6 +27,35 @@ public class Lang_EN extends LangHelper {
         add("command.craton.excavate.done", "Excavation complete: %s blocks removed; bedrock preserved.");
         add("command.craton.excavate.failed", "Excavation stopped: %s");
 
+        // JEI translations: generated from this provider, not maintained only in JSON.
+        add("jei.craton.ore_drops", "Ore drops");
+        add("jei.craton.bonus_chance", "Bonus chance: %s (base)");
+        add("jei.craton.main_chance", "Main product chance: %s (base)");
+        add("jei.craton.quantity", "Quantity: %s–%s (before Fortune)");
+        add("jei.craton.fortune_amount", "Fortune amount scale: %s");
+        add("jei.craton.fortune_chance", "Fortune bonus chance scale: %s");
+        add("jei.craton.veins", "Mineral Deposits");
+        add("jei.craton.geology", "Geology & Strata");
+        add("jei.craton.vein_type", "Type: %s");
+        add("jei.craton.vein_cell", "Cell: %s, candidates: %s");
+        add("jei.craton.vein_reach", "Reach: %s, frequency: %s");
+        add("jei.craton.region", "Region: %s");
+        add("jei.craton.ui.vein_ores", "Ores found in this deposit");
+        add("jei.craton.ui.vein_frequency", "Generation frequency: %s");
+        add("jei.craton.ui.vein_scale", "Deposit influence: about %s blocks");
+        add("jei.craton.ui.vein_technical", "Actual distribution depends on geology");
+        add("jei.craton.ui.geology_region", "Region: %s");
+        add("jei.craton.ui.geology_more", "%s more layers not shown");
+        add("jei.craton.ui.primary", "Main drop");
+        add("jei.craton.ui.bonus", "Extra drop");
+        add("jei.craton.ui.base_chance", "Base chance: %s");
+        add("jei.craton.ui.drop_count", "Quantity: %s–%s");
+        add("jei.craton.ui.fortune_effect", "Fortune affects actual drops");
+        add("jei.craton.ui.host_rocks", "Ore host rocks");
+        add("jei.craton.ui.host_lookup_note", "Host rocks (not a strata profile)");
+        add("jei.craton.ui.strata_section", "Strata section · top to bottom");
+        add("jei.craton.ui.layer_thickness", "Thickness %s blocks");
+
         add("itemGroup." + modid + ".core", "Craton");
         add("itemGroup." + modid + ".ores", "Craton Ores");
 
@@ -77,6 +106,7 @@ public class Lang_EN extends LangHelper {
         add(CratonBlocks.ferriferous_gravel.value().getDescriptionId(), "Ferriferous Gravel");
         add(CratonBlocks.auriferous_sand.value().getDescriptionId(), "Auriferous Sand");
         add(CratonBlocks.ferriferous_sand.value().getDescriptionId(), "Ferriferous Sand");
+        add(CratonBlocks.ferriferous_red_sand.value().getDescriptionId(), "Ferriferous Red Sand");
         CratonItems.addEnglish(this::add);
         add(CratonBlocks.diamond_bearing_kimberlite.value().getDescriptionId(), "Diamond-Bearing Kimberlite");
         add(CratonBlocks.diamond_rich_kimberlite.value().getDescriptionId(), "Diamond-Rich Kimberlite");

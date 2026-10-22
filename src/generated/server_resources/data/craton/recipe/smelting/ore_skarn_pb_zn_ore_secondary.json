@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "ingredient": "craton:skarn_pb_zn_ore",
+  "result": {
+    "id": "craton:raw_lead"
+  }
+}

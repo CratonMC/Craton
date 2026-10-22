@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "ingredient": "craton:sedimentary_pb_zn_ore",
+  "result": {
+    "id": "craton:raw_zinc"
+  }
+}

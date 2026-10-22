@@ -27,6 +27,35 @@ public class Lang_ZH extends LangHelper {
         add("command.craton.excavate.done", "清空完成：已清除 %s 个方块，基岩已保留。");
         add("command.craton.excavate.failed", "清空任务已停止：%s");
 
+        // JEI translations: generated from this provider, not maintained only in JSON.
+        add("jei.craton.ore_drops", "矿石掉落");
+        add("jei.craton.bonus_chance", "副产物概率：%s（基础）");
+        add("jei.craton.main_chance", "主产物概率：%s（基础）");
+        add("jei.craton.quantity", "数量：%s～%s（未计算时运）");
+        add("jei.craton.fortune_amount", "时运数量系数：%s");
+        add("jei.craton.fortune_chance", "时运副产物概率系数：%s");
+        add("jei.craton.veins", "矿脉信息");
+        add("jei.craton.geology", "地区与岩层");
+        add("jei.craton.vein_type", "类型：%s");
+        add("jei.craton.vein_cell", "单元间距：%s，候选数：%s");
+        add("jei.craton.vein_reach", "作用范围：%s，频率：%s");
+        add("jei.craton.region", "地质区：%s");
+        add("jei.craton.ui.vein_ores", "矿脉中可能出现的矿石");
+        add("jei.craton.ui.vein_frequency", "生成频率：%s");
+        add("jei.craton.ui.vein_scale", "矿脉影响范围：约 %s 格");
+        add("jei.craton.ui.vein_technical", "具体分布取决于地形和地质条件");
+        add("jei.craton.ui.geology_region", "所属地区：%s");
+        add("jei.craton.ui.geology_more", "另有 %s 层（未显示）");
+        add("jei.craton.ui.primary", "主要掉落");
+        add("jei.craton.ui.bonus", "额外掉落");
+        add("jei.craton.ui.base_chance", "基础概率：%s");
+        add("jei.craton.ui.drop_count", "每次数量：%s～%s");
+        add("jei.craton.ui.fortune_effect", "时运会影响实际掉落");
+        add("jei.craton.ui.host_rocks", "可生成此矿石的母岩");
+        add("jei.craton.ui.host_lookup_note", "母岩种类（非地层剖面）");
+        add("jei.craton.ui.strata_section", "地层剖面 · 从上至下");
+        add("jei.craton.ui.layer_thickness", "厚度 %s 格");
+
         add("itemGroup." + modid + ".core", "克拉通");
         add("itemGroup." + modid + ".ores", "克拉通矿产");
 
@@ -76,6 +105,7 @@ public class Lang_ZH extends LangHelper {
         add(CratonBlocks.ferriferous_gravel.value().getDescriptionId(), "含铁砂砾");
         add(CratonBlocks.auriferous_sand.value().getDescriptionId(), "金砂");
         add(CratonBlocks.ferriferous_sand.value().getDescriptionId(), "铁砂");
+        add(CratonBlocks.ferriferous_red_sand.value().getDescriptionId(), "含铁红砂");
         CratonItems.addChinese(this::add);
         add(CratonBlocks.diamond_bearing_kimberlite.value().getDescriptionId(), "含钻金伯利岩");
         add(CratonBlocks.diamond_rich_kimberlite.value().getDescriptionId(), "金伯利钻石体");

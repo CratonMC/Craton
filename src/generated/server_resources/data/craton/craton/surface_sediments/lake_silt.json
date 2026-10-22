@@ -1,0 +1,11 @@
+{
+  "type": "craton:riverbed",
+  "environment": "craton:lake",
+  "main_block": "minecraft:clay",
+  "secondary": [
+    {
+      "type": "craton:deposit_patch",
+      "block": "minecraft:gravel"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ore_vms_pb_ag_ore_primary": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:vms_pb_ag_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:blasting/ore_vms_pb_ag_ore_primary"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ore_vms_pb_ag_ore_primary"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:blasting/ore_vms_pb_ag_ore_primary"
+    ]
+  }
+}
