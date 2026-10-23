@@ -11,6 +11,7 @@
       "rich_chance": 0.1,
       "rich_scale": 1.0
     },
+    "hosts": "#c:geology/hosts/jadeitite",
     "ores": [
       "craton:jadeitite_jade"
     ],

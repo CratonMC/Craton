@@ -11,6 +11,7 @@
       "rich_chance": 0.15,
       "rich_scale": 1.0
     },
+    "hosts": "#c:geology/hosts/stratiform_coal",
     "ores": [
       "craton:limestone_coal",
       "craton:shale_coal"
@@ -21,7 +22,6 @@
       "max_candidates": 2,
       "reach": 190.0
     },
-    "rock": "minecraft:black_terracotta",
     "shape": {
       "broad_noise": 0.25,
       "detail_noise": 0.07,

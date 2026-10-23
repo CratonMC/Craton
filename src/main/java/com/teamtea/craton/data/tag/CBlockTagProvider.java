@@ -26,8 +26,39 @@ public class CBlockTagProvider extends BlockTagsProvider {
         super(output, lookupProvider, modId);
     }
 
+    private static TagKey<Block> hostTag(String path){
+        return TagKey.create(Registries.BLOCK,net.minecraft.resources.Identifier.fromNamespaceAndPath("c","geology/hosts/"+path));
+    }
+
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        tag(TagKey.create(Registries.BLOCK, net.minecraft.resources.Identifier.fromNamespaceAndPath("c", "geology/meteorite_replaceable")))
+                .add(net.minecraft.world.level.block.Blocks.GRASS_BLOCK,net.minecraft.world.level.block.Blocks.SAND,
+                        net.minecraft.world.level.block.Blocks.RED_SAND,net.minecraft.world.level.block.Blocks.GRAVEL,
+                        net.minecraft.world.level.block.Blocks.BASALT,net.minecraft.world.level.block.Blocks.TUFF,
+                        net.minecraft.world.level.block.Blocks.SNOW_BLOCK)
+                .addTag(BlockTags.BASE_STONE_OVERWORLD)
+                .addTag(BlockTags.STONE_ORE_REPLACEABLES)
+                .addTag(BlockTags.DIRT);
+        tag(hostTag("epithermal")).add(net.minecraft.world.level.block.Blocks.ANDESITE,CratonBlocks.RHYOLITE.getOrigin().getBaseBlock());
+        tag(hostTag("vms")).add(net.minecraft.world.level.block.Blocks.TUFF,net.minecraft.world.level.block.Blocks.BASALT,net.minecraft.world.level.block.Blocks.ANDESITE,CratonBlocks.GABBRO.getOrigin().getBaseBlock());
+        tag(hostTag("vms_cap")).add(net.minecraft.world.level.block.Blocks.TUFF,net.minecraft.world.level.block.Blocks.BASALT);
+        tag(hostTag("vms_footwall")).add(net.minecraft.world.level.block.Blocks.ANDESITE,CratonBlocks.GABBRO.getOrigin().getBaseBlock());
+        tag(hostTag("vms_lens")).add(net.minecraft.world.level.block.Blocks.TUFF);
+        tag(hostTag("vms_upper")).add(net.minecraft.world.level.block.Blocks.BASALT);
+        tag(hostTag("vms_lower")).add(CratonBlocks.GABBRO.getOrigin().getBaseBlock());
+        tag(hostTag("weathering")).add(net.minecraft.world.level.block.Blocks.BASALT);
+        tag(hostTag("jadeitite")).add(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock(),CratonBlocks.SCHIST.getOrigin().getBaseBlock());
+        tag(hostTag("deep_redstone")).add(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock());
+        tag(hostTag("stratiform_coal")).add(CratonBlocks.LIMESTONE.getOrigin().getBaseBlock(), CratonBlocks.SHALE.getOrigin().getBaseBlock());
+        tag(hostTag("stratiform_copper")).add(CratonBlocks.LIMESTONE.getOrigin().getBaseBlock());
+        tag(hostTag("shale_pb_zn")).add(CratonBlocks.SHALE.getOrigin().getBaseBlock());
+        tag(hostTag("sandstone_uranium")).add(CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock());
+        tag(hostTag("bif")).add(CratonBlocks.GNEISS.getOrigin().getBaseBlock());
+        tag(hostTag("skarn")).add(CratonBlocks.LIMESTONE.getOrigin().getBaseBlock(),CratonBlocks.MARBLE.getOrigin().getBaseBlock());
+        tag(hostTag("hydrothermal_emerald")).add(CratonBlocks.SCHIST.getOrigin().getBaseBlock(),CratonBlocks.GABBRO.getOrigin().getBaseBlock(),net.minecraft.world.level.block.Blocks.BASALT);
+        tag(hostTag("peat_soil")).add(net.minecraft.world.level.block.Blocks.MUD,net.minecraft.world.level.block.Blocks.DIRT,net.minecraft.world.level.block.Blocks.GRASS_BLOCK);
+
         tag(OreTags.Blocks.ORES_GOLD)
                 .add(CratonBlocks.auriferous_gravel.value())
                 .add(CratonBlocks.auriferous_sand.value())

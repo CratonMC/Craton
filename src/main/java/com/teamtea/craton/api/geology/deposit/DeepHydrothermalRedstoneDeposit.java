@@ -21,17 +21,22 @@ public class DeepHydrothermalRedstoneDeposit extends OrdinaryDeposit {
         super(DepositTypes.DEEP_REDSTONE,settings,DepositRandomSequences.VEIN,35);
     }
 
+    /** Shared host-rock rule for generation, placer provenance, and survey. */
+    public boolean matchesHost(BlockState state) {
+        return hostMatches(state, settings().hostTags());
+    }
+
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
     @Override
     public boolean canPlace(DepositGenerationContext ctx,BlockState originalHost,BlockState state,int y){
-        return state==originalHost&&originalHost.is(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock());
+        return state==originalHost&&matchesHost(originalHost);
     }
 
     @Override
     public BlockState place(DepositGenerationContext ctx,DepositCandidateSampler.Candidate candidate,
                             BlockState originalHost,BlockState state,int y) {
-        if(state!=originalHost || !originalHost.is(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock())) return null;
+        if(state!=originalHost || !matchesHost(originalHost)) return null;
         Column column=(Column)ctx.columnGeometry(candidate);
         if(column==null){column=prepareColumn(ctx,candidate,originalHost);ctx.columnGeometry(candidate,column);}
         if(!column.valid()) return null;

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#c:is_badlands",
+  "features": "craton:badlands_red_sand_placer",
+  "step": "underground_decoration"
+}

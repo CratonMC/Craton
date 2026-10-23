@@ -11,6 +11,7 @@
       "rich_chance": 0.1,
       "rich_scale": 1.0
     },
+    "hosts": "#c:geology/hosts/stratiform_copper",
     "ores": [
       "craton:sedimentary_copper"
     ],
@@ -20,7 +21,6 @@
       "max_candidates": 1,
       "reach": 190.0
     },
-    "rock": "minecraft:orange_terracotta",
     "shape": {
       "broad_noise": 0.25,
       "detail_noise": 0.07,

@@ -5,6 +5,8 @@ import com.teamtea.craton.common.worldgen.deposit.PreparedPegmatite;
 import com.teamtea.craton.common.worldgen.noise.GeologicalNoise;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 
 import net.minecraft.world.level.block.Blocks;
@@ -14,11 +16,32 @@ import com.teamtea.craton.common.worldgen.deposit.DepositGenerationContext;
 import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
 
 public class HydrothermalVeinDeposit extends OrdinaryDeposit {
-    public static final MapCodec<HydrothermalVeinDeposit> CODEC =
-            codecFor(4, false, HydrothermalVeinDeposit::new);
+    public static final MapCodec<HydrothermalVeinDeposit> CODEC = RecordCodecBuilder.<HydrothermalVeinDeposit>mapCodec(i -> i.group(
+            Settings.CODEC.fieldOf("settings").forGetter(HydrothermalVeinDeposit::settings),
+            Codec.floatRange(0f, 1f).optionalFieldOf("emerald_chance", .40f).forGetter(HydrothermalVeinDeposit::emeraldChance),
+            Codec.floatRange(0f, 1f).optionalFieldOf("emerald_min_grade", .53f).forGetter(HydrothermalVeinDeposit::emeraldMinGrade),
+            Codec.floatRange(0f, 1f).optionalFieldOf("emerald_min_mix", .42f).forGetter(HydrothermalVeinDeposit::emeraldMinMix),
+            Codec.floatRange(0f, 1f).optionalFieldOf("emerald_max_mix", .68f).forGetter(HydrothermalVeinDeposit::emeraldMaxMix)
+    ).apply(i, HydrothermalVeinDeposit::new)).flatXmap(HydrothermalVeinDeposit::validate, HydrothermalVeinDeposit::validate);
+    private static com.mojang.serialization.DataResult<HydrothermalVeinDeposit> validate(HydrothermalVeinDeposit d) {
+        if (d.emeraldMinMix > d.emeraldMaxMix) return com.mojang.serialization.DataResult.error(() -> "Emerald min mix exceeds max mix");
+        return FieldDeposit.validate(d.settings(), 4, false).map(v -> d);
+    }
+    private final float emeraldChance, emeraldMinGrade, emeraldMinMix, emeraldMaxMix;
+    public float emeraldChance(){ return emeraldChance; }
+    public float emeraldMinGrade(){ return emeraldMinGrade; }
+    public float emeraldMinMix(){ return emeraldMinMix; }
+    public float emeraldMaxMix(){ return emeraldMaxMix; }
 
     public HydrothermalVeinDeposit(Settings settings) {
+        this(settings, .40f, .53f, .42f, .68f);
+    }
+    public HydrothermalVeinDeposit(Settings settings, float emeraldChance, float emeraldMinGrade, float emeraldMinMix, float emeraldMaxMix) {
         super(DepositTypes.VEIN,settings,DepositRandomSequences.VEIN,30,PreparedPegmatite.requiredReach(settings.shape()));
+        this.emeraldChance=emeraldChance;
+        this.emeraldMinGrade=emeraldMinGrade;
+        this.emeraldMinMix=emeraldMinMix;
+        this.emeraldMaxMix=emeraldMaxMix;
     }
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
@@ -60,10 +83,9 @@ public class HydrothermalVeinDeposit extends OrdinaryDeposit {
         BlockState pegmatite=settings().rock();
         // Mafic or schist country rock is a coarse proxy for a favorable reactive wall rock,
         // not a claim that all such rocks provide chromium or vanadium.
-        boolean emeraldHost=state.is(com.teamtea.craton.common.registry.CratonBlocks.SCHIST.getOrigin().getBaseBlock())
-                ||state.is(com.teamtea.craton.common.registry.CratonBlocks.GABBRO.getOrigin().getBaseBlock())||state.is(Blocks.BASALT);
-        if(settings().ores().size()>4&&emeraldHost&&rand01(c.alterationSeed()^0x454D4552414C44L)<.40
-                &&geometry.wallFraction()>.25&&geometry.wallFraction()<.90&&grade>.53&&mix>.42&&mix<.68)
+        boolean emeraldHost=hostMatches(state,settings().hostTags());
+        if(settings().ores().size()>4&&emeraldHost&&rand01(c.alterationSeed()^0x454D4552414C44L)<emeraldChance
+                &&geometry.wallFraction()>.25&&geometry.wallFraction()<.90&&grade>emeraldMinGrade&&mix>emeraldMinMix&&mix<emeraldMaxMix)
             return abundantOre(this,ctx,c,y,4,pegmatite);
         if(geometry.wallFraction()>.30&&grade>.72&&mix<.22) return abundantOre(this,ctx,c,y,0,pegmatite);
         if(geometry.wallFraction()>.45&&grade>.58&&mix<.55) return abundantOre(this,ctx,c,y,1,pegmatite);

@@ -5,6 +5,7 @@ import com.teamtea.craton.common.worldgen.deposit.DepositGenerationContext;
 import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 import com.teamtea.craton.common.worldgen.deposit.StratiformDepositField.DepositSample;
 import net.minecraft.world.level.block.state.BlockState;
+import com.teamtea.craton.common.registry.CratonBlocks;
 
 import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
 
@@ -18,6 +19,12 @@ public class ShaleLeadZincDeposit extends FieldDeposit {
     }
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
+
+    /** Shared host predicate for generation and reconnaissance. */
+    public boolean matchesHost(BlockState state) { return hostMatches(state,settings().hostTags()); }
+    public static boolean supportsHost(BlockState state) {
+        return state.is(CratonBlocks.SHALE.getOrigin().getBaseBlock());
+    }
 
     public BlockState placeSample(DepositGenerationContext ctx,BlockState host,int y,DepositSample sample) {
         return occupies(sample.score(),sample.grade(),sample.candidate(),ctx.x(),y,ctx.z(),.10,.68)

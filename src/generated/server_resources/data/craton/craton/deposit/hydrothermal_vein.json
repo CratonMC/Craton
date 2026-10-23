@@ -11,6 +11,7 @@
       "rich_chance": 0.1,
       "rich_scale": 1.0
     },
+    "hosts": "#c:geology/hosts/hydrothermal_emerald",
     "ores": [
       "craton:quartz_vein_gold",
       "craton:quartz_vein_pyrite",

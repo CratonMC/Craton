@@ -19,41 +19,42 @@ import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
 public class StratiformDepositField {
     private StratiformDepositField(){}
 
-    public static BlockState applyStratiform(DepositGenerationContext ctx,BlockState host,int y){
-        if(isLimestone(host)){
-            DepositSample coal=layerBoundSample(ctx,ctx.stratiformCoal(),CratonBlocks.LIMESTONE.getOrigin().getBaseBlock().defaultBlockState(),y,0x11);
-            if(coal!=null){
-                StratiformCoalDeposit definition=(StratiformCoalDeposit)ctx.owners().get(coal.candidate());
-                BlockState placed=definition.placeSample(ctx,host,y,coal);
-                if(!placed.equals(host)) return placed;
+    public static BlockState applyStratiform(DepositGenerationContext ctx, BlockState host, int y) {
+        BlockState placed = applyLayerBound(ctx, ctx.stratiformCoal(), host, y, 0x11);
+        if (!placed.equals(host)) return placed;
+        placed = applyLayerBound(ctx, ctx.stratiformCopper(), host, y, 0x29);
+        if (!placed.equals(host)) return placed;
+        placed = applyLayerBound(ctx, ctx.shaleLeadZinc(), host, y, 0x5A);
+        if (!placed.equals(host)) return placed;
+        if (ctx.sandstoneUranium().stream().anyMatch(c ->
+                ctx.owners().get(c) instanceof SandstoneUraniumDeposit deposit && deposit.matchesHost(host))) {
+            DepositSample uranium = sandstoneRollFront(ctx, host, y);
+            if (uranium != null) {
+                SandstoneUraniumDeposit deposit=(SandstoneUraniumDeposit)ctx.owners().get(uranium.candidate());
+                if (deposit.matchesHost(host)) return deposit.placeSample(ctx,host,y,uranium);
             }
-            DepositSample copper=layerBoundSample(ctx,ctx.stratiformCopper(),CratonBlocks.LIMESTONE.getOrigin().getBaseBlock().defaultBlockState(),y,0x29);
-            if(copper!=null){
-                StratiformCopperDeposit definition=(StratiformCopperDeposit)ctx.owners().get(copper.candidate());
-                BlockState placed=definition.placeSample(ctx,host,y,copper);
-                if(!placed.equals(host)) return placed;
-            }
-        }
-        if(host.is(CratonBlocks.SHALE.getOrigin().getBaseBlock())){
-            DepositSample coal=layerBoundSample(ctx,ctx.stratiformCoal(),host,y,0x11);
-            if(coal!=null){
-                StratiformCoalDeposit definition=(StratiformCoalDeposit)ctx.owners().get(coal.candidate());
-                BlockState placed=definition.placeSample(ctx,host,y,coal);
-                if(!placed.equals(host)) return placed;
-            }
-            DepositSample leadZinc=layerBoundSample(ctx,ctx.shaleLeadZinc(),host,y,0x5A);
-            if(leadZinc!=null){
-                ShaleLeadZincDeposit definition=(ShaleLeadZincDeposit)ctx.owners().get(leadZinc.candidate());
-                BlockState placed=definition.placeSample(ctx,host,y,leadZinc);
-                if(!placed.equals(host)) return placed;
-            }
-        }
-        if(host.is(CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock())){
-            DepositSample uranium=sandstoneRollFront(ctx,y);
-            if(uranium!=null)
-                return ((SandstoneUraniumDeposit)ctx.owners().get(uranium.candidate())).placeSample(ctx,host,y,uranium);
         }
         return host;
+    }
+
+    private static BlockState applyLayerBound(DepositGenerationContext ctx,
+            List<DepositCandidateSampler.Candidate> candidates, BlockState host, int y, long variant) {
+        if (candidates.isEmpty()) return host;
+        List<DepositCandidateSampler.Candidate> eligible=new java.util.ArrayList<>();
+        for (DepositCandidateSampler.Candidate candidate : candidates) {
+            Object owner=ctx.owners().get(candidate);
+            boolean allowed=owner instanceof StratiformCoalDeposit coal ? coal.matchesHost(host)
+                    : owner instanceof StratiformCopperDeposit copper ? copper.matchesHost(host)
+                    : owner instanceof ShaleLeadZincDeposit lead ? lead.matchesHost(host) : false;
+            if (allowed) eligible.add(candidate);
+        }
+        if (eligible.isEmpty()) return host;
+        DepositSample sample=layerBoundSample(ctx,eligible,host,y,variant);
+        if (sample == null) return host;
+        Object owner=ctx.owners().get(sample.candidate());
+        return owner instanceof StratiformCoalDeposit coal ? coal.placeSample(ctx,host,y,sample)
+                : owner instanceof StratiformCopperDeposit copper ? copper.placeSample(ctx,host,y,sample)
+                : ((ShaleLeadZincDeposit)owner).placeSample(ctx,host,y,sample);
     }
 
     public static class DepositSample {
@@ -162,18 +163,17 @@ public class StratiformDepositField {
     }
     private static final Lens INVALID_LENS=new Lens(null,null);
     private static Anchor prepareAnchor(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c,BlockState host,long variant){
-        List<Integer> layers=matchingLayers(ctx,host,c.x(),c.z());
-        boolean coal=ctx.owners().get(c) instanceof StratiformCoalDeposit;
-        int layer;
-        if(coal){
-            // Select one horizon across both coal hosts, rather than one per host.
-            var eligible=new java.util.ArrayList<Integer>(matchingLayers(ctx,
-                    CratonBlocks.LIMESTONE.getOrigin().getBaseBlock().defaultBlockState(),c.x(),c.z()));
-            eligible.addAll(matchingLayers(ctx,CratonBlocks.SHALE.getOrigin().getBaseBlock().defaultBlockState(),c.x(),c.z()));
-            eligible.sort(Integer::compareTo);
-            int selected=eligible.isEmpty()?-1:eligible.get(index(c.verticalSeed()^variant,eligible.size()));
-            layer=layers.contains(selected)?selected:-1;
-        }else layer=layers.isEmpty()?-1:layers.get(index(c.verticalSeed()^variant,layers.size()));
+        FieldDeposit deposit=(FieldDeposit)ctx.owners().get(c);
+        java.util.function.Predicate<BlockState> eligibleHost = deposit instanceof StratiformCoalDeposit coalDeposit
+                ? coalDeposit::matchesHost
+                : deposit instanceof StratiformCopperDeposit copper ? copper::matchesHost
+                : deposit instanceof ShaleLeadZincDeposit lead ? lead::matchesHost
+                : state -> false;
+        List<Integer> eligible=matchingHostLayers(ctx,eligibleHost,c.x(),c.z());
+        // One selected horizon per deposit candidate, including coal with multiple hosts.
+        int selected=eligible.isEmpty()?-1:eligible.get(index(c.verticalSeed()^variant,eligible.size()));
+        int layer=selected>=0&&ctx.geology().layers().get(selected).value().blockState().is(host.getBlock()) ? selected : -1;
+        boolean coal=deposit instanceof StratiformCoalDeposit;
         return new Anchor(layer,c,shape(ctx,c),variant,coal);
     }
     private static Lens prepareLens(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c,Anchor anchor,long variant){
@@ -195,14 +195,24 @@ public class StratiformDepositField {
         return lens;
     }
 
-    private static DepositSample sandstoneRollFront(DepositGenerationContext ctx,int y){
+    private static List<Integer> matchingHostLayers(DepositGenerationContext ctx,
+            java.util.function.Predicate<BlockState> predicate,int x,int z) {
+        List<Integer> matches=new java.util.ArrayList<>();
+        for (int i=0;i<ctx.geology().layers().size();i++)
+            if (ctx.geology().layerThickness(i,x,z)>=1.0
+                    && predicate.test(ctx.geology().layers().get(i).value().blockState())) matches.add(i);
+        return matches;
+    }
+
+    private static DepositSample sandstoneRollFront(DepositGenerationContext ctx,BlockState host,int y){
         DepositSample best=ctx.stratiformSample();
         best.reset();
         List<DepositCandidateSampler.Candidate> candidates=ctx.sandstoneUranium();
         for(int i=0,size=candidates.size();i<size;i++){
             DepositCandidateSampler.Candidate candidate=candidates.get(i);
-            List<Integer> sandstoneLayers=matchingLayers(ctx,
-                    CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock().defaultBlockState(),candidate.x(),candidate.z());
+            SandstoneUraniumDeposit deposit=(SandstoneUraniumDeposit)ctx.owners().get(candidate);
+            if (!deposit.matchesHost(host)) continue;
+            List<Integer> sandstoneLayers=matchingHostLayers(ctx,deposit::matchesHost,candidate.x(),candidate.z());
             if(sandstoneLayers.isEmpty()) continue;
             ((SandstoneUraniumDeposit)ctx.owners().get(candidate))
                     .sampleRollFront(ctx,candidate,y,sandstoneLayers,best);

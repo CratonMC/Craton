@@ -21,6 +21,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamtea.craton.api.geology.ore.OreType;
 import com.teamtea.craton.common.registry.CratonRegistries;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.resources.Identifier;
 
@@ -29,17 +33,26 @@ public class BandedIronFormation extends AbstractDeposit {
     private final double length,width,thickness,dipMin,dipMax,bandScale,enrichmentScale,oreDensity,frequency,broadNoise,detailNoise;
     private final int satelliteCount;
     private final Abundance abundance;
+    private final HolderSet<Block> hosts;
+    private static final HolderSet<Block> DEFAULT_HOSTS = HolderSet.direct(List.of());
 
     public BandedIronFormation(Holder<OreType> ore,double length,double width,double thickness,
                                double dipMin,double dipMax,double bandScale,double enrichmentScale,double oreDensity,
                                double frequency,int satelliteCount,double broadNoise,double detailNoise) {
-        this(ore,length,width,thickness,dipMin,dipMax,bandScale,enrichmentScale,oreDensity,frequency,satelliteCount,broadNoise,detailNoise,Abundance.BANDED);
+        this(ore,length,width,thickness,dipMin,dipMax,bandScale,enrichmentScale,oreDensity,frequency,satelliteCount,broadNoise,detailNoise,Abundance.BANDED,DEFAULT_HOSTS);
     }
     public BandedIronFormation(Holder<OreType> ore,double length,double width,double thickness,
                                double dipMin,double dipMax,double bandScale,double enrichmentScale,double oreDensity,
                                double frequency,int satelliteCount,double broadNoise,double detailNoise,Abundance abundance) {
+        this(ore,length,width,thickness,dipMin,dipMax,bandScale,enrichmentScale,oreDensity,frequency,satelliteCount,broadNoise,detailNoise,abundance,DEFAULT_HOSTS);
+    }
+    public BandedIronFormation(Holder<OreType> ore,double length,double width,double thickness,
+                               double dipMin,double dipMax,double bandScale,double enrichmentScale,double oreDensity,
+                               double frequency,int satelliteCount,double broadNoise,double detailNoise,
+                               Abundance abundance,HolderSet<Block> hosts) {
         super(resolvePlacement(length,width,frequency,broadNoise,detailNoise));
         this.abundance=abundance;
+        this.hosts=hosts;
         this.ore=ore;
         this.length=length;
         this.width=width;
@@ -53,6 +66,24 @@ public class BandedIronFormation extends AbstractDeposit {
         this.satelliteCount=satelliteCount;
         this.broadNoise=broadNoise;
         this.detailNoise=detailNoise;
+    }
+
+    public BlockState hostState() { return CratonBlocks.GNEISS.getOrigin().getBaseBlock().defaultBlockState(); }
+    public BandedIronFormation withHosts(HolderSet<Block> value) {
+        return new BandedIronFormation(ore,length,width,thickness,dipMin,dipMax,bandScale,enrichmentScale,
+                oreDensity,frequency,satelliteCount,broadNoise,detailNoise,abundance,value);
+    }
+    public HolderSet<Block> hosts() { return hosts; }
+    public boolean matchesHost(BlockState state) { return hosts.size()==0 ? state.is(hostState().getBlock())
+            : hosts.contains(state.getBlock().builtInRegistryHolder()); }
+    private List<Integer> hostLayers(GeologyFieldSampler geology,int x,int z) {
+        var layers=new ArrayList<Integer>();
+        for(int i=0;i<geology.layers().size();i++)
+            if(geology.layerThickness(i,x,z)>=1.0&&matchesHost(geology.layers().get(i).value().blockState()))layers.add(i);
+        return layers;
+    }
+    public List<Integer> matchingHostLayers(GeologyFieldSampler geology,int x,int z) {
+        return hostLayers(geology,x,z);
     }
 
     public Abundance abundance(){return abundance;}
@@ -94,7 +125,8 @@ public class BandedIronFormation extends AbstractDeposit {
                     Codec.intRange(0,24).optionalFieldOf("satellite_count",8).forGetter(BandedIronFormation::satelliteCount),
                     Codec.doubleRange(0,2).optionalFieldOf("broad_noise",.32).forGetter(BandedIronFormation::broadNoise),
                     Codec.doubleRange(0,2).optionalFieldOf("detail_noise",.075).forGetter(BandedIronFormation::detailNoise),
-                    Abundance.CODEC.optionalFieldOf("abundance",Abundance.BANDED).forGetter(BandedIronFormation::abundance)
+                    Abundance.CODEC.optionalFieldOf("abundance",Abundance.BANDED).forGetter(BandedIronFormation::abundance),
+                    RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("hosts",DEFAULT_HOSTS).forGetter(BandedIronFormation::hosts)
             ).apply(instance, BandedIronFormation::new)).flatXmap(BandedIronFormation::validate,BandedIronFormation::validate);
 
     private static DataResult<BandedIronFormation> validate(BandedIronFormation b) {
@@ -187,8 +219,7 @@ public class BandedIronFormation extends AbstractDeposit {
     private static final Anchor INVALID_ANCHOR=new Anchor(-1,1,0,new Pod[0],null);
 
     private Anchor prepareAnchor(GeologyFieldSampler geology,DepositCandidateSampler.Candidate candidate){
-        List<Integer> eligible=geology.matchingLayersAt(
-                CratonBlocks.GNEISS.getOrigin().getBaseBlock().defaultBlockState(),candidate.x(),candidate.z());
+        List<Integer> eligible=hostLayers(geology,candidate.x(),candidate.z());
         if(eligible.isEmpty()) return INVALID_ANCHOR;
         int layer=eligible.get((int)Math.floor(rand01(candidate.verticalSeed())*eligible.size())%eligible.size());
         double rawGx=geology.boundaryY(layer,candidate.x()+4,candidate.z())-geology.boundaryY(layer,candidate.x()-4,candidate.z());

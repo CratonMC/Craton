@@ -1,3 +1,4 @@
 {
-  "type": "craton:placer"
+  "type": "craton:placer",
+  "deposit": "craton:placer"
 }

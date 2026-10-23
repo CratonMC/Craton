@@ -85,30 +85,23 @@
     "craton:ferriferous_gravel": {
       "drops": [
         {
-          "item": "minecraft:iron_nugget",
+          "item": "craton:magnetite_nugget",
           "max_count": 4,
-          "min_count": 2,
-          "required_ingot_tag": "c:ingots/iron"
+          "min_count": 2
         }
       ]
     },
     "craton:ferriferous_red_sand": {
       "drops": [
         {
-          "item": "minecraft:iron_nugget",
-          "max_count": 4,
-          "min_count": 2,
-          "required_ingot_tag": "c:ingots/iron"
+          "item": "craton:hematite_nugget"
         }
       ]
     },
     "craton:ferriferous_sand": {
       "drops": [
         {
-          "item": "minecraft:iron_nugget",
-          "max_count": 4,
-          "min_count": 2,
-          "required_ingot_tag": "c:ingots/iron"
+          "item": "craton:magnetite_nugget"
         }
       ]
     },

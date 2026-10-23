@@ -21,6 +21,7 @@ public class ModBiomeModifiers {
 
     public static final ResourceKey<BiomeModifier> REMOVE_STONE = createKey("remove_stone");
     public static final ResourceKey<BiomeModifier> REMOVE_ORES = createKey("remove_ores");
+    public static final ResourceKey<BiomeModifier> ADD_BADLANDS_RED_SAND_PLACER = createKey("add_badlands_red_sand_placer");
     public static final ResourceKey<BiomeModifier> ADD_PLACER = createKey("add_placer");
     public static final ResourceKey<BiomeModifier> ADD_METEORITE = createKey("add_meteorite");
 
@@ -31,6 +32,10 @@ public class ModBiomeModifiers {
     public static void bootstrap(BootstrapContext<BiomeModifier> context) {
         HolderGetter<Biome> holderGetter = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureHolderGetter = context.lookup(Registries.PLACED_FEATURE);
+        context.register(ADD_BADLANDS_RED_SAND_PLACER, new BiomeModifiers.AddFeaturesBiomeModifier(
+                holderGetter.getOrThrow(Tags.Biomes.IS_BADLANDS),
+                HolderSet.direct(placedFeatureHolderGetter.getOrThrow(CratonWorldgenFeatures.PLACED_BADLANDS_RED_SAND_PLACER)),
+                GenerationStep.Decoration.UNDERGROUND_DECORATION));
         context.register(ADD_PLACER,new BiomeModifiers.AddFeaturesBiomeModifier(
                 holderGetter.getOrThrow(Tags.Biomes.IS_OVERWORLD),
                 HolderSet.direct(placedFeatureHolderGetter.getOrThrow(CratonWorldgenFeatures.PLACED_PLACER)),

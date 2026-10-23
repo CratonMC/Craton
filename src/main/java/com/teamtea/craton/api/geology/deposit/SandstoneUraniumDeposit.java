@@ -25,6 +25,12 @@ public class SandstoneUraniumDeposit extends FieldDeposit {
 
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
+    /** Shared host predicate for generation and reconnaissance. */
+    public boolean matchesHost(BlockState state) { return hostMatches(state,settings().hostTags()); }
+    public static boolean supportsHost(BlockState state) {
+        return state.is(CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock());
+    }
+
     public BlockState placeSample(DepositGenerationContext ctx,BlockState host,int y,DepositSample sample){
         if(occupies(sample.score(),sample.grade(),sample.candidate(),ctx.x(),y,ctx.z(),.12,.62))
             return abundantOre(this,ctx,sample.candidate(),y,0,host);

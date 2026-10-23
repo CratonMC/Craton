@@ -101,6 +101,7 @@ public class WorldSetter {
             int[] tops=new int[256];
             int[] waterSurfaces=new int[256];
             // Snapshot the real floor before any writes; do not query/generate adjacent chunks.
+            BlockPos.MutableBlockPos heightScan = new BlockPos.MutableBlockPos();
             for(int i=0;i<surfaces.length;i++){
                 ColumnSurface surface=surfaces[i];
                 if (surface == null) {
@@ -111,34 +112,38 @@ public class WorldSetter {
                     // occupied position explicitly instead of assuming an off-by-one.
                     int floorHeight = chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, surface.x(), surface.z());
                     int surfaceHeight = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, surface.x(), surface.z());
-                    tops[i] = occupiedY(chunk, surface.x(), surface.z(), floorHeight, true);
-                    waterSurfaces[i] = occupiedY(chunk, surface.x(), surface.z(), surfaceHeight, false);
+                    tops[i] = occupiedY(chunk, heightScan, surface.x(), surface.z(), floorHeight, true);
+                    waterSurfaces[i] = occupiedY(chunk, heightScan, surface.x(), surface.z(), surfaceHeight, false);
                 }
             }
             // Resolve actual submerged columns before any geology/sediment writes.
             // Only chunk-owned coordinates are queried; neighboring chunks are never loaded.
             boolean[] submergedColumns = new boolean[256];
+            BlockPos.MutableBlockPos scan = new BlockPos.MutableBlockPos();
+            BlockColumn scanColumn = new BlockColumn() {
+                @Override public BlockState getBlock(int y) { return chunk.getBlockState(scan.setY(y)); }
+                @Override public void setBlock(int y, BlockState state) { throw new UnsupportedOperationException(); }
+            };
             for (int i = 0; i < surfaces.length; i++) {
                 ColumnSurface surface = surfaces[i];
                 if (surface == null || tops[i] < minY) continue;
-                BlockPos.MutableBlockPos scan = new BlockPos.MutableBlockPos(surface.x(), minY, surface.z());
-                BlockColumn scanColumn = new BlockColumn() {
-                    @Override public BlockState getBlock(int y) { return chunk.getBlockState(scan.setY(y)); }
-                    @Override public void setBlock(int y, BlockState state) { throw new UnsupportedOperationException(); }
-                };
+                scan.set(surface.x(), minY, surface.z());
                 submergedColumns[i] = SurfaceSedimentEngine.classifyWater(scanColumn, tops[i],
                         waterSurfaces[i], seaLevel, minY, surface.biome(), climate.sample(surface.x(), surface.z())).submerged();
             }
+            BlockPos.MutableBlockPos position = new BlockPos.MutableBlockPos();
+            BlockColumn column = new BlockColumn() {
+                @Override public BlockState getBlock(int y) { return chunk.getBlockState(position.setY(y)); }
+                @Override public void setBlock(int y, BlockState state) {
+                    chunk.setBlockState(position.setY(y), state,
+                            Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
+                }
+            };
             for(int index=0;index<surfaces.length;index++){
                 ColumnSurface surface=surfaces[index];
                 if(surface==null) continue;
                 int x=surface.x(),z=surface.z();
-                BlockPos.MutableBlockPos position=new BlockPos.MutableBlockPos(x,minY,z);
-                BlockColumn column=new BlockColumn(){
-                    @Override public BlockState getBlock(int y){return chunk.getBlockState(position.setY(y));}
-                    @Override public void setBlock(int y,BlockState state){chunk.setBlockState(position.setY(y),state,
-                            Block.UPDATE_CLIENTS|Block.UPDATE_KNOWN_SHAPE|Block.UPDATE_SUPPRESS_DROPS);}
-                };
+                position.set(x,minY,z);
                 Climate.TargetPoint point=climate.sample(x,z);
                 int top=tops[index];
                 if(top<minY||top>chunk.getHeightAccessorForGeneration().getMaxY()) continue;
@@ -182,7 +187,7 @@ public class WorldSetter {
                 if (!DEBUG_DEPOSITS && !water.submerged() && top >= seaLevel - 1 && top <= seaLevel + 2) {
                     com.teamtea.craton.api.geology.surface.SurfaceSediment bankSource = findBankSource(
                             chunk, x, z, top, seaLevel, minY, surfaces, tops,
-                            waterSurfaces, submergedColumns);
+                            waterSurfaces, submergedColumns, scan, scanColumn);
                     if (bankSource != null) {
                         surfaceSedimentEngine.applyBank(column, x, z, top, minY, bankSource);
                     }
@@ -195,7 +200,8 @@ public class WorldSetter {
          */
         private com.teamtea.craton.api.geology.surface.SurfaceSediment findBankSource(
                 ChunkAccess chunk, int x, int z, int bankY, int seaLevel, int minY,
-                ColumnSurface[] surfaces, int[] tops, int[] waterSurfaces, boolean[] submerged) {
+                ColumnSurface[] surfaces, int[] tops, int[] waterSurfaces, boolean[] submerged,
+                BlockPos.MutableBlockPos scan, BlockColumn sourceColumn) {
             int lx = Math.floorMod(x, 16), lz = Math.floorMod(z, 16);
             for (int distance = 1; distance <= 2; distance++) {
                 for (int dz = -distance; dz <= distance; dz++) {
@@ -211,11 +217,7 @@ public class WorldSetter {
                         Climate.TargetPoint point = climate.sample(neighbor.x(), neighbor.z());
                         var profile = generation.getGeologyProfile(point);
                         if (profile.isEmpty()) continue;
-                        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(neighbor.x(), minY, neighbor.z());
-                        BlockColumn sourceColumn = new BlockColumn() {
-                            @Override public BlockState getBlock(int y) { return chunk.getBlockState(pos.setY(y)); }
-                            @Override public void setBlock(int y, BlockState state) { throw new UnsupportedOperationException(); }
-                        };
+                        scan.set(neighbor.x(), minY, neighbor.z());
                         var water = new SurfaceSedimentEngine.WaterColumn(neighborY, waterSurfaces[i], true);
                         var selected = surfaceSedimentEngine.selectSubmergedRule(sourceColumn,
                                 neighbor.x(), neighbor.z(), neighborY, neighbor.biome(), point,
@@ -227,12 +229,13 @@ public class WorldSetter {
             return null;
         }
 
-        private static int occupiedY(ChunkAccess chunk, int x, int z, int height, boolean solidFloor) {
+        private static int occupiedY(ChunkAccess chunk, BlockPos.MutableBlockPos scan,
+                                     int x, int z, int height, boolean solidFloor) {
             int minY = chunk.getHeightAccessorForGeneration().getMinY();
             int maxY = chunk.getHeightAccessorForGeneration().getMaxY();
             int candidate = Math.min(height, maxY);
             if (candidate > minY) {
-                BlockState state = chunk.getBlockState(new BlockPos(x, candidate, z));
+                BlockState state = chunk.getBlockState(scan.set(x, candidate, z));
                 if (state.isAir() || (solidFloor && !state.getFluidState().isEmpty())) {
                     candidate--;
                 }

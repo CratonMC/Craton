@@ -103,15 +103,15 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.ferriferous_gravel,
-                List.of(counts(product(Items.IRON_NUGGET, "c:ingots/iron"), 2, 4)),
+                List.of(counts(product(CratonItems.MAGNETITE_NUGGET.value()), 2, 4)),
                 List.of());
 
         add(CratonBlocks.ferriferous_sand,
-                List.of(counts(product(Items.IRON_NUGGET, "c:ingots/iron"), 2, 4)),
+                List.of(product(CratonItems.MAGNETITE_NUGGET.value())),
                 List.of());
 
         add(CratonBlocks.ferriferous_red_sand,
-                List.of(counts(product(Items.IRON_NUGGET, "c:ingots/iron"), 2, 4)),
+                List.of(product(CratonItems.HEMATITE_NUGGET.value())),
                 List.of());
 
         add(CratonBlocks.diamond_bearing_kimberlite,

@@ -11,6 +11,11 @@
       "rich_chance": 0.15,
       "rich_scale": 1.0
     },
+    "cap_hosts": "#c:geology/hosts/vms_cap",
+    "footwall_hosts": "#c:geology/hosts/vms_footwall",
+    "hosts": "#c:geology/hosts/vms",
+    "lens_hosts": "#c:geology/hosts/vms_lens",
+    "lower_hosts": "#c:geology/hosts/vms_lower",
     "ores": [
       "craton:vms_chalcopyrite",
       "craton:vms_sphalerite",
@@ -22,7 +27,6 @@
       "max_candidates": 1,
       "reach": 130.0
     },
-    "rock": "minecraft:tuff",
     "shape": {
       "broad_noise": 0.29,
       "detail_noise": 0.09,
@@ -34,6 +38,7 @@
       "radius_y_min": 5.1,
       "radius_z_max": 51.85,
       "radius_z_min": 22.1
-    }
+    },
+    "upper_hosts": "#c:geology/hosts/vms_upper"
   }
 }

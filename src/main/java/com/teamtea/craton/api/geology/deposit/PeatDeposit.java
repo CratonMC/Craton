@@ -21,7 +21,7 @@ public class PeatDeposit extends OrdinaryDeposit {
     public static boolean soil(BlockState state){return state.is(Blocks.MUD)||state.is(Blocks.DIRT)||state.is(Blocks.GRASS_BLOCK);}
     @Override public boolean canPlace(DepositGenerationContext ctx,BlockState host,BlockState state,int y){
         return ctx.biome().is(Tags.Biomes.IS_SWAMP)&&!ctx.biome().is(Tags.Biomes.IS_OCEAN)
-                &&soil(state)&&ctx.surfaceY()-y>=0;
+                &&hostMatches(state,settings().hostTags())&&ctx.surfaceY()-y>=0;
     }
     private record Column(double footprint,double thickness){}
     private static final Column OUTSIDE=new Column(Double.NEGATIVE_INFINITY,0);

@@ -1,0 +1,8 @@
+{
+  "type": "meteorite",
+  "max_radius": 6,
+  "min_radius": 3,
+  "ore": "craton:meteoritic_iron",
+  "replaceable": "#c:geology/meteorite_replaceable",
+  "rock": "craton:meteorite"
+}

@@ -21,19 +21,23 @@ public class JadeititeDeposit extends OrdinaryDeposit {
         super(DepositTypes.JADEITITE,settings,DepositRandomSequences.SPECIAL,60);
     }
 
+    /** Shared host-rock rule for generation, placer provenance, and survey. */
+    public boolean matchesHost(BlockState state) {
+        return hostMatches(state, settings().hostTags());
+    }
+
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
     @Override
     public boolean canPlace(DepositGenerationContext ctx,BlockState originalHost,BlockState state,int y){
-        return state.equals(originalHost)&&(originalHost.is(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock())||originalHost.is(CratonBlocks.SCHIST.getOrigin().getBaseBlock()));
+        return state.equals(originalHost)&&(matchesHost(originalHost));
     }
 
     @Override
     public BlockState place(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c,
                             BlockState originalHost,BlockState state,int y){
         if(!state.equals(originalHost)) return null;
-        if(!originalHost.is(CratonBlocks.ECLOGITE.getOrigin().getBaseBlock())
-                &&!originalHost.is(CratonBlocks.SCHIST.getOrigin().getBaseBlock())) return null;
+        if(!matchesHost(originalHost)) return null;
 
         Column column=(Column)ctx.columnGeometry(c);
         if(column==null){column=prepareColumn(ctx,c);ctx.columnGeometry(c,column);}

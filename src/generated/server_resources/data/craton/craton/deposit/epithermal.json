@@ -11,6 +11,7 @@
       "rich_chance": 0.1,
       "rich_scale": 1.0
     },
+    "hosts": "#c:geology/hosts/epithermal",
     "ores": [
       "craton:epithermal_au_ag"
     ],
@@ -20,7 +21,6 @@
       "max_candidates": 1,
       "reach": 205.0
     },
-    "rock": "minecraft:quartz_block",
     "shape": {
       "broad_noise": 0.2,
       "detail_noise": 0.09,

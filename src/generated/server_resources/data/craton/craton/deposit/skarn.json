@@ -11,6 +11,7 @@
       "rich_chance": 0.1,
       "rich_scale": 1.0
     },
+    "hosts": "#c:geology/hosts/skarn",
     "ores": [
       "craton:skarn_w_sn",
       "craton:skarn_pb_zn_ag",

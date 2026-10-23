@@ -20,18 +20,23 @@ public class EpithermalDeposit extends OrdinaryDeposit {
         super(DepositTypes.EPITHERMAL,settings,DepositRandomSequences.EPITHERMAL,20);
     }
 
+    /** Shared host-rock rule for generation, placer provenance, and survey. */
+    public boolean matchesHost(BlockState state) {
+        return hostMatches(state, settings().hostTags());
+    }
+
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
     @Override
     public boolean canPlace(DepositGenerationContext ctx,BlockState originalHost,BlockState state,int y){
-        return state.equals(originalHost)&&(originalHost.is(Blocks.ANDESITE)||isRhyolite(originalHost));
+        return state.equals(originalHost)&&(matchesHost(originalHost));
     }
 
     @Override
     public BlockState place(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c,
                             BlockState originalHost,BlockState state,int y){
         if(!state.equals(originalHost)) return null;
-        if(!originalHost.is(Blocks.ANDESITE)&&!isRhyolite(originalHost)) return null;
+        if(!matchesHost(originalHost)) return null;
 
         Shape config=settings().shape();
         double score=ctx.vein(c,config,.021,2).score(ctx.x(),y,ctx.z());
@@ -41,8 +46,8 @@ public class EpithermalDeposit extends OrdinaryDeposit {
         double occ=GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.17);
         if(occ<p){
             if(grade>.57&&GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.oreSeed(),.11)<.48)
-                return abundantOre(this,ctx,c,y,0,state,settings().rock());
-            return settings().rock();
+                return abundantOre(this,ctx,c,y,0,state);
+            return null;
         }
         return null;
     }

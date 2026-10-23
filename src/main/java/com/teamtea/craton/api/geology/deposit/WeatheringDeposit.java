@@ -10,7 +10,6 @@ import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
-import java.util.List;
 import com.teamtea.craton.common.worldgen.deposit.DepositGenerationContext;
 
 import static com.teamtea.craton.common.worldgen.deposit.DepositFieldSupport.*;
@@ -23,18 +22,23 @@ public class WeatheringDeposit extends OrdinaryDeposit {
         super(DepositTypes.WEATHERING,settings,DepositRandomSequences.WEATHERING,40);
     }
 
+    /** Shared host-rock rule for generation, placer provenance, and survey. */
+    public boolean matchesHost(BlockState state) {
+        return hostMatches(state, settings().hostTags());
+    }
+
     @Override public MapCodec<? extends Deposit> codec() { return CODEC; }
 
     @Override
     public boolean canPlace(DepositGenerationContext ctx,BlockState originalHost,BlockState state,int y){
-        return state.equals(originalHost)&&originalHost.is(Blocks.BASALT)&&!ctx.biome().is(Tags.Biomes.IS_OCEAN)&&ctx.topY()-y>=1;
+        return state.equals(originalHost)&&matchesHost(originalHost)&&!ctx.biome().is(Tags.Biomes.IS_OCEAN)&&ctx.topY()-y>=1;
     }
 
     @Override
     public BlockState place(DepositGenerationContext ctx,DepositCandidateSampler.Candidate c,
                             BlockState originalHost,BlockState state,int y){
         if(!state.equals(originalHost)) return null;
-        if(!originalHost.is(Blocks.BASALT)||ctx.biome().is(Tags.Biomes.IS_OCEAN)) return null;
+        if(!matchesHost(originalHost)||ctx.biome().is(Tags.Biomes.IS_OCEAN)) return null;
         int depth=ctx.topY()-y;
         if(depth<1) return null;
 
@@ -48,15 +52,17 @@ public class WeatheringDeposit extends OrdinaryDeposit {
         double edgeP=GeologicalNoise.smoothstep(-.10,.38,footprint);
         if(GeologicalNoise.occupancy(ctx.x(),y,ctx.z(),c.occupancySeed(),.15)>edgeP) return null;
 
-        List<BlockState> alteration=settings().alterationRocks();
+        // Weathering changes ore concentration, not the host rock itself.
+        // Keep the original basalt (or its existing geology-layer replacement) outside the ore lens.
         double thickness=column.thickness();
-        if(depth<=thickness*3/13) return alteration.size()>0?alteration.get(0):settings().rock();
-        if(depth<=thickness*9/13){
+        if(depth>thickness*3/13 && depth<=thickness*9/13){
             double grade=.5+.5*GeologicalNoise.fbm(ctx.x(),y,ctx.z(),c.gradeSeed(),.075,3);
-            if(grade>.42) return abundantOre(this,ctx,c,y,0,state,alteration.size()>1?alteration.get(1):settings().rock());
-            return alteration.size()>1?alteration.get(1):settings().rock();
+            if(grade>.42){
+                BlockState mineralized=abundantOre(this,ctx,c,y,0,state);
+                return mineralized.equals(state)?null:mineralized;
+            }
         }
-        return alteration.size()>2?alteration.get(2):settings().rock();
+        return null;
     }
     private static class Column {
         private double thickness,footprint;

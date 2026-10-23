@@ -15,6 +15,7 @@ public class DepositTypes {
             new HashMap<>();
 
     public static final Identifier PEAT=Craton.rl("peat");
+    public static final Identifier METEORITE=Craton.rl("meteorite");
     public static final Identifier BIF = Craton.rl("bif");
     public static final Identifier GRANITE = Craton.rl("granite_intrusion"),
             DIORITE = Craton.rl("diorite_intrusion"),
@@ -55,6 +56,7 @@ public class DepositTypes {
     static {
         registerField(PEAT,PeatDeposit.CODEC,PeatDeposit::new);
         register(BIF, BandedIronFormation.CODEC);
+        register(METEORITE, MeteoriteDeposit.CODEC);
         registerField(GRANITE,GraniteIntrusionDeposit.CODEC,GraniteIntrusionDeposit::new);
         registerField(DIORITE,DioriteIntrusionDeposit.CODEC,DioriteIntrusionDeposit::new);
         registerField(GABBRO,GabbroIntrusionDeposit.CODEC,GabbroIntrusionDeposit::new);

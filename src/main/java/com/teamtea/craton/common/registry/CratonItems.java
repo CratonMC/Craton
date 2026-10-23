@@ -11,6 +11,8 @@ import java.util.function.BiConsumer;
 public class CratonItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Craton.MODID);
     public static final Holder<Item> SURVEY_CHART = ITEMS.registerItem("survey_chart",com.teamtea.craton.common.item.SurveyChartItem::new);
+    public static final Holder<Item> HEMATITE_NUGGET = ITEMS.registerSimpleItem("hematite_nugget");
+    public static final Holder<Item> MAGNETITE_NUGGET = ITEMS.registerSimpleItem("magnetite_nugget");
     public static final Holder<Item> RAW_HEMATITE = ITEMS.registerSimpleItem("raw_hematite");
     public static final Holder<Item> RAW_MAGNETITE = ITEMS.registerSimpleItem("raw_magnetite");
     public static final Holder<Item> RAW_IRON_SULFIDE = ITEMS.registerSimpleItem("raw_iron_sulfide");
@@ -33,7 +35,7 @@ public class CratonItems {
     public static final Holder<Item> WHITE_JADE = ITEMS.registerSimpleItem("white_jade");
     public static final Holder<Item> LAVENDER_JADE = ITEMS.registerSimpleItem("lavender_jade");
     public static final List<Holder<Item>> ALL = List.of(
-            RAW_HEMATITE, RAW_MAGNETITE, RAW_IRON_SULFIDE, RAW_COPPER_OXIDE,
+            HEMATITE_NUGGET, MAGNETITE_NUGGET, RAW_HEMATITE, RAW_MAGNETITE, RAW_IRON_SULFIDE, RAW_COPPER_OXIDE,
             RAW_COPPER_SULFIDE, RAW_GOLD, RAW_SILVER, RAW_NICKEL, RAW_LEAD,
             RAW_ZINC, RAW_TIN, RAW_TUNGSTEN, RAW_URANIUM,
             METEORIC_IRON, GREEN_JADE, WHITE_JADE,
@@ -59,6 +61,8 @@ public class CratonItems {
         add.accept("survey.craton.legend.contacts", "绿：宝石；棕：铝土；红：红石；粉：伟晶岩；品红：接触交代");
 
         
+        add.accept("item.craton.hematite_nugget", "赤铁矿粒");
+        add.accept("item.craton.magnetite_nugget", "磁铁矿粒");
         add.accept("item.craton.raw_hematite", "赤铁矿原矿");
         add.accept("item.craton.raw_magnetite", "磁铁矿原矿");
         add.accept("item.craton.raw_iron_sulfide", "硫化铁原矿");
@@ -100,6 +104,8 @@ public class CratonItems {
         add.accept("survey.craton.legend.contacts", "Green: gems · Brown: bauxite · Red: redstone · Pink: pegmatite · Magenta: contact ores");
 
         
+        add.accept("item.craton.hematite_nugget", "Hematite Nugget");
+        add.accept("item.craton.magnetite_nugget", "Magnetite Nugget");
         add.accept("item.craton.raw_hematite", "Raw Hematite");
         add.accept("item.craton.raw_magnetite", "Raw Magnetite");
         add.accept("item.craton.raw_iron_sulfide", "Raw Iron Sulfide");

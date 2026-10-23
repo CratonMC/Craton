@@ -49,7 +49,7 @@ public class DepositSurvey {
         long cells=0;
         for(var entry:plan.definitions()){
             Deposit d=entry.deposit();if(!independent(d))continue;
-            double reach=entry.reach()+(d instanceof PlacerDeposit?PlacerDeposit.RIVER_SEARCH_RADIUS:0);int size=d.placement().cellSize();
+            double reach=entry.reach()+(d instanceof PlacerDeposit placer?placer.riverSearchRadius():0);int size=d.placement().cellSize();
             long nx=(long)Math.floor((canvas.maximumX()+reach)/size)-(long)Math.floor((canvas.minimumX()-reach)/size)+1;
             long nz=(long)Math.floor((canvas.maximumZ()+reach)/size)-(long)Math.floor((canvas.minimumZ()-reach)/size)+1;
             cells+=nx*nz;
@@ -66,7 +66,7 @@ public class DepositSurvey {
         while(++definitionIndex<plan.definitions().size()){
             var entry=plan.definitions().get(definitionIndex);if(!independent(entry.deposit()))continue;
             definition=entry;int size=entry.deposit().placement().cellSize();
-            double reach=entry.reach()+(entry.deposit() instanceof PlacerDeposit?PlacerDeposit.RIVER_SEARCH_RADIUS:0);
+            double reach=entry.reach()+(entry.deposit() instanceof PlacerDeposit placer?placer.riverSearchRadius():0);
             cellX=(int)Math.floor((canvas.minimumX()-reach)/size);
             maxCellX=(int)Math.floor((canvas.maximumX()+reach)/size);
             cellZ=minCellZ=(int)Math.floor((canvas.minimumZ()-reach)/size);
@@ -109,6 +109,19 @@ public class DepositSurvey {
     private boolean hasLayer(DepositCandidateSampler.Candidate c,Block block){
         return !geology.matchingLayersAt(block.defaultBlockState(),c.x(),c.z()).isEmpty();
     }
+    private boolean atCenterMatching(FieldDeposit deposit, DepositCandidateSampler.Candidate c,
+                                     java.util.function.Predicate<net.minecraft.world.level.block.state.BlockState> predicate){
+        int y=(int)Math.round(deposit.settings().shape().height(minY,c.verticalSeed()));
+        return predicate.test(geology.sampleRaw(c.x(),y,c.z()));
+    }
+    private boolean hasMatchingLayer(DepositCandidateSampler.Candidate c,
+                                    java.util.function.Predicate<net.minecraft.world.level.block.state.BlockState> predicate){
+        for(var layer:geology.layers()){
+            var state=layer.value().blockState();
+            if(predicate.test(state)&&!geology.matchingLayersAt(state,c.x(),c.z()).isEmpty())return true;
+        }
+        return false;
+    }
     private boolean atCenter(FieldDeposit deposit,DepositCandidateSampler.Candidate c,Block... rocks){
         int y=(int)Math.round(deposit.settings().shape().height(minY,c.verticalSeed()));
         var state=geology.sampleRaw(c.x(),y,c.z());
@@ -127,7 +140,7 @@ public class DepositSurvey {
         boolean mineralized=available(deposit);
         if(!mineralized&&!(deposit instanceof IntrusionDeposit))return;
         if(deposit instanceof BandedIronFormation bif){
-            var host=CratonBlocks.GNEISS.getOrigin().getBaseBlock();var layers=geology.matchingLayersAt(host.defaultBlockState(),c.x(),c.z());
+            var layers=bif.matchingHostLayers(geology,c.x(),c.z());
             if(layers.isEmpty()||bif.oreDensity()<=0)return;
             int layer=layers.get(index(c.verticalSeed(),layers.size()));
             double gx=(geology.boundaryY(layer,c.x()+4,c.z())-geology.boundaryY(layer,c.x()-4,c.z()))/8;
@@ -162,37 +175,35 @@ public class DepositSurvey {
             for(var rule:plan.skarns()){
                 if(!available(rule.deposit()))continue;
                 if(rand01(c.alterationSeed()^rule.salt())>=rule.deposit().placement().frequency())continue;
-                if(!hasLayer(c,CratonBlocks.LIMESTONE.getOrigin().getBaseBlock())&&!hasLayer(c,CratonBlocks.MARBLE.getOrigin().getBaseBlock()))continue;
+                if(!hasMatchingLayer(c,rule.deposit()::matchesHost))continue;
                 double reach=rule.deposit().settings().shape().y(c.shapeSeed());
                 canvas.add(new SurveyMapCanvas.Mark(c.x(),c.z(),parent.rx+reach,parent.rz+reach,parent.angle,SKARN,c.alterationSeed()^rule.salt()));
             }
         }else if(deposit instanceof StratiformCoalDeposit){
-            if(hasLayer(c,CratonBlocks.LIMESTONE.getOrigin().getBaseBlock())||hasLayer(c,CratonBlocks.SHALE.getOrigin().getBaseBlock()))add(field,c,COAL);
+            if(hasMatchingLayer(c,((StratiformCoalDeposit)deposit)::matchesHost))add(field,c,COAL);
         }else if(deposit instanceof StratiformCopperDeposit){
-            if(hasLayer(c,CratonBlocks.LIMESTONE.getOrigin().getBaseBlock()))add(field,c,COPPER);
+            if(hasMatchingLayer(c,((StratiformCopperDeposit)deposit)::matchesHost))add(field,c,COPPER);
         }else if(deposit instanceof ShaleLeadZincDeposit){
-            if(hasLayer(c,CratonBlocks.SHALE.getOrigin().getBaseBlock()))add(field,c,LEAD_ZINC);
+            if(hasMatchingLayer(c,((ShaleLeadZincDeposit)deposit)::matchesHost))add(field,c,LEAD_ZINC);
         }else if(deposit instanceof SandstoneUraniumDeposit){
-            if(hasLayer(c,CratonBlocks.ARKOSE_SANDSTONE.getOrigin().getBaseBlock()))add(field,c,URANIUM);
-        }else if(deposit instanceof VmsDeposit){
-            var layers=geology.matchingLayersAt(Blocks.TUFF.defaultBlockState(),c.x(),c.z());
-            if(layers.isEmpty()||.5+.5*GeologicalNoise.fbm2(c.x(),c.z(),DepositRandomSequences.VMS.salt()^0x564D5350L,.0019,4)<.46)return;
-            int layer=layers.get(index(c.verticalSeed(),layers.size()));
-            if(!VmsDeposit.isVolcanicHorizon(geology,layer,c.x(),c.z()))return;
+            if(hasMatchingLayer(c,((SandstoneUraniumDeposit)deposit)::matchesHost))add(field,c,URANIUM);
+        }else if(deposit instanceof VmsDeposit vms){
+            int layer=vms.selectedHorizon(geology,c);
+            if(layer<0||.5+.5*GeologicalNoise.fbm2(c.x(),c.z(),DepositRandomSequences.VMS.salt()^0x564D5350L,.0019,4)<.46)return;
             add(field,c,COPPER);placerSources.add(new Source(c.x(),c.z(),105,false));
-        }else if(deposit instanceof EpithermalDeposit){
-            if(atCenter(field,c,Blocks.ANDESITE,CratonBlocks.RHYOLITE.getOrigin().getBaseBlock())){
+        }else if(deposit instanceof EpithermalDeposit epi){
+            if(atCenterMatching(field,c,epi::matchesHost)){
                 add(field,c,GOLD);if(hasMetal(field,"gold"))placerSources.add(new Source(c.x(),c.z(),120,true));
             }
-        }else if(deposit instanceof JadeititeDeposit){
-            if(atCenter(field,c,CratonBlocks.ECLOGITE.getOrigin().getBaseBlock(),CratonBlocks.SCHIST.getOrigin().getBaseBlock()))add(field,c,GEM);
-        }else if(deposit instanceof DeepHydrothermalRedstoneDeposit){
-            if(hasLayer(c,CratonBlocks.ECLOGITE.getOrigin().getBaseBlock()))add(field,c,REDSTONE);
+        }else if(deposit instanceof JadeititeDeposit jade){
+            if(atCenterMatching(field,c,jade::matchesHost))add(field,c,GEM);
+        }else if(deposit instanceof DeepHydrothermalRedstoneDeposit redstone){
+            if(hasMatchingLayer(c,redstone::matchesHost))add(field,c,REDSTONE);
         }else if(deposit instanceof KimberliteDeposit){add(field,c,GEM);
-        }else if(deposit instanceof WeatheringDeposit){
-            if(!environment.ocean(c.x(),c.z())&&geology.sampleRaw(c.x(),(int)Math.floor(environment.surfaceY(c.x(),c.z()))-4,c.z()).is(Blocks.BASALT))add(field,c,BAUXITE);
+        }else if(deposit instanceof WeatheringDeposit weathering){
+            if(!environment.ocean(c.x(),c.z())&&weathering.matchesHost(geology.sampleRaw(c.x(),(int)Math.floor(environment.surfaceY(c.x(),c.z()))-4,c.z())))add(field,c,BAUXITE);
         }else if(deposit instanceof PlacerDeposit placer){
-            var anchor=PlacerDeposit.riverAnchor(c,placerRiver);
+            var anchor=PlacerDeposit.riverAnchor(c,placerRiver,placer.riverSearchRadius());
             if(!anchor.found())return;
             if(placers.size()>=2048)throw new IllegalStateException("Too many placer candidates");
             placers.add(new PendingPlacer(placer,c,anchor));

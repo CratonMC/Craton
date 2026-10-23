@@ -1,7 +1,4 @@
 {
   "type": "craton:meteorite",
-  "max_radius": 6,
-  "min_radius": 3,
-  "ore": "craton:meteoritic_iron",
-  "rock": "craton:meteorite"
+  "deposit": "craton:meteorite"
 }

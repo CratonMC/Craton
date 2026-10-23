@@ -7,9 +7,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamtea.craton.api.geology.ore.OreType;
 import com.teamtea.craton.common.registry.CratonRegistries;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import com.teamtea.craton.common.worldgen.deposit.DepositRandomSequences;
 
 import java.util.List;
@@ -110,11 +115,19 @@ public abstract class FieldDeposit extends AbstractDeposit {
     @Override public abstract MapCodec<? extends Deposit> codec();
 
     public record Settings(Placement placement, Shape shape, BlockState rock, List<Holder<OreType>> ores,
-                           List<BlockState> alterationRocks, Abundance abundance) {
+                           List<BlockState> alterationRocks, Abundance abundance,
+                           HolderSet<Block> hostTags, HolderSet<Block> capTags, HolderSet<Block> footwallTags, HolderSet<Block> upperTags, HolderSet<Block> lowerTags, HolderSet<Block> lensTags) {
+        private static final HolderSet<Block> EMPTY_HOSTS = HolderSet.direct(List.of());
         public Settings(Placement placement,Shape shape,BlockState rock,List<Holder<OreType>> ores,List<BlockState> alterationRocks){
-            this(placement,shape,rock,ores,alterationRocks,Abundance.NONE);
+            this(placement,shape,rock,ores,alterationRocks,Abundance.NONE,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS);
         }
-        public Settings withAbundance(Abundance value){return new Settings(placement,shape,rock,ores,alterationRocks,value);}
+        public Settings(Placement placement,Shape shape,BlockState rock,List<Holder<OreType>> ores,List<BlockState> alterationRocks,Abundance abundance){
+            this(placement,shape,rock,ores,alterationRocks,abundance,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS,EMPTY_HOSTS);
+        }
+        public Settings withAbundance(Abundance value){return new Settings(placement,shape,rock,ores,alterationRocks,value,hostTags,capTags,footwallTags,upperTags,lowerTags,lensTags);}
+        public Settings withHosts(HolderSet<Block> hosts,HolderSet<Block> caps,HolderSet<Block> feet,HolderSet<Block> upper,HolderSet<Block> lower,HolderSet<Block> lens){
+            return new Settings(placement,shape,rock,ores,alterationRocks,abundance,hosts,caps,feet,upper,lower,lens);
+        }
         public Settings {
             ores = List.copyOf(ores);
             alterationRocks = List.copyOf(alterationRocks);
@@ -122,11 +135,21 @@ public abstract class FieldDeposit extends AbstractDeposit {
         public static final Codec<Settings> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Placement.CODEC.fieldOf("placement").forGetter(Settings::placement),
                 Shape.CODEC.fieldOf("shape").forGetter(Settings::shape),
-                BlockState.CODEC.fieldOf("rock").forGetter(Settings::rock),
+                BlockState.CODEC.optionalFieldOf("rock", Blocks.AIR.defaultBlockState()).forGetter(Settings::rock),
                 RegistryFixedCodec.create(CratonRegistries.ORE_TYPE).listOf().fieldOf("ores").forGetter(Settings::ores),
                 BlockState.CODEC.listOf().optionalFieldOf("alteration_rocks",List.of()).forGetter(Settings::alterationRocks),
-                Abundance.CODEC.optionalFieldOf("abundance",Abundance.NONE).forGetter(Settings::abundance)
+                Abundance.CODEC.optionalFieldOf("abundance",Abundance.NONE).forGetter(Settings::abundance),
+                RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("hosts",EMPTY_HOSTS).forGetter(Settings::hostTags),
+                RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("cap_hosts",EMPTY_HOSTS).forGetter(Settings::capTags),
+                RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("footwall_hosts",EMPTY_HOSTS).forGetter(Settings::footwallTags),
+                RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("upper_hosts",EMPTY_HOSTS).forGetter(Settings::upperTags),
+                RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("lower_hosts",EMPTY_HOSTS).forGetter(Settings::lowerTags),
+                RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("lens_hosts",EMPTY_HOSTS).forGetter(Settings::lensTags)
         ).apply(i, Settings::new));
+    }
+
+    protected final boolean hostMatches(BlockState state, HolderSet<Block> hosts){
+        return hosts.contains(state.getBlock().builtInRegistryHolder());
     }
 
     public record Placement(int cellSize, int maxCandidates, double reach, double frequency) {

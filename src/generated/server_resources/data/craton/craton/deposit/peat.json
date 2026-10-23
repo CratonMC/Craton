@@ -11,6 +11,7 @@
       "rich_chance": 0.12,
       "rich_scale": 1.0
     },
+    "hosts": "#c:geology/hosts/peat_soil",
     "ores": [
       "craton:peat"
     ],
@@ -20,7 +21,6 @@
       "max_candidates": 2,
       "reach": 70.0
     },
-    "rock": "craton:peat",
     "shape": {
       "broad_noise": 0.16,
       "detail_noise": 0.04,

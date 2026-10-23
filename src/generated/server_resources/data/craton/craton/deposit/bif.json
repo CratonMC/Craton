@@ -5,6 +5,7 @@
   "dip_min": 0.0,
   "enrichment_scale": 100.0,
   "frequency": 0.18,
+  "hosts": "#c:geology/hosts/bif",
   "length": 360.0,
   "ore": "craton:bif_iron",
   "ore_density": 0.9,
