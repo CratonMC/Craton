@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": "craton:magnetite_nugget",
+  "result": {
+    "id": "minecraft:iron_nugget"
+  }
+}

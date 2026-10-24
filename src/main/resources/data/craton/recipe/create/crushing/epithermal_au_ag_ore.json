@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "create"
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/gold"
+          }
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/silver"
+          }
+        }
+      ]
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    "craton:epithermal_au_ag_ore"
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "id": "craton:raw_gold"
+    },
+    {
+      "id": "craton:raw_silver"
+    }
+  ]
+}

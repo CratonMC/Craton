@@ -323,13 +323,16 @@ public class CratonBlocks {
 
     private static void registerBlockItem(String name, DeferredBlock<? extends Block> block) {
         Identifier id = Identifier.fromNamespaceAndPath(Craton.MODID, name);
-
-        ITEMS.register(name, () -> new BlockItem(
-                block.get(),
-                new Item.Properties()
-                        .setId(ResourceKey.create(Registries.ITEM, id))
-                        .useBlockDescriptionPrefix()
-        ));
+        Item.Properties properties = new Item.Properties()
+                .setId(ResourceKey.create(Registries.ITEM, id))
+                .useBlockDescriptionPrefix();
+        if ("peat".equals(name)) {
+            properties.component(net.minecraft.core.component.DataComponents.COOKING_FUEL,
+                    new net.minecraft.world.item.component.CookingFuel(
+                            new net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt.Constant(1200),
+                            new net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat.Constant(1.5f)));
+        }
+        ITEMS.register(name, () -> new BlockItem(block.get(), properties));
     }
 
     private static DeferredBlock<Block> registerOreBlock(String name, Supplier<Block> host) {

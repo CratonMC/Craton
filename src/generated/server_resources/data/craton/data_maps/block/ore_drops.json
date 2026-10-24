@@ -94,14 +94,18 @@
     "craton:ferriferous_red_sand": {
       "drops": [
         {
-          "item": "craton:hematite_nugget"
+          "item": "craton:hematite_nugget",
+          "max_count": 3,
+          "min_count": 2
         }
       ]
     },
     "craton:ferriferous_sand": {
       "drops": [
         {
-          "item": "craton:magnetite_nugget"
+          "item": "craton:magnetite_nugget",
+          "max_count": 3,
+          "min_count": 2
         }
       ]
     },
@@ -416,14 +420,6 @@
         {
           "fortune_scale": 0.5,
           "item": "craton:green_jade"
-        },
-        {
-          "fortune_scale": 0.5,
-          "item": "craton:white_jade"
-        },
-        {
-          "fortune_scale": 0.5,
-          "item": "craton:lavender_jade"
         }
       ]
     },

@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "create"
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/tin"
+          }
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/tungsten"
+          }
+        }
+      ]
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    "craton:skarn_w_sn_ore"
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "id": "craton:raw_tin"
+    },
+    {
+      "id": "craton:raw_tungsten"
+    }
+  ]
+}

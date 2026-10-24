@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_hematite_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "craton:hematite_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "craton:smelting/hematite_nugget"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_hematite_nugget"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "craton:smelting/hematite_nugget"
+    ]
+  }
+}

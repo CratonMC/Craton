@@ -1,4 +1,13 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ores/copper"
+      }
+    }
+  ],
   "type": "minecraft:smelting",
   "cookingtime": 200,
   "experience": 0.7,

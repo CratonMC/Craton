@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "create"
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/zinc"
+          }
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/lead"
+          }
+        }
+      ]
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    "craton:sedimentary_pb_zn_ore"
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "id": "craton:raw_zinc"
+    },
+    {
+      "id": "craton:raw_lead"
+    }
+  ]
+}

@@ -43,22 +43,32 @@ public record BadlandsRedSandPlacerFeature() implements Feature {
         int changed = 0;
         var pos = new BlockPos.MutableBlockPos();
         for (int z = minZ; z < minZ + 16; z++) for (int x = minX; x < minX + 16; x++) {
-            // Surface heightmaps return the first free Y, not the surface block Y.
-            int surfaceY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) - 1;
-            if (surfaceY < minY || surfaceY + 1 >= maxY) continue;
+            // Heightmap Y interpretation can vary by generation phase.
+            // Accept the exposed red sand at the heightmap position or one below,
+            // rather than unconditionally subtracting one from the height.
+            int heightY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x & 15, z & 15);
+            int surfaceY = -1;
+            for (int offset = 0; offset <= 1; offset++) {
+                int candidateY = heightY - offset;
+                if (candidateY < minY || candidateY + 1 >= maxY) continue;
+                pos.set(x, candidateY, z);
+                if (!chunk.getBlockState(pos).is(Blocks.RED_SAND)) continue;
+                if (!chunk.getBlockState(pos.setY(candidateY + 1)).isAir()) continue;
+                surfaceY = candidateY;
+                break;
+            }
+            if (surfaceY < minY) continue;
             pos.set(x, surfaceY, z);
             if (!biomes.apply(pos).is(Tags.Biomes.IS_BADLANDS)) continue;
-            if (!chunk.getBlockState(pos).is(Blocks.RED_SAND)) continue;
-            if (!chunk.getBlockState(pos.setY(surfaceY + 1)).isAir()) continue;
             if (!isScatteredDeposit(seed, x, z)) continue;
-            chunk.setBlockState(pos.setY(surfaceY), CratonBlocks.ferriferous_red_sand.value().defaultBlockState(),
+            chunk.setBlockState(pos, CratonBlocks.ferriferous_red_sand.value().defaultBlockState(),
                     Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS);
             changed++;
         }
         return changed;
     }
 
-    /** Sparse, irregular placer grains, not contiguous circular patches. */
+    /** Sparse isolated iron-rich grains on existing exposed red sand. */
     private static boolean isScatteredDeposit(long seed, int x, int z) {
         // Coarse cells modulate local density; no chunk-relative randomness or cross-chunk writes.
         long cellX = Math.floorDiv(x, CELL_SIZE);
@@ -66,14 +76,14 @@ public record BadlandsRedSandPlacerFeature() implements Feature {
         long zone = mix(seed ^ SALT ^ (cellX * 0x9E3779B97F4A7C15L)
                 ^ (cellZ * 0xC2B2AE3D27D4EB4FL));
         // Some cells contain no mineralization at all.
-        if (Long.remainderUnsigned(zone, 5) >= 3) return false;
+        if (Long.remainderUnsigned(zone, 5) >= 2) return false;
 
         // Individual grains are deterministic by world coordinate, deliberately dispersed.
         long grain = mix(seed ^ (SALT + 0x517cc1b727220a95L)
                 ^ ((long) x * 0xD6E8FEB86659FD93L)
                 ^ ((long) z * 0xA5A3564E27F88619L));
         // Variable local density, without smooth disks or large artificial blobs.
-        int threshold = Long.remainderUnsigned(zone >>> 13, 2) == 0 ? 32 : 20;
+        int threshold = Long.remainderUnsigned(zone >>> 13, 2) == 0 ? 3 : 2;
         return Long.remainderUnsigned(grain, 100) < threshold;
     }
 

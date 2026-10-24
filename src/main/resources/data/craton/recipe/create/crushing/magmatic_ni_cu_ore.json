@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "create"
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/nickel"
+          }
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:tag_empty",
+            "tag": "c:ores/copper"
+          }
+        }
+      ]
+    }
+  ],
+  "type": "create:crushing",
+  "ingredients": [
+    "craton:magmatic_ni_cu_ore"
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "id": "craton:raw_nickel"
+    },
+    {
+      "id": "minecraft:raw_copper"
+    }
+  ]
+}

@@ -32,14 +32,11 @@ public class CratonItems {
 
     public static final Holder<Item> METEORIC_IRON = ITEMS.registerSimpleItem("meteoric_iron");
     public static final Holder<Item> GREEN_JADE = ITEMS.registerSimpleItem("green_jade");
-    public static final Holder<Item> WHITE_JADE = ITEMS.registerSimpleItem("white_jade");
-    public static final Holder<Item> LAVENDER_JADE = ITEMS.registerSimpleItem("lavender_jade");
     public static final List<Holder<Item>> ALL = List.of(
             HEMATITE_NUGGET, MAGNETITE_NUGGET, RAW_HEMATITE, RAW_MAGNETITE, RAW_IRON_SULFIDE, RAW_COPPER_OXIDE,
             RAW_COPPER_SULFIDE, RAW_GOLD, RAW_SILVER, RAW_NICKEL, RAW_LEAD,
             RAW_ZINC, RAW_TIN, RAW_TUNGSTEN, RAW_URANIUM,
-            METEORIC_IRON, GREEN_JADE, WHITE_JADE,
-            LAVENDER_JADE);
+            METEORIC_IRON, GREEN_JADE);
 
     public static void addChinese(BiConsumer<String,String> add) {
         add.accept("item.craton.survey_chart", "空白矿产调查图");
@@ -81,8 +78,6 @@ public class CratonItems {
         add.accept("item.craton.bauxite", "铝土");
         add.accept("item.craton.meteoric_iron", "陨铁");
         add.accept("item.craton.green_jade", "绿色翡翠");
-        add.accept("item.craton.white_jade", "白色翡翠");
-        add.accept("item.craton.lavender_jade", "紫色翡翠");
     }
     public static void addEnglish(BiConsumer<String,String> add) {
         add.accept("item.craton.survey_chart", "Blank Mineral Survey Chart");
@@ -124,8 +119,6 @@ public class CratonItems {
         add.accept("item.craton.bauxite", "Bauxite");
         add.accept("item.craton.meteoric_iron", "Meteoric Iron");
         add.accept("item.craton.green_jade", "Green Jade");
-        add.accept("item.craton.white_jade", "White Jade");
-        add.accept("item.craton.lavender_jade", "Lavender Jade");
     }
     private CratonItems() {}
 }

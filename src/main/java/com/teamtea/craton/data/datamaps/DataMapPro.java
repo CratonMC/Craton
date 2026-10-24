@@ -107,11 +107,11 @@ public class DataMapPro extends DataMapProvider {
                 List.of());
 
         add(CratonBlocks.ferriferous_sand,
-                List.of(product(CratonItems.MAGNETITE_NUGGET.value())),
+                List.of(counts(product(CratonItems.MAGNETITE_NUGGET.value()), 2, 3)),
                 List.of());
 
         add(CratonBlocks.ferriferous_red_sand,
-                List.of(product(CratonItems.HEMATITE_NUGGET.value())),
+                List.of(counts(product(CratonItems.HEMATITE_NUGGET.value()), 2, 3)),
                 List.of());
 
         add(CratonBlocks.diamond_bearing_kimberlite,
@@ -230,9 +230,7 @@ public class DataMapPro extends DataMapProvider {
 
         add(CratonBlocks.suspicious_jadeitite,
                 List.of(
-                        tuned(product(CratonItems.GREEN_JADE.value()), 0.50, 0.0),
-                        tuned(product(CratonItems.WHITE_JADE.value()), 0.50, 0.0),
-                        tuned(product(CratonItems.LAVENDER_JADE.value()), 0.50, 0.0)
+                        tuned(product(CratonItems.GREEN_JADE.value()), 0.50, 0.0)
                 ),
                 List.of());
     }

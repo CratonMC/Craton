@@ -79,6 +79,9 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
 
     /** Datapack recipes for mineral products. Output is generated under data/craton/recipe/. */
     private void generateMineralSmelting() {
+        // Independent hematite/magnetite grains recover an iron nugget, not an ingot.
+        cooking("hematite_nugget", CratonItems.HEMATITE_NUGGET.value(), Items.IRON_NUGGET, 1, 0.1f);
+        cooking("magnetite_nugget", CratonItems.MAGNETITE_NUGGET.value(), Items.IRON_NUGGET, 1, 0.1f);
         cooking("raw_hematite", CratonItems.RAW_HEMATITE.value(), Items.IRON_INGOT, 1, 0.7f);
         cooking("raw_magnetite", CratonItems.RAW_MAGNETITE.value(), Items.IRON_INGOT, 1, 0.7f);
         cooking("raw_iron_sulfide", CratonItems.RAW_IRON_SULFIDE.value(), Items.IRON_INGOT, 1, 0.7f);
@@ -137,8 +140,38 @@ public class CratonRecipeProvider extends VanillaRecipeProvider {
      */
     private void dualCooking(String name, ItemLike input, ItemLike firstResult,
                              ItemLike secondResult, int count, float xp) {
-        cooking(name + "_primary", input, firstResult, count, xp);
-        cooking(name + "_secondary", input, secondResult, count, xp);
+        String[] metals = switch (name) {
+            case "ore_magmatic_ni_cu_ore" -> new String[]{"nickel", "copper"};
+            case "ore_epithermal_au_ag_ore" -> new String[]{"gold", "silver"};
+            case "ore_vms_pb_ag_ore" -> new String[]{"lead", "silver"};
+            case "ore_sedimentary_pb_zn_ore", "ore_skarn_pb_zn_ore" -> new String[]{"zinc", "lead"};
+            case "ore_skarn_w_sn_ore" -> new String[]{"tin", "tungsten"};
+            default -> throw new IllegalArgumentException("Unknown polymetallic ore: " + name);
+        };
+        cookingWithTagCondition(name + "_primary", input, firstResult, count, xp, metals[0]);
+        cookingWithTagCondition(name + "_secondary", input, secondResult, count, xp, metals[1]);
+    }
+
+    /** Keep both direct-smelting routes, conditional on the corresponding metal's ore tag. */
+    private void cookingWithTagCondition(String name, ItemLike input, ItemLike result,
+                                         int count, float xp, String metal) {
+        var condition = new net.neoforged.neoforge.common.conditions.NotCondition(
+                new net.neoforged.neoforge.common.conditions.TagEmptyCondition(
+                        net.minecraft.tags.TagKey.create(Registries.ITEM,
+                                net.minecraft.resources.Identifier.parse("c:ores/" + metal))));
+        var conditionedOutput = output.withConditions(condition);
+        var ingredient = Ingredient.of(input);
+        var resultStack = new ItemStackTemplate(result.asItem(), count);
+        SimpleCookingRecipeBuilder.smelting(ingredient, RecipeCategory.MISC,
+                        CookingBookCategory.MISC, resultStack, xp, 200)
+                .unlockedBy("has_" + name, has(input))
+                .save(conditionedOutput, net.minecraft.resources.ResourceKey.create(
+                        Registries.RECIPE, Craton.rl("smelting/" + name)));
+        SimpleCookingRecipeBuilder.blasting(ingredient, RecipeCategory.MISC,
+                        CookingBookCategory.MISC, resultStack, xp, 200)
+                .unlockedBy("has_" + name, has(input))
+                .save(conditionedOutput, net.minecraft.resources.ResourceKey.create(
+                        Registries.RECIPE, Craton.rl("blasting/" + name)));
     }
 
     private void cooking(String name, ItemLike input, ItemLike result, int count, float xp) {
